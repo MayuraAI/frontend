@@ -208,7 +208,7 @@ export type Database = {
       workspaces: {
         Row: {
           created_at: string
-          description: string
+          default_prompt: string
           id: string
           include_profile_context: boolean
           include_workspace_instructions: boolean
@@ -221,7 +221,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          description: string
+          default_prompt: string
           id?: string
           include_profile_context: boolean
           include_workspace_instructions: boolean
@@ -234,7 +234,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          description?: string
+          default_prompt?: string
           id?: string
           include_profile_context?: boolean
           include_workspace_instructions?: boolean

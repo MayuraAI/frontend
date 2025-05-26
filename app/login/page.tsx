@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { SubmitButton } from "@/components/ui/submit-button"
 import { createClient } from "@/lib/supabase/server"
+import { getServerHomeWorkspace } from "@/lib/server/workspaces"
 import { Database } from "@/supabase/types"
 import { createServerClient } from "@supabase/ssr"
 import { get } from "@vercel/edge-config"
@@ -34,17 +35,7 @@ export default async function Login({
   const session = (await supabase.auth.getSession()).data.session
 
   if (session) {
-    const { data: homeWorkspace, error } = await supabase
-      .from("workspaces")
-      .select("*")
-      .eq("user_id", session.user.id)
-      .eq("is_home", true)
-      .single()
-
-    if (!homeWorkspace) {
-      throw new Error(error.message)
-    }
-
+    const homeWorkspace = await getServerHomeWorkspace(session.user.id)
     return redirect(`/${homeWorkspace.id}/chat`)
   }
 
@@ -65,19 +56,15 @@ export default async function Login({
       return redirect(`/login?message=${error.message}`)
     }
 
-    const { data: homeWorkspace, error: homeWorkspaceError } = await supabase
-      .from("workspaces")
-      .select("*")
-      .eq("user_id", data.user.id)
-      .eq("is_home", true)
-      .single()
-
-    if (!homeWorkspace) {
-      throw new Error(
-        homeWorkspaceError?.message || "An unexpected error occurred"
-      )
+    // Get the session after sign in
+    const {
+      data: { session }
+    } = await supabase.auth.getSession()
+    if (!session) {
+      return redirect(`/login?message=Failed to establish session`)
     }
 
+    const homeWorkspace = await getServerHomeWorkspace(session.user.id)
     return redirect(`/${homeWorkspace.id}/chat`)
   }
 

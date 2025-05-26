@@ -2,6 +2,12 @@ import { supabase } from "@/lib/supabase/browser-client"
 import { TablesInsert, TablesUpdate } from "@/supabase/types"
 
 export const getHomeWorkspaceByUserId = async (userId: string) => {
+  // First check if we're authenticated
+  const session = (await supabase.auth.getSession()).data.session
+  if (!session) {
+    throw new Error("Not authenticated")
+  }
+
   const { data: homeWorkspace, error } = await supabase
     .from("workspaces")
     .select("*")
@@ -15,11 +21,12 @@ export const getHomeWorkspaceByUserId = async (userId: string) => {
       const newWorkspace = await createWorkspace({
         user_id: userId,
         name: "Home",
-        description: "Your home workspace",
+        default_prompt: "You are a helpful AI assistant.",
         is_home: true,
         include_profile_context: true,
         include_workspace_instructions: true,
-        instructions: "You are a helpful AI assistant."
+        instructions: "You are a helpful AI assistant.",
+        sharing: "private"
       })
       return newWorkspace.id
     }
@@ -46,6 +53,16 @@ export const getWorkspaceById = async (workspaceId: string) => {
 }
 
 export const getWorkspacesByUserId = async (userId: string) => {
+  // First check if we're authenticated and the user ID matches
+  const session = (await supabase.auth.getSession()).data.session
+  if (!session) {
+    throw new Error("Not authenticated")
+  }
+
+  if (userId !== session.user.id) {
+    throw new Error("Cannot access workspaces for another user")
+  }
+
   const { data: workspaces, error } = await supabase
     .from("workspaces")
     .select("*")
@@ -56,13 +73,14 @@ export const getWorkspacesByUserId = async (userId: string) => {
     if (error.code === "PGRST116") {
       // No workspaces found, create home workspace
       const homeWorkspace = await createWorkspace({
-        user_id: userId,
+        user_id: session.user.id, // Use session.user.id instead of userId
         name: "Home",
-        description: "Your home workspace",
+        default_prompt: "You are a helpful AI assistant.",
         is_home: true,
         include_profile_context: true,
         include_workspace_instructions: true,
-        instructions: "You are a helpful AI assistant."
+        instructions: "You are a helpful AI assistant.",
+        sharing: "private"
       })
       return [homeWorkspace]
     }
@@ -73,13 +91,14 @@ export const getWorkspacesByUserId = async (userId: string) => {
   if (!workspaces || workspaces.length === 0) {
     // No workspaces found, create home workspace
     const homeWorkspace = await createWorkspace({
-      user_id: userId,
+      user_id: session.user.id, // Use session.user.id instead of userId
       name: "Home",
-      description: "Your home workspace",
+      default_prompt: "You are a helpful AI assistant.",
       is_home: true,
       include_profile_context: true,
       include_workspace_instructions: true,
-      instructions: "You are a helpful AI assistant."
+      instructions: "You are a helpful AI assistant.",
+      sharing: "private"
     })
     return [homeWorkspace]
   }
@@ -90,6 +109,25 @@ export const getWorkspacesByUserId = async (userId: string) => {
 export const createWorkspace = async (
   workspace: TablesInsert<"workspaces">
 ) => {
+  // First check if we're authenticated
+  const session = (await supabase.auth.getSession()).data.session
+  if (!session) {
+    throw new Error("Not authenticated")
+  }
+
+  console.log("Debug - Auth Check:", {
+    sessionUserId: session.user.id,
+    workspaceUserId: workspace.user_id,
+    isMatch: workspace.user_id === session.user.id
+  })
+
+  // Verify the user_id matches the authenticated user
+  if (workspace.user_id !== session.user.id) {
+    throw new Error(
+      `Cannot create workspace for another user. Session user: ${session.user.id}, Workspace user: ${workspace.user_id}`
+    )
+  }
+
   const { data: createdWorkspace, error } = await supabase
     .from("workspaces")
     .insert([workspace])
@@ -97,6 +135,12 @@ export const createWorkspace = async (
     .single()
 
   if (error) {
+    if (error.message.includes("row-level security")) {
+      console.error("RLS Error creating workspace:", error)
+      throw new Error(
+        "Not authorized to create workspace. Please try logging out and back in."
+      )
+    }
     throw new Error(error.message)
   }
 

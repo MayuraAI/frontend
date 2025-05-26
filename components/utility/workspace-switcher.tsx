@@ -50,7 +50,7 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
     const createdWorkspace = await createWorkspace({
       user_id: profile.user_id,
       name: "New Workspace",
-      description: "",
+      default_prompt: "You are a helpful AI assistant.",
       instructions: "",
       include_profile_context: true,
       include_workspace_instructions: true,
