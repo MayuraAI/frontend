@@ -21,12 +21,11 @@ export const getHomeWorkspaceByUserId = async (userId: string) => {
       const newWorkspace = await createWorkspace({
         user_id: userId,
         name: "Home",
-        default_prompt: "You are a helpful AI assistant.",
+        description: "Your home workspace",
         is_home: true,
         include_profile_context: true,
         include_workspace_instructions: true,
-        instructions: "You are a helpful AI assistant.",
-        sharing: "private"
+        instructions: "You are a helpful AI assistant."
       })
       return newWorkspace.id
     }
@@ -44,6 +43,9 @@ export const getWorkspaceById = async (workspaceId: string) => {
     .eq("id", workspaceId)
     .single()
 
+  if (error) {
+    console.error("Error fetching workspace:", error)
+    throw new Error(`Failed to fetch workspace: ${error.message}`)
   if (error) {
     console.error("Error fetching workspace:", error)
     throw new Error(`Failed to fetch workspace: ${error.message}`)
@@ -73,14 +75,13 @@ export const getWorkspacesByUserId = async (userId: string) => {
     if (error.code === "PGRST116") {
       // No workspaces found, create home workspace
       const homeWorkspace = await createWorkspace({
-        user_id: session.user.id, // Use session.user.id instead of userId
+        user_id: userId,
         name: "Home",
-        default_prompt: "You are a helpful AI assistant.",
+        description: "Your home workspace",
         is_home: true,
         include_profile_context: true,
         include_workspace_instructions: true,
-        instructions: "You are a helpful AI assistant.",
-        sharing: "private"
+        instructions: "You are a helpful AI assistant."
       })
       return [homeWorkspace]
     }
@@ -91,14 +92,13 @@ export const getWorkspacesByUserId = async (userId: string) => {
   if (!workspaces || workspaces.length === 0) {
     // No workspaces found, create home workspace
     const homeWorkspace = await createWorkspace({
-      user_id: session.user.id, // Use session.user.id instead of userId
+      user_id: userId,
       name: "Home",
-      default_prompt: "You are a helpful AI assistant.",
+      description: "Your home workspace",
       is_home: true,
       include_profile_context: true,
       include_workspace_instructions: true,
-      instructions: "You are a helpful AI assistant.",
-      sharing: "private"
+      instructions: "You are a helpful AI assistant."
     })
     return [homeWorkspace]
   }
@@ -176,6 +176,26 @@ export const deleteWorkspace = async (workspaceId: string) => {
   }
 
   return true
+}
+
+export const getChatsByWorkspaceId = async (workspaceId: string) => {
+  const { data: chats, error } = await supabase
+    .from("chats")
+    .select("*")
+    .eq("workspace_id", workspaceId)
+    .order("created_at", { ascending: false })
+
+  if (error) {
+    console.error("Error fetching chats:", error)
+    throw new Error(`Failed to fetch chats: ${error.message}`)
+  }
+
+  if (!chats) {
+    console.error("No chats found for workspace:", workspaceId)
+    return []
+  }
+
+  return chats
 }
 
 export const getChatsByWorkspaceId = async (workspaceId: string) => {

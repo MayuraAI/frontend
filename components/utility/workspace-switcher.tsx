@@ -23,6 +23,7 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
 
   const {
     profile,
+    profile,
     workspaces,
     selectedWorkspace,
     setSelectedWorkspace,
@@ -43,14 +44,22 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
       workspaces.find(workspace => workspace.id === workspaceId)?.name || ""
     )
   }
+  const value = selectedWorkspace?.id || ""
+
+  const getWorkspaceName = (workspaceId: string) => {
+    return (
+      workspaces.find(workspace => workspace.id === workspaceId)?.name || ""
+    )
+  }
 
   const handleCreateWorkspace = async () => {
+    if (!profile) return
     if (!profile) return
 
     const createdWorkspace = await createWorkspace({
       user_id: profile.user_id,
       name: "New Workspace",
-      default_prompt: "You are a helpful AI assistant.",
+      description: "",
       instructions: "",
       include_profile_context: true,
       include_workspace_instructions: true,
@@ -59,8 +68,10 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
 
     setSelectedWorkspace(createdWorkspace)
     setWorkspaces(prevState => [...prevState, createdWorkspace])
+    setWorkspaces(prevState => [...prevState, createdWorkspace])
     setOpen(false)
 
+    router.push(`/${createdWorkspace.id}/chat`)
     router.push(`/${createdWorkspace.id}/chat`)
   }
 
@@ -86,6 +97,7 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
         <div className="flex items-center truncate">
           {selectedWorkspace && (
             <div className="flex items-center">
+              <IconComponent className="mb-0.5 mr-2" size={22} />
               <IconComponent className="mb-0.5 mr-2" size={22} />
             </div>
           )}
@@ -125,7 +137,18 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
                   onClick={() => handleSelect(workspace.id)}
                 >
                   <IconHome className="mr-3" size={28} />
+              .map(workspace => (
+                <Button
+                  key={workspace.id}
+                  className="flex items-center justify-start"
+                  variant="ghost"
+                  onClick={() => handleSelect(workspace.id)}
+                >
+                  <IconHome className="mr-3" size={28} />
 
+                  <div className="text-lg font-semibold">{workspace.name}</div>
+                </Button>
+              ))}
                   <div className="text-lg font-semibold">{workspace.name}</div>
                 </Button>
               ))}
@@ -145,7 +168,18 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
                   onClick={() => handleSelect(workspace.id)}
                 >
                   <IconBuilding className="mr-3" size={28} />
+              .map(workspace => (
+                <Button
+                  key={workspace.id}
+                  className="flex items-center justify-start"
+                  variant="ghost"
+                  onClick={() => handleSelect(workspace.id)}
+                >
+                  <IconBuilding className="mr-3" size={28} />
 
+                  <div className="text-lg font-semibold">{workspace.name}</div>
+                </Button>
+              ))}
                   <div className="text-lg font-semibold">{workspace.name}</div>
                 </Button>
               ))}

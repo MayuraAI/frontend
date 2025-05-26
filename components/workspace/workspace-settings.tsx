@@ -1,10 +1,12 @@
 import { ChatbotUIContext } from "@/context/context"
 import { WORKSPACE_INSTRUCTIONS_MAX } from "@/db/limits"
 import { updateWorkspace } from "@/db/workspaces"
+import { ChatSettings } from "@/types"
 import { IconHome, IconSettings } from "@tabler/icons-react"
 import { FC, useContext, useRef, useState } from "react"
 import { toast } from "sonner"
 import { Button } from "../ui/button"
+import { ChatSettingsForm } from "../ui/chat-settings-form"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import { LimitDisplay } from "../ui/limit-display"
@@ -25,37 +27,56 @@ import { IconInfoCircle } from "@tabler/icons-react"
 interface WorkspaceSettingsProps {}
 
 export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
-  const { profile, selectedWorkspace, setSelectedWorkspace, setWorkspaces } =
-    useContext(ChatbotUIContext)
+  const {
+    profile,
+    selectedWorkspace,
+    setSelectedWorkspace,
+    setWorkspaces,
+    chatSettings,
+    setChatSettings
+  } = useContext(ChatbotUIContext)
 
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   const [isOpen, setIsOpen] = useState(false)
 
   const [name, setName] = useState(selectedWorkspace?.name || "")
-  const [defaultPrompt, setDefaultPrompt] = useState(
-    selectedWorkspace?.default_prompt || ""
+  const [description, setDescription] = useState(
+    selectedWorkspace?.description || ""
   )
   const [instructions, setInstructions] = useState(
     selectedWorkspace?.instructions || ""
   )
-  const [includeProfileContext, setIncludeProfileContext] = useState(
-    selectedWorkspace?.include_profile_context || false
-  )
-  const [includeWorkspaceInstructions, setIncludeWorkspaceInstructions] =
-    useState(selectedWorkspace?.include_workspace_instructions || false)
+
+  const [localChatSettings, setLocalChatSettings] = useState<ChatSettings>({
+    ...chatSettings
+  })
+
+  useEffect(() => {
+    if (selectedWorkspace) {
+      setLocalChatSettings({
+        ...chatSettings,
+        includeProfileContext: selectedWorkspace.include_profile_context,
+        includeWorkspaceInstructions:
+          selectedWorkspace.include_workspace_instructions
+      })
+    }
+  }, [selectedWorkspace, chatSettings])
 
   const handleSave = async () => {
     if (!selectedWorkspace) return
 
     const updatedWorkspace = await updateWorkspace(selectedWorkspace.id, {
       name,
-      default_prompt: defaultPrompt,
+      description,
       instructions,
-      include_profile_context: includeProfileContext,
-      include_workspace_instructions: includeWorkspaceInstructions,
+      include_profile_context: localChatSettings.includeProfileContext,
+      include_workspace_instructions:
+        localChatSettings.includeWorkspaceInstructions,
       updated_at: new Date().toISOString()
     })
+
+    setChatSettings(localChatSettings)
 
     setIsOpen(false)
     setSelectedWorkspace(updatedWorkspace)
@@ -128,7 +149,7 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
                 </div>
 
                 <div className="space-y-1">
-                  <Label>Default Prompt</Label>
+                  <Label>Description</Label>
 
                   <Input
                     placeholder="Default prompt... (optional)"
@@ -136,7 +157,11 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
                     onChange={e => setDefaultPrompt(e.target.value)}
                   />
                 </div>
+                </div>
 
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <Label>Instructions</Label>
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <Label>Instructions</Label>
@@ -157,42 +182,10 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
                   />
                 </div>
 
-                <div className="mt-7 flex items-center space-x-2">
-                  <Checkbox
-                    checked={includeProfileContext}
-                    onCheckedChange={(value: boolean) =>
-                      setIncludeProfileContext(value)
-                    }
-                  />
-
-                  <Label>Include Profile Context</Label>
-
-                  <WithTooltip
-                    delayDuration={0}
-                    display={
-                      <div className="w-[400px] p-3">
-                        {profile?.profile_context || "No profile context."}
-                      </div>
-                    }
-                    trigger={
-                      <IconInfoCircle
-                        className="cursor-hover:opacity-50"
-                        size={16}
-                      />
-                    }
-                  />
-                </div>
-
-                <div className="mt-4 flex items-center space-x-2">
-                  <Checkbox
-                    checked={includeWorkspaceInstructions}
-                    onCheckedChange={(value: boolean) =>
-                      setIncludeWorkspaceInstructions(value)
-                    }
-                  />
-
-                  <Label>Include Workspace Instructions</Label>
-                </div>
+                <ChatSettingsForm
+                  chatSettings={localChatSettings}
+                  onChangeChatSettings={setLocalChatSettings}
+                />
 
                 {!selectedWorkspace.is_home && (
                   <DeleteWorkspace
@@ -204,7 +197,21 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
             </TabsContent>
           </Tabs>
         </div>
+                {!selectedWorkspace.is_home && (
+                  <DeleteWorkspace
+                    workspace={selectedWorkspace}
+                    onDelete={() => setIsOpen(false)}
+                  />
+                )}
+              </>
+            </TabsContent>
+          </Tabs>
+        </div>
 
+        <div className="flex justify-end">
+          <Button ref={buttonRef} onClick={handleSave}>
+            Save
+          </Button>
         <div className="flex justify-end">
           <Button ref={buttonRef} onClick={handleSave}>
             Save

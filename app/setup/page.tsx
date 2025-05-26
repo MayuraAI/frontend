@@ -6,12 +6,12 @@ import { getHomeWorkspaceByUserId } from "@/db/workspaces"
 import { supabase } from "@/lib/supabase/browser-client"
 import { useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
-import { FinishStep } from "../../components/setup/finish-step"
-import { ProfileStep } from "../../components/setup/profile-step"
+import { FinishStep } from "../../../components/setup/finish-step"
+import { ProfileStep } from "../../../components/setup/profile-step"
 import {
   SETUP_STEP_COUNT,
   StepContainer
-} from "../../components/setup/step-container"
+} from "../../../components/setup/step-container"
 
 export default function SetupPage() {
   const { profile, setProfile } = useContext(ChatbotUIContext)
