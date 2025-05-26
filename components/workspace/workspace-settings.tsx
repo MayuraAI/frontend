@@ -1,12 +1,10 @@
 import { ChatbotUIContext } from "@/context/context"
 import { WORKSPACE_INSTRUCTIONS_MAX } from "@/db/limits"
 import { updateWorkspace } from "@/db/workspaces"
-import { ChatSettings } from "@/types"
 import { IconHome, IconSettings } from "@tabler/icons-react"
 import { FC, useContext, useRef, useState } from "react"
 import { toast } from "sonner"
 import { Button } from "../ui/button"
-import { ChatSettingsForm } from "../ui/chat-settings-form"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import { LimitDisplay } from "../ui/limit-display"
@@ -27,56 +25,37 @@ import { IconInfoCircle } from "@tabler/icons-react"
 interface WorkspaceSettingsProps {}
 
 export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
-  const {
-    profile,
-    selectedWorkspace,
-    setSelectedWorkspace,
-    setWorkspaces,
-    chatSettings,
-    setChatSettings
-  } = useContext(ChatbotUIContext)
+  const { profile, selectedWorkspace, setSelectedWorkspace, setWorkspaces } =
+    useContext(ChatbotUIContext)
 
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   const [isOpen, setIsOpen] = useState(false)
 
   const [name, setName] = useState(selectedWorkspace?.name || "")
-  const [description, setDescription] = useState(
-    selectedWorkspace?.description || ""
+  const [defaultPrompt, setDefaultPrompt] = useState(
+    selectedWorkspace?.default_prompt || ""
   )
   const [instructions, setInstructions] = useState(
     selectedWorkspace?.instructions || ""
   )
-
-  const [localChatSettings, setLocalChatSettings] = useState<ChatSettings>({
-    ...chatSettings
-  })
-
-  useEffect(() => {
-    if (selectedWorkspace) {
-      setLocalChatSettings({
-        ...chatSettings,
-        includeProfileContext: selectedWorkspace.include_profile_context,
-        includeWorkspaceInstructions:
-          selectedWorkspace.include_workspace_instructions
-      })
-    }
-  }, [selectedWorkspace, chatSettings])
+  const [includeProfileContext, setIncludeProfileContext] = useState(
+    selectedWorkspace?.include_profile_context || false
+  )
+  const [includeWorkspaceInstructions, setIncludeWorkspaceInstructions] =
+    useState(selectedWorkspace?.include_workspace_instructions || false)
 
   const handleSave = async () => {
     if (!selectedWorkspace) return
 
     const updatedWorkspace = await updateWorkspace(selectedWorkspace.id, {
       name,
-      description,
+      default_prompt: defaultPrompt,
       instructions,
-      include_profile_context: localChatSettings.includeProfileContext,
-      include_workspace_instructions:
-        localChatSettings.includeWorkspaceInstructions,
+      include_profile_context: includeProfileContext,
+      include_workspace_instructions: includeWorkspaceInstructions,
       updated_at: new Date().toISOString()
     })
-
-    setChatSettings(localChatSettings)
 
     setIsOpen(false)
     setSelectedWorkspace(updatedWorkspace)
@@ -149,7 +128,7 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
                 </div>
 
                 <div className="space-y-1">
-                  <Label>Description</Label>
+                  <Label>Default Prompt</Label>
 
                   <Input
                     placeholder="Default prompt... (optional)"
@@ -182,10 +161,42 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
                   />
                 </div>
 
-                <ChatSettingsForm
-                  chatSettings={localChatSettings}
-                  onChangeChatSettings={setLocalChatSettings}
-                />
+                <div className="mt-7 flex items-center space-x-2">
+                  <Checkbox
+                    checked={includeProfileContext}
+                    onCheckedChange={(value: boolean) =>
+                      setIncludeProfileContext(value)
+                    }
+                  />
+
+                  <Label>Include Profile Context</Label>
+
+                  <WithTooltip
+                    delayDuration={0}
+                    display={
+                      <div className="w-[400px] p-3">
+                        {profile?.profile_context || "No profile context."}
+                      </div>
+                    }
+                    trigger={
+                      <IconInfoCircle
+                        className="cursor-hover:opacity-50"
+                        size={16}
+                      />
+                    }
+                  />
+                </div>
+
+                <div className="mt-4 flex items-center space-x-2">
+                  <Checkbox
+                    checked={includeWorkspaceInstructions}
+                    onCheckedChange={(value: boolean) =>
+                      setIncludeWorkspaceInstructions(value)
+                    }
+                  />
+
+                  <Label>Include Workspace Instructions</Label>
+                </div>
 
                 {!selectedWorkspace.is_home && (
                   <DeleteWorkspace

@@ -21,11 +21,12 @@ export const getHomeWorkspaceByUserId = async (userId: string) => {
       const newWorkspace = await createWorkspace({
         user_id: userId,
         name: "Home",
-        description: "Your home workspace",
+        default_prompt: "You are a helpful AI assistant.",
         is_home: true,
         include_profile_context: true,
         include_workspace_instructions: true,
-        instructions: "You are a helpful AI assistant."
+        instructions: "You are a helpful AI assistant.",
+        sharing: "private"
       })
       return newWorkspace.id
     }
@@ -75,13 +76,14 @@ export const getWorkspacesByUserId = async (userId: string) => {
     if (error.code === "PGRST116") {
       // No workspaces found, create home workspace
       const homeWorkspace = await createWorkspace({
-        user_id: userId,
+        user_id: session.user.id, // Use session.user.id instead of userId
         name: "Home",
-        description: "Your home workspace",
+        default_prompt: "You are a helpful AI assistant.",
         is_home: true,
         include_profile_context: true,
         include_workspace_instructions: true,
-        instructions: "You are a helpful AI assistant."
+        instructions: "You are a helpful AI assistant.",
+        sharing: "private"
       })
       return [homeWorkspace]
     }
@@ -92,13 +94,14 @@ export const getWorkspacesByUserId = async (userId: string) => {
   if (!workspaces || workspaces.length === 0) {
     // No workspaces found, create home workspace
     const homeWorkspace = await createWorkspace({
-      user_id: userId,
+      user_id: session.user.id, // Use session.user.id instead of userId
       name: "Home",
-      description: "Your home workspace",
+      default_prompt: "You are a helpful AI assistant.",
       is_home: true,
       include_profile_context: true,
       include_workspace_instructions: true,
-      instructions: "You are a helpful AI assistant."
+      instructions: "You are a helpful AI assistant.",
+      sharing: "private"
     })
     return [homeWorkspace]
   }
