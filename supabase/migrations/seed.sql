@@ -27,5 +27,4 @@ BEGIN
     ('e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa', chat1_id, 'I am fine, thank you!', 'user', NULL, 2),
     ('e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa', chat1_id, 'Great to hear that!', 'assistant', 'gpt-4-turbo-preview', 3);
   END;
-
-END $$;
+END $$; 

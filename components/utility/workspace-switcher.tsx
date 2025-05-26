@@ -11,7 +11,6 @@ import { createWorkspace } from "@/db/workspaces"
 import useHotkey from "@/lib/hooks/use-hotkey"
 import { IconBuilding, IconHome, IconPlus } from "@tabler/icons-react"
 import { ChevronsUpDown } from "lucide-react"
-import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { FC, useContext, useEffect, useState } from "react"
 import { Button } from "../ui/button"
@@ -23,8 +22,8 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
   useHotkey(";", () => setOpen(prevState => !prevState))
 
   const {
+    profile,
     workspaces,
-    workspaceImages,
     selectedWorkspace,
     setSelectedWorkspace,
     setWorkspaces
@@ -35,47 +34,34 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
   const router = useRouter()
 
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState("")
   const [search, setSearch] = useState("")
 
-  useEffect(() => {
-    if (!selectedWorkspace) return
-
-    setValue(selectedWorkspace.id)
-  }, [selectedWorkspace])
-
-  const handleCreateWorkspace = async () => {
-    if (!selectedWorkspace) return
-
-    const createdWorkspace = await createWorkspace({
-      user_id: selectedWorkspace.user_id,
-      default_context_length: selectedWorkspace.default_context_length,
-      default_model: selectedWorkspace.default_model,
-      default_prompt: selectedWorkspace.default_prompt,
-      default_temperature: selectedWorkspace.default_temperature,
-      description: "",
-      embeddings_provider: "openai",
-      include_profile_context: selectedWorkspace.include_profile_context,
-      include_workspace_instructions:
-        selectedWorkspace.include_workspace_instructions,
-      instructions: selectedWorkspace.instructions,
-      is_home: false,
-      name: "New Workspace"
-    })
-
-    setWorkspaces([...workspaces, createdWorkspace])
-    setSelectedWorkspace(createdWorkspace)
-    setOpen(false)
-
-    return router.push(`/${createdWorkspace.id}/chat`)
-  }
+  const value = selectedWorkspace?.id || ""
 
   const getWorkspaceName = (workspaceId: string) => {
-    const workspace = workspaces.find(workspace => workspace.id === workspaceId)
+    return (
+      workspaces.find(workspace => workspace.id === workspaceId)?.name || ""
+    )
+  }
 
-    if (!workspace) return
+  const handleCreateWorkspace = async () => {
+    if (!profile) return
 
-    return workspace.name
+    const createdWorkspace = await createWorkspace({
+      user_id: profile.user_id,
+      name: "New Workspace",
+      description: "",
+      instructions: "",
+      include_profile_context: true,
+      include_workspace_instructions: true,
+      is_home: false
+    })
+
+    setSelectedWorkspace(createdWorkspace)
+    setWorkspaces(prevState => [...prevState, createdWorkspace])
+    setOpen(false)
+
+    router.push(`/${createdWorkspace.id}/chat`)
   }
 
   const handleSelect = (workspaceId: string) => {
@@ -89,15 +75,6 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
     return router.push(`/${workspace.id}/chat`)
   }
 
-  const workspaceImage = workspaceImages.find(
-    image => image.workspaceId === selectedWorkspace?.id
-  )
-  const imageSrc = workspaceImage
-    ? workspaceImage.url
-    : selectedWorkspace?.is_home
-      ? ""
-      : ""
-
   const IconComponent = selectedWorkspace?.is_home ? IconHome : IconBuilding
 
   return (
@@ -109,18 +86,7 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
         <div className="flex items-center truncate">
           {selectedWorkspace && (
             <div className="flex items-center">
-              {/* {workspaceImage ? (
-                <Image
-                  style={{ width: "22px", height: "22px" }}
-                  className="mr-2 rounded"
-                  src={imageSrc}
-                  width={22}
-                  height={22}
-                  alt={selectedWorkspace.name}
-                />
-              ) : (
-                <IconComponent className="mb-0.5 mr-2" size={22} />
-              )} */}
+              <IconComponent className="mb-0.5 mr-2" size={22} />
             </div>
           )}
 
@@ -151,37 +117,18 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
           <div className="flex flex-col space-y-1">
             {workspaces
               .filter(workspace => workspace.is_home)
-              .map(workspace => {
-                // const image = workspaceImages.find(
-                //   image => image.workspaceId === workspace.id
-                // )
+              .map(workspace => (
+                <Button
+                  key={workspace.id}
+                  className="flex items-center justify-start"
+                  variant="ghost"
+                  onClick={() => handleSelect(workspace.id)}
+                >
+                  <IconHome className="mr-3" size={28} />
 
-                return (
-                  <Button
-                    key={workspace.id}
-                    className="flex items-center justify-start"
-                    variant="ghost"
-                    onClick={() => handleSelect(workspace.id)}
-                  >
-                    {/* {image ? (
-                      <Image
-                        style={{ width: "28px", height: "28px" }}
-                        className="mr-3 rounded"
-                        src={image.url || ""}
-                        width={28}
-                        height={28}
-                        alt={workspace.name}
-                      />
-                    ) : (
-                      <IconHome className="mr-3" size={28} />
-                    )} */}
-
-                    <div className="text-lg font-semibold">
-                      {workspace.name}
-                    </div>
-                  </Button>
-                )
-              })}
+                  <div className="text-lg font-semibold">{workspace.name}</div>
+                </Button>
+              ))}
 
             {workspaces
               .filter(
@@ -190,37 +137,18 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
                   workspace.name.toLowerCase().includes(search.toLowerCase())
               )
               .sort((a, b) => a.name.localeCompare(b.name))
-              .map(workspace => {
-                // const image = workspaceImages.find(
-                //   image => image.workspaceId === workspace.id
-                // )
+              .map(workspace => (
+                <Button
+                  key={workspace.id}
+                  className="flex items-center justify-start"
+                  variant="ghost"
+                  onClick={() => handleSelect(workspace.id)}
+                >
+                  <IconBuilding className="mr-3" size={28} />
 
-                return (
-                  <Button
-                    key={workspace.id}
-                    className="flex items-center justify-start"
-                    variant="ghost"
-                    onClick={() => handleSelect(workspace.id)}
-                  >
-                    {/* {image ? (
-                      <Image
-                        style={{ width: "28px", height: "28px" }}
-                        className="mr-3 rounded"
-                        src={image.url || ""}
-                        width={28}
-                        height={28}
-                        alt={workspace.name}
-                      />
-                    ) : (
-                      <IconBuilding className="mr-3" size={28} />
-                    )} */}
-
-                    <div className="text-lg font-semibold">
-                      {workspace.name}
-                    </div>
-                  </Button>
-                )
-              })}
+                  <div className="text-lg font-semibold">{workspace.name}</div>
+                </Button>
+              ))}
           </div>
         </div>
       </PopoverContent>

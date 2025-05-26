@@ -1,8 +1,9 @@
-import React, { FC } from "react"
-import remarkGfm from "remark-gfm"
-import remarkMath from "remark-math"
+import { FC } from "react"
 import { MessageCodeBlock } from "./message-codeblock"
 import { MessageMarkdownMemoized } from "./message-markdown-memoized"
+import remarkGfm from "remark-gfm"
+import remarkMath from "remark-math"
+import React from "react"
 
 interface MessageMarkdownProps {
   content: string
@@ -16,9 +17,6 @@ export const MessageMarkdown: FC<MessageMarkdownProps> = ({ content }) => {
       components={{
         p({ children }) {
           return <p className="mb-2 last:mb-0">{children}</p>
-        },
-        img({ node, ...props }) {
-          return <img className="max-w-[67%]" {...props} />
         },
         code({ node, className, children, ...props }) {
           const childArray = React.Children.toArray(children)

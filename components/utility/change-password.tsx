@@ -23,13 +23,33 @@ export const ChangePassword: FC<ChangePasswordProps> = () => {
   const [confirmPassword, setConfirmPassword] = useState("")
 
   const handleResetPassword = async () => {
-    if (!newPassword) return toast.info("Please enter your new password.")
+    if (!newPassword) {
+      return toast.error("Please enter your new password.")
+    }
 
-    await supabase.auth.updateUser({ password: newPassword })
+    if (newPassword.length < 6) {
+      return toast.error("Password must be at least 6 characters long.")
+    }
 
-    toast.success("Password changed successfully.")
+    if (newPassword !== confirmPassword) {
+      return toast.error("Passwords do not match.")
+    }
 
-    return router.push("/login")
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      })
+
+      if (error) {
+        return toast.error(error.message)
+      }
+
+      toast.success("Password changed successfully.")
+      return router.push("/login")
+    } catch (error) {
+      console.error(error)
+      toast.error("Failed to change password. Please try again.")
+    }
   }
 
   return (
@@ -45,6 +65,7 @@ export const ChangePassword: FC<ChangePasswordProps> = () => {
           type="password"
           value={newPassword}
           onChange={e => setNewPassword(e.target.value)}
+          minLength={6}
         />
 
         <Input
@@ -53,10 +74,20 @@ export const ChangePassword: FC<ChangePasswordProps> = () => {
           type="password"
           value={confirmPassword}
           onChange={e => setConfirmPassword(e.target.value)}
+          minLength={6}
         />
 
         <DialogFooter>
-          <Button onClick={handleResetPassword}>Confirm Change</Button>
+          <Button
+            onClick={handleResetPassword}
+            disabled={
+              !newPassword ||
+              !confirmPassword ||
+              newPassword !== confirmPassword
+            }
+          >
+            Confirm Change
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

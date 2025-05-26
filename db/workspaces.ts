@@ -9,8 +9,22 @@ export const getHomeWorkspaceByUserId = async (userId: string) => {
     .eq("is_home", true)
     .single()
 
-  if (!homeWorkspace) {
-    throw new Error(error.message)
+  if (error) {
+    if (error.code === "PGRST116") {
+      // Home workspace not found, create one
+      const newWorkspace = await createWorkspace({
+        user_id: userId,
+        name: "Home",
+        description: "Your home workspace",
+        is_home: true,
+        include_profile_context: true,
+        include_workspace_instructions: true,
+        instructions: "You are a helpful AI assistant."
+      })
+      return newWorkspace.id
+    }
+    console.error("Error fetching home workspace:", error)
+    throw new Error(`Failed to fetch home workspace: ${error.message}`)
   }
 
   return homeWorkspace.id
@@ -23,8 +37,9 @@ export const getWorkspaceById = async (workspaceId: string) => {
     .eq("id", workspaceId)
     .single()
 
-  if (!workspace) {
-    throw new Error(error.message)
+  if (error) {
+    console.error("Error fetching workspace:", error)
+    throw new Error(`Failed to fetch workspace: ${error.message}`)
   }
 
   return workspace
@@ -37,8 +52,36 @@ export const getWorkspacesByUserId = async (userId: string) => {
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
 
-  if (!workspaces) {
-    throw new Error(error.message)
+  if (error) {
+    if (error.code === "PGRST116") {
+      // No workspaces found, create home workspace
+      const homeWorkspace = await createWorkspace({
+        user_id: userId,
+        name: "Home",
+        description: "Your home workspace",
+        is_home: true,
+        include_profile_context: true,
+        include_workspace_instructions: true,
+        instructions: "You are a helpful AI assistant."
+      })
+      return [homeWorkspace]
+    }
+    console.error("Error fetching workspaces:", error)
+    throw new Error(`Failed to fetch workspaces: ${error.message}`)
+  }
+
+  if (!workspaces || workspaces.length === 0) {
+    // No workspaces found, create home workspace
+    const homeWorkspace = await createWorkspace({
+      user_id: userId,
+      name: "Home",
+      description: "Your home workspace",
+      is_home: true,
+      include_profile_context: true,
+      include_workspace_instructions: true,
+      instructions: "You are a helpful AI assistant."
+    })
+    return [homeWorkspace]
   }
 
   return workspaces
@@ -89,4 +132,24 @@ export const deleteWorkspace = async (workspaceId: string) => {
   }
 
   return true
+}
+
+export const getChatsByWorkspaceId = async (workspaceId: string) => {
+  const { data: chats, error } = await supabase
+    .from("chats")
+    .select("*")
+    .eq("workspace_id", workspaceId)
+    .order("created_at", { ascending: false })
+
+  if (error) {
+    console.error("Error fetching chats:", error)
+    throw new Error(`Failed to fetch chats: ${error.message}`)
+  }
+
+  if (!chats) {
+    console.error("No chats found for workspace:", workspaceId)
+    return []
+  }
+
+  return chats
 }

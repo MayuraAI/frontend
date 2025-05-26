@@ -31,9 +31,9 @@ export const SidebarSwitcher: FC<SidebarSwitcherProps> = ({
           icon={<IconMessage size={SIDEBAR_ICON_SIZE} />}
           contentType="chats"
           onContentTypeChange={onContentTypeChange}
-        /> */}
+        />
 
-        {/* <SidebarSwitchItem
+        <SidebarSwitchItem
           icon={<IconAdjustmentsHorizontal size={SIDEBAR_ICON_SIZE} />}
           contentType="presets"
           onContentTypeChange={onContentTypeChange}
