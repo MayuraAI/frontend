@@ -5,6 +5,7 @@ import {
   PROFILE_USERNAME_MAX,
   PROFILE_USERNAME_MIN
 } from "@/db/limits"
+import { supabase } from "@/lib/supabase/browser-client"
 import {
   IconCircleCheckFilled,
   IconCircleXFilled,
@@ -72,16 +73,18 @@ export const ProfileStep: FC<ProfileStepProps> = ({
 
       setLoading(true)
 
-      const response = await fetch(`/api/username/available`, {
-        method: "POST",
-        body: JSON.stringify({ username })
-      })
+      const { data: profiles, error } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("username", username)
 
-      const data = await response.json()
-      const isAvailable = data.isAvailable
+      if (error) {
+        console.error(error)
+        onUsernameAvailableChange(false)
+        return
+      }
 
-      onUsernameAvailableChange(isAvailable)
-
+      onUsernameAvailableChange(profiles.length === 0)
       setLoading(false)
     }, 500),
     []
@@ -94,11 +97,12 @@ export const ProfileStep: FC<ProfileStepProps> = ({
           <Label>Username</Label>
 
           <div className="text-xs">
-            {usernameAvailable ? (
-              <div className="text-green-500">AVAILABLE</div>
-            ) : (
-              <div className="text-red-500">UNAVAILABLE</div>
-            )}
+            {username &&
+              (usernameAvailable ? (
+                <div className="text-green-500">AVAILABLE</div>
+              ) : (
+                <div className="text-red-500">UNAVAILABLE</div>
+              ))}
           </div>
         </div>
 
@@ -115,22 +119,24 @@ export const ProfileStep: FC<ProfileStepProps> = ({
             maxLength={PROFILE_USERNAME_MAX}
           />
 
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-            {loading ? (
-              <IconLoader2 className="animate-spin" />
-            ) : usernameAvailable ? (
-              <IconCircleCheckFilled className="text-green-500" />
-            ) : (
-              <IconCircleXFilled className="text-red-500" />
-            )}
-          </div>
+          {username && (
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+              {loading ? (
+                <IconLoader2 className="animate-spin" />
+              ) : usernameAvailable ? (
+                <IconCircleCheckFilled className="text-green-500" />
+              ) : (
+                <IconCircleXFilled className="text-red-500" />
+              )}
+            </div>
+          )}
         </div>
 
         <LimitDisplay used={username.length} limit={PROFILE_USERNAME_MAX} />
       </div>
 
       <div className="space-y-1">
-        <Label>Chat Display Name</Label>
+        <Label>Display Name</Label>
 
         <Input
           placeholder="Your Name"

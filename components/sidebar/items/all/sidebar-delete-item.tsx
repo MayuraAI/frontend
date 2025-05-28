@@ -9,130 +9,69 @@ import {
   DialogTrigger
 } from "@/components/ui/dialog"
 import { ChatbotUIContext } from "@/context/context"
-import { deleteAssistant } from "@/db/assistants"
 import { deleteChat } from "@/db/chats"
-import { deleteCollection } from "@/db/collections"
-import { deleteFile } from "@/db/files"
-import { deleteModel } from "@/db/models"
-import { deletePreset } from "@/db/presets"
-import { deletePrompt } from "@/db/prompts"
-import { deleteFileFromStorage } from "@/db/storage/files"
-import { deleteTool } from "@/db/tools"
 import { Tables } from "@/supabase/types"
-import { ContentType, DataItemType } from "@/types"
-import { FC, useContext, useRef, useState } from "react"
+import { FC, useContext, useState } from "react"
 
 interface SidebarDeleteItemProps {
-  item: DataItemType
-  contentType: ContentType
+  contentType: "chats"
+  item: Tables<"chats">
+  children: React.ReactNode
 }
 
 export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
+  contentType,
   item,
-  contentType
+  children
 }) => {
-  const {
-    setChats,
-    setPresets,
-    setPrompts,
-    setFiles,
-    setCollections,
-    setAssistants,
-    setTools,
-    setModels
-  } = useContext(ChatbotUIContext)
+  const { setChats } = useContext(ChatbotUIContext)
 
-  const buttonRef = useRef<HTMLButtonElement>(null)
-
-  const [showDialog, setShowDialog] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   const deleteFunctions = {
-    chats: async (chat: Tables<"chats">) => {
-      await deleteChat(chat.id)
-    },
-    presets: async (preset: Tables<"presets">) => {
-      await deletePreset(preset.id)
-    },
-    prompts: async (prompt: Tables<"prompts">) => {
-      await deletePrompt(prompt.id)
-    },
-    files: async (file: Tables<"files">) => {
-      await deleteFileFromStorage(file.file_path)
-      await deleteFile(file.id)
-    },
-    collections: async (collection: Tables<"collections">) => {
-      await deleteCollection(collection.id)
-    },
-    assistants: async (assistant: Tables<"assistants">) => {
-      await deleteAssistant(assistant.id)
-      setChats(prevState =>
-        prevState.filter(chat => chat.assistant_id !== assistant.id)
-      )
-    },
-    tools: async (tool: Tables<"tools">) => {
-      await deleteTool(tool.id)
-    },
-    models: async (model: Tables<"models">) => {
-      await deleteModel(model.id)
-    }
+    chats: deleteChat
   }
 
   const stateUpdateFunctions = {
-    chats: setChats,
-    presets: setPresets,
-    prompts: setPrompts,
-    files: setFiles,
-    collections: setCollections,
-    assistants: setAssistants,
-    tools: setTools,
-    models: setModels
+    chats: (prevItems: Tables<"chats">[]) =>
+      prevItems.filter(prevItem => prevItem.id !== item.id)
   }
 
   const handleDelete = async () => {
     const deleteFunction = deleteFunctions[contentType]
-    const setStateFunction = stateUpdateFunctions[contentType]
+    const updateFunction = stateUpdateFunctions[contentType]
 
-    if (!deleteFunction || !setStateFunction) return
+    if (!deleteFunction || !updateFunction) return
 
-    await deleteFunction(item as any)
+    const success = await deleteFunction(item.id)
 
-    setStateFunction((prevItems: any) =>
-      prevItems.filter((prevItem: any) => prevItem.id !== item.id)
-    )
-
-    setShowDialog(false)
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") {
-      e.stopPropagation()
-      buttonRef.current?.click()
+    if (success) {
+      setChats(prevItems => updateFunction(prevItems))
     }
+
+    setIsOpen(false)
   }
 
   return (
-    <Dialog open={showDialog} onOpenChange={setShowDialog}>
-      <DialogTrigger asChild>
-        <Button className="text-red-500" variant="ghost">
-          Delete
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <DialogContent onKeyDown={handleKeyDown}>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete {contentType.slice(0, -1)}</DialogTitle>
 
           <DialogDescription>
-            Are you sure you want to delete {item.name}?
+            Are you sure you want to delete this {contentType.slice(0, -1)}?
+            This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
 
         <DialogFooter>
-          <Button variant="ghost" onClick={() => setShowDialog(false)}>
+          <Button onClick={() => setIsOpen(false)} variant={"outline" as const}>
             Cancel
           </Button>
 
-          <Button ref={buttonRef} variant="destructive" onClick={handleDelete}>
+          <Button onClick={handleDelete} variant={"destructive" as const}>
             Delete
           </Button>
         </DialogFooter>

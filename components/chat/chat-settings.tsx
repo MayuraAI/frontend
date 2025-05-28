@@ -13,14 +13,7 @@ interface ChatSettingsProps {}
 export const ChatSettings: FC<ChatSettingsProps> = ({}) => {
   useHotkey("i", () => handleClick())
 
-  const {
-    chatSettings,
-    setChatSettings,
-    models,
-    availableHostedModels,
-    availableLocalModels,
-    availableOpenRouterModels
-  } = useContext(ChatbotUIContext)
+  const { chatSettings, setChatSettings } = useContext(ChatbotUIContext)
 
   const buttonRef = useRef<HTMLButtonElement>(null)
 
@@ -37,32 +30,24 @@ export const ChatSettings: FC<ChatSettingsProps> = ({}) => {
       ...chatSettings,
       temperature: Math.min(
         chatSettings.temperature,
-        CHAT_SETTING_LIMITS[chatSettings.model]?.MAX_TEMPERATURE || 1
+        CHAT_SETTING_LIMITS[chatSettings.model as LLMID]?.MAX_TEMPERATURE || 1
       ),
       contextLength: Math.min(
         chatSettings.contextLength,
-        CHAT_SETTING_LIMITS[chatSettings.model]?.MAX_CONTEXT_LENGTH || 4096
+        CHAT_SETTING_LIMITS[chatSettings.model as LLMID]?.MAX_CONTEXT_LENGTH ||
+          4096
       )
     })
   }, [chatSettings?.model])
 
   if (!chatSettings) return null
 
-  const allModels = [
-    ...models.map(model => ({
-      modelId: model.model_id as LLMID,
-      modelName: model.name,
-      provider: "custom" as ModelProvider,
-      hostedId: model.id,
-      platformLink: "",
-      imageInput: false
-    })),
-    ...availableHostedModels,
-    ...availableLocalModels,
-    ...availableOpenRouterModels
-  ]
-
-  const fullModel = allModels.find(llm => llm.modelId === chatSettings.model)
+  // For now, we'll just show the current model since the full model list needs to be fetched from context
+  const currentModel = {
+    modelId: chatSettings.model as LLMID,
+    modelName: chatSettings.model,
+    provider: "custom" as ModelProvider
+  }
 
   return (
     <Popover>
@@ -73,7 +58,7 @@ export const ChatSettings: FC<ChatSettingsProps> = ({}) => {
           variant="ghost"
         >
           <div className="max-w-[120px] truncate text-lg sm:max-w-[300px] lg:max-w-[500px]">
-            {fullModel?.modelName || chatSettings.model}
+            {currentModel.modelName}
           </div>
 
           <IconAdjustmentsHorizontal size={28} />

@@ -2,6 +2,12 @@ import { supabase } from "@/lib/supabase/browser-client"
 import { TablesInsert, TablesUpdate } from "@/supabase/types"
 
 export const getHomeWorkspaceByUserId = async (userId: string) => {
+  // First check if we're authenticated
+  const session = (await supabase.auth.getSession()).data.session
+  if (!session) {
+    throw new Error("Not authenticated")
+  }
+
   const { data: homeWorkspace, error } = await supabase
     .from("workspaces")
     .select("*")
@@ -9,8 +15,23 @@ export const getHomeWorkspaceByUserId = async (userId: string) => {
     .eq("is_home", true)
     .single()
 
-  if (!homeWorkspace) {
-    throw new Error(error.message)
+  if (error) {
+    if (error.code === "PGRST116") {
+      // Home workspace not found, create one
+      const newWorkspace = await createWorkspace({
+        user_id: userId,
+        name: "Home",
+        default_prompt: "You are a helpful AI assistant.",
+        is_home: true,
+        include_profile_context: true,
+        include_workspace_instructions: true,
+        instructions: "You are a helpful AI assistant.",
+        sharing: "private"
+      })
+      return newWorkspace.id
+    }
+    console.error("Error fetching home workspace:", error)
+    throw new Error(`Failed to fetch home workspace: ${error.message}`)
   }
 
   return homeWorkspace.id
@@ -23,22 +44,63 @@ export const getWorkspaceById = async (workspaceId: string) => {
     .eq("id", workspaceId)
     .single()
 
-  if (!workspace) {
-    throw new Error(error.message)
+  if (error) {
+    console.error("Error fetching workspace:", error)
+    throw new Error(`Failed to fetch workspace: ${error.message}`)
   }
 
   return workspace
 }
 
 export const getWorkspacesByUserId = async (userId: string) => {
+  // First check if we're authenticated and the user ID matches
+  const session = (await supabase.auth.getSession()).data.session
+  if (!session) {
+    throw new Error("Not authenticated")
+  }
+
+  if (userId !== session.user.id) {
+    throw new Error("Cannot access workspaces for another user")
+  }
+
   const { data: workspaces, error } = await supabase
     .from("workspaces")
     .select("*")
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
 
-  if (!workspaces) {
-    throw new Error(error.message)
+  if (error) {
+    if (error.code === "PGRST116") {
+      // No workspaces found, create home workspace
+      const homeWorkspace = await createWorkspace({
+        user_id: session.user.id, // Use session.user.id instead of userId
+        name: "Home",
+        default_prompt: "You are a helpful AI assistant.",
+        is_home: true,
+        include_profile_context: true,
+        include_workspace_instructions: true,
+        instructions: "You are a helpful AI assistant.",
+        sharing: "private"
+      })
+      return [homeWorkspace]
+    }
+    console.error("Error fetching workspaces:", error)
+    throw new Error(`Failed to fetch workspaces: ${error.message}`)
+  }
+
+  if (!workspaces || workspaces.length === 0) {
+    // No workspaces found, create home workspace
+    const homeWorkspace = await createWorkspace({
+      user_id: session.user.id, // Use session.user.id instead of userId
+      name: "Home",
+      default_prompt: "You are a helpful AI assistant.",
+      is_home: true,
+      include_profile_context: true,
+      include_workspace_instructions: true,
+      instructions: "You are a helpful AI assistant.",
+      sharing: "private"
+    })
+    return [homeWorkspace]
   }
 
   return workspaces
@@ -47,6 +109,25 @@ export const getWorkspacesByUserId = async (userId: string) => {
 export const createWorkspace = async (
   workspace: TablesInsert<"workspaces">
 ) => {
+  // First check if we're authenticated
+  const session = (await supabase.auth.getSession()).data.session
+  if (!session) {
+    throw new Error("Not authenticated")
+  }
+
+  console.log("Debug - Auth Check:", {
+    sessionUserId: session.user.id,
+    workspaceUserId: workspace.user_id,
+    isMatch: workspace.user_id === session.user.id
+  })
+
+  // Verify the user_id matches the authenticated user
+  if (workspace.user_id !== session.user.id) {
+    throw new Error(
+      `Cannot create workspace for another user. Session user: ${session.user.id}, Workspace user: ${workspace.user_id}`
+    )
+  }
+
   const { data: createdWorkspace, error } = await supabase
     .from("workspaces")
     .insert([workspace])
@@ -54,6 +135,12 @@ export const createWorkspace = async (
     .single()
 
   if (error) {
+    if (error.message.includes("row-level security")) {
+      console.error("RLS Error creating workspace:", error)
+      throw new Error(
+        "Not authorized to create workspace. Please try logging out and back in."
+      )
+    }
     throw new Error(error.message)
   }
 
@@ -89,4 +176,24 @@ export const deleteWorkspace = async (workspaceId: string) => {
   }
 
   return true
+}
+
+export const getChatsByWorkspaceId = async (workspaceId: string) => {
+  const { data: chats, error } = await supabase
+    .from("chats")
+    .select("*")
+    .eq("workspace_id", workspaceId)
+    .order("created_at", { ascending: false })
+
+  if (error) {
+    console.error("Error fetching chats:", error)
+    throw new Error(`Failed to fetch chats: ${error.message}`)
+  }
+
+  if (!chats) {
+    console.error("No chats found for workspace:", workspaceId)
+    return []
+  }
+
+  return chats
 }

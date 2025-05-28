@@ -5,7 +5,7 @@ import { Input } from "../ui/input"
 interface SidebarSearchProps {
   contentType: ContentType
   searchTerm: string
-  setSearchTerm: Function
+  setSearchTerm: (value: string) => void
 }
 
 export const SidebarSearch: FC<SidebarSearchProps> = ({
