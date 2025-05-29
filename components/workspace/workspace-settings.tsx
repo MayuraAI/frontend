@@ -136,11 +136,7 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
                     onChange={e => setDefaultPrompt(e.target.value)}
                   />
                 </div>
-                </div>
 
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <Label>Instructions</Label>
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <Label>Instructions</Label>
@@ -208,21 +204,7 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
             </TabsContent>
           </Tabs>
         </div>
-                {!selectedWorkspace.is_home && (
-                  <DeleteWorkspace
-                    workspace={selectedWorkspace}
-                    onDelete={() => setIsOpen(false)}
-                  />
-                )}
-              </>
-            </TabsContent>
-          </Tabs>
-        </div>
 
-        <div className="flex justify-end">
-          <Button ref={buttonRef} onClick={handleSave}>
-            Save
-          </Button>
         <div className="flex justify-end">
           <Button ref={buttonRef} onClick={handleSave}>
             Save

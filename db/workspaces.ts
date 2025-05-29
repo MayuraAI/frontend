@@ -47,9 +47,6 @@ export const getWorkspaceById = async (workspaceId: string) => {
   if (error) {
     console.error("Error fetching workspace:", error)
     throw new Error(`Failed to fetch workspace: ${error.message}`)
-  if (error) {
-    console.error("Error fetching workspace:", error)
-    throw new Error(`Failed to fetch workspace: ${error.message}`)
   }
 
   return workspace
@@ -179,26 +176,6 @@ export const deleteWorkspace = async (workspaceId: string) => {
   }
 
   return true
-}
-
-export const getChatsByWorkspaceId = async (workspaceId: string) => {
-  const { data: chats, error } = await supabase
-    .from("chats")
-    .select("*")
-    .eq("workspace_id", workspaceId)
-    .order("created_at", { ascending: false })
-
-  if (error) {
-    console.error("Error fetching chats:", error)
-    throw new Error(`Failed to fetch chats: ${error.message}`)
-  }
-
-  if (!chats) {
-    console.error("No chats found for workspace:", workspaceId)
-    return []
-  }
-
-  return chats
 }
 
 export const getChatsByWorkspaceId = async (workspaceId: string) => {

@@ -70,7 +70,6 @@ export type Database = {
             referencedRelation: "workspaces"
             referencedColumns: ["id"]
           }
-          }
         ]
       }
       messages: {
@@ -79,7 +78,6 @@ export type Database = {
           content: string
           created_at: string
           id: string
-          model_name: string | null
           model_name: string | null
           role: string
           sequence_number: number
@@ -92,7 +90,6 @@ export type Database = {
           created_at?: string
           id?: string
           model_name?: string | null
-          model_name?: string | null
           role: string
           sequence_number: number
           updated_at?: string | null
@@ -103,7 +100,6 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
-          model_name?: string | null
           model_name?: string | null
           role?: string
           sequence_number?: number
@@ -121,14 +117,9 @@ export type Database = {
           {
             foreignKeyName: "messages_user_id_fkey"
             columns: ["user_id"]
-          {
-            foreignKeyName: "messages_user_id_fkey"
-            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
-            referencedRelation: "users"
             referencedColumns: ["id"]
-          }
           }
         ]
       }
@@ -169,12 +160,7 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: true
             referencedRelation: "users"
-            foreignKeyName: "profiles_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
             referencedColumns: ["id"]
-          }
           }
         ]
       }
@@ -188,7 +174,6 @@ export type Database = {
           updated_at: string | null
           user_id: string
           workspace_id: string
-          workspace_id: string
         }
         Insert: {
           content: string
@@ -198,7 +183,6 @@ export type Database = {
           sharing?: string
           updated_at?: string | null
           user_id: string
-          workspace_id: string
           workspace_id: string
         }
         Update: {
@@ -214,12 +198,10 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "prompts_workspace_id_fkey"
-            foreignKeyName: "prompts_workspace_id_fkey"
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
             referencedColumns: ["id"]
-          }
           }
         ]
       }
@@ -406,7 +388,6 @@ export type Database = {
             referencedRelation: "buckets"
             referencedColumns: ["id"]
           }
-          }
         ]
       }
       prefixes: {
@@ -438,7 +419,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "buckets"
             referencedColumns: ["id"]
-          }
           }
         ]
       }
@@ -483,7 +463,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "buckets"
             referencedColumns: ["id"]
-          }
           }
         ]
       }
@@ -538,7 +517,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "s3_multipart_uploads"
             referencedColumns: ["id"]
-          }
           }
         ]
       }
@@ -828,4 +806,3 @@ export const Constants = {
     Enums: {},
   },
 } as const
-

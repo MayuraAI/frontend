@@ -12,13 +12,13 @@ export const ChatMessages: FC<ChatMessagesProps> = ({}) => {
   const [editingMessage, setEditingMessage] = useState<Tables<"messages">>()
 
   return chatMessages
-    .sort((a, b) => a.message.sequence_number - b.message.sequence_number)
+    .sort((a, b) => a.sequence_number - b.sequence_number)
     .map((chatMessage, index, array) => {
       return (
         <Message
-          key={chatMessage.message.sequence_number}
-          message={chatMessage.message}
-          isEditing={editingMessage?.id === chatMessage.message.id}
+          key={chatMessage.id}
+          message={chatMessage}
+          isEditing={editingMessage?.id === chatMessage.id}
           isLast={index === array.length - 1}
           onStartEdit={setEditingMessage}
           onCancelEdit={() => setEditingMessage(undefined)}
