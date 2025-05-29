@@ -7,8 +7,9 @@ import {
   adaptMessagesForGoogleGemini
 } from "@/lib/build-prompt"
 import { consumeReadableStream } from "@/lib/consume-stream"
-import { Tables, TablesInsert } from "@/supabase/types"
-import { ChatMessage, ChatPayload, ChatSettings, LLM } from "@/types"
+import { Tables } from "@/supabase/types"
+import { ChatMessage } from "@/types"
+import { ChatPayload, ChatSettings, LLM, TablesInsert } from "@/types"
 import React from "react"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
@@ -108,11 +109,11 @@ export const handleCreateMessages = async (
     message => ({
       id: uuidv4(),
       chat_id: chatId,
-      content: message.message.content,
-      role: message.message.role,
+      content: message.content,
+      role: message.role,
       user_id: profile.user_id,
       model_name: modelName,
-      sequence_number: message.message.sequence_number,
+      sequence_number: message.sequence_number,
       created_at: now,
       updated_at: null
     })
@@ -138,9 +139,9 @@ export const handleCreateMessages = async (
     const newMessages = [...prevMessages]
     createdMessages.forEach((createdMessage, index) => {
       if (index < newMessages.length) {
-        newMessages[index] = { message: createdMessage }
+        newMessages[index] = createdMessage
       } else {
-        newMessages.push({ message: createdMessage })
+        newMessages.push(createdMessage)
       }
     })
     return newMessages
@@ -168,28 +169,27 @@ export const processResponse = async (
 
       const text = new TextDecoder().decode(value)
       const lines = text.split("\n").filter(line => line.trim() !== "")
+      const data = JSON.parse(lines[0].slice(6))
 
-      for (const line of lines) {
-        const data = JSON.parse(line)
+      if (data.type == "end") {
+        break
+      }
 
-        if (data.model_name) {
-          modelName = data.model_name
-          setModelName(modelName)
-          continue
-        }
+      if (data.model) {
+        modelName = data.model
+        setModelName(modelName)
+        continue
+      }
 
-        fullText += data.content
+      if (data.message) {
+        fullText += data.message
         setFirstTokenReceived(true)
-
         setChatMessages(prev =>
           prev.map(chatMessage =>
-            chatMessage === tempAssistantChatMessage
+            chatMessage.id === tempAssistantChatMessage.id
               ? {
                   ...chatMessage,
-                  message: {
-                    ...chatMessage.message,
-                    content: fullText
-                  }
+                  content: fullText
                 }
               : chatMessage
           )

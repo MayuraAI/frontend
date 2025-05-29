@@ -29,11 +29,7 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
         const dbMessages = await getMessagesByChatId(params.chatid as string)
         if (!dbMessages) return
 
-        const chatMessages = dbMessages.map(msg => ({
-          message: msg
-        }))
-
-        setChatMessages(chatMessages)
+        setChatMessages(dbMessages)
         setLoading(false)
         setIsReady(true)
       }

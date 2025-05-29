@@ -6,6 +6,7 @@ import { createMessage } from "@/db/messages"
 import { buildFinalMessages } from "@/lib/build-prompt"
 import { Tables } from "@/supabase/types"
 import { ChatMessage } from "@/types"
+import { useRouter } from "next/navigation"
 import { useContext, useRef, useState } from "react"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
@@ -33,6 +34,7 @@ export const useChatHandler = () => {
     setFirstTokenReceived
   } = useContext(ChatbotUIContext)
 
+  const router = useRouter()
   const [modelName, setModelName] = useState("")
   const chatInputRef = useRef<HTMLTextAreaElement>(null)
 
@@ -45,71 +47,12 @@ export const useChatHandler = () => {
   const handleNewChat = async () => {
     if (!profile || !selectedWorkspace) return
 
-    const newChat = {
-      user_id: profile.user_id,
-      workspace_id: selectedWorkspace.id,
-      name: userInput.slice(0, 100),
-      prompt: chatSettings.prompt,
-      temperature: chatSettings.temperature,
-      include_profile_context: chatSettings.includeProfileContext,
-      include_workspace_instructions: chatSettings.includeWorkspaceInstructions,
-      sharing: "private"
-    }
-
-    const createdChat = await createChat(newChat)
-
-    setChats(prevState => [...prevState, createdChat])
-    setSelectedChat(createdChat)
-
-    const tempAssistantMessage = {
-      id: uuidv4(),
-      chat_id: createdChat.id,
-      user_id: profile.user_id,
-      content: "",
-      role: "assistant",
-      model_name: chatSettings.model,
-      sequence_number: 1,
-      created_at: new Date().toISOString(),
-      updated_at: null
-    }
-
-    const tempAssistantChatMessage: ChatMessage = {
-      message: tempAssistantMessage
-    }
-
-    setIsGenerating(true)
-    setFirstTokenReceived(false)
-    setChatMessages(prev => [...prev, tempAssistantChatMessage])
-
-    const payload = {
-      chatSettings,
-      messages: [],
-      prompt: chatSettings.prompt,
-      workspace_instructions: selectedWorkspace.instructions,
-      profile_context: selectedWorkspace.include_profile_context
-        ? profile.profile_context
-        : undefined,
-      embeddings_provider: chatSettings.embeddingsProvider
-    }
-
-    const formattedMessages = await buildFinalMessages(
-      payload,
-      profile,
-      tempAssistantChatMessage
-    )
-
-    const createdMessage = await createMessage(tempAssistantMessage)
-
-    setChatMessages(prevState =>
-      prevState.map(chatMessage =>
-        chatMessage === tempAssistantChatMessage
-          ? { ...chatMessage, message: createdMessage }
-          : chatMessage
-      )
-    )
-
+    setChatMessages([])
+    setSelectedChat(null)
     setUserInput("")
     setIsGenerating(false)
+    setFirstTokenReceived(false)
+    router.push(`/${selectedWorkspace.id}/chat`)
   }
 
   const handleStopMessage = () => {
@@ -155,9 +98,9 @@ export const useChatHandler = () => {
         updated_at: null
       }
 
-      const tempUserChatMessage: ChatMessage = { message: tempUserMessage }
+      const tempUserChatMessage: ChatMessage = { ...tempUserMessage }
       const tempAssistantChatMessage: ChatMessage = {
-        message: tempAssistantMessage
+        ...tempAssistantMessage
       }
 
       if (!isRegeneration) {
@@ -176,7 +119,7 @@ export const useChatHandler = () => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          messages: messages.map(m => m.message),
+          messages: messages,
           profile_context: selectedWorkspace.include_profile_context
             ? profile.profile_context
             : undefined,

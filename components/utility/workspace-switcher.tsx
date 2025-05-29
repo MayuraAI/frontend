@@ -1,6 +1,5 @@
 "use client"
 
-import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
 import {
   Popover,
   PopoverContent,
@@ -28,8 +27,6 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
     setSelectedWorkspace,
     setWorkspaces
   } = useContext(ChatbotUIContext)
-
-  const { handleNewChat } = useChatHandler()
 
   const router = useRouter()
 

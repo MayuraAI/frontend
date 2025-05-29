@@ -83,7 +83,7 @@ export const Message: FC<MessageProps> = ({
             : profile?.display_name || "User"}
         </div>
 
-        {message.model_name && (
+        {message.role === "assistant" && message.model_name && (
           <div className="text-muted-foreground text-xs">
             {message.model_name}
           </div>

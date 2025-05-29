@@ -1,17 +1,15 @@
 import { Database, Tables } from "@/supabase/types"
 
 export interface ChatMessage {
-  message: {
-    id: string
-    chat_id: string
-    user_id: string
-    content: string
-    role: string
-    model_name: string | null
-    sequence_number: number
-    created_at: string
-    updated_at: string | null
-  }
+  id: string
+  chat_id: string
+  user_id: string
+  content: string
+  role: string
+  model_name: string | null
+  sequence_number: number
+  created_at: string
+  updated_at: string | null
 }
 
 export interface ChatSettings {

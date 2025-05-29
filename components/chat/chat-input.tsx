@@ -42,11 +42,11 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
   }
 
   return (
-    <div className="bg-background relative flex w-full grow flex-col rounded-xl border px-4 py-2">
+    <div className="bg-background relative flex w-full grow flex-row rounded-xl border px-4 py-2">
       <Textarea
         ref={textareaRef}
         placeholder="Message..."
-        className="bg-background min-h-[24px] w-full resize-none px-2 py-[5px] focus-visible:ring-0 focus-visible:ring-offset-0"
+        className="bg-background min-h-[24px] w-full resize-none border-none px-2 py-[5px] focus-visible:ring-0 focus-visible:ring-offset-0"
         onKeyDown={handleKeyDown}
       />
 
