@@ -127,10 +127,10 @@ export const Message: FC<MessageProps> = ({
           <div className="mb-3 flex items-center gap-2">
             {message.model_name && (
               <div>
-                <span className="font-medium text-base mr-2 text-text-primary">
+                <span className="font-normal text-xs mr-2" style={{ color: '#888888' }}>
                   Mayura AI
                 </span>
-                <span className="text-text-muted bg-interactive-active rounded-full px-2 py-1 text-xs">
+                <span className="rounded-full px-2 py-1 text-xs font-normal" style={{ color: '#aaaaaa', backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
                   {message.model_name}
                 </span>
               </div>
