@@ -79,7 +79,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
   return (
     <div
       ref={divRef}
-      className={cn("flex-1 space-y-1 overflow-auto", isOverflowing && "pr-2")}
+      className={cn("flex-1 space-y-1 overflow-auto scrollbar-hide", isOverflowing && "pr-2")}
       role="list"
       aria-label="Chat history"
     >
