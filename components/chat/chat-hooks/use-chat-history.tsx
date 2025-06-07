@@ -31,7 +31,7 @@ export const useChatHistoryHandler = () => {
     let tempIndex = messageHistoryIndex
     while (
       tempIndex > 0 &&
-      chatMessages[tempIndex - 1].message.role !== userRoleString
+      chatMessages[tempIndex - 1].role !== userRoleString
     ) {
       tempIndex--
     }
@@ -41,7 +41,7 @@ export const useChatHistoryHandler = () => {
         ? chatMessages[tempIndex - 1]
         : null
     if (previousUserMessage) {
-      setUserInput(previousUserMessage.message.content)
+      setUserInput(previousUserMessage.content)
       setMessageHistoryIndex(tempIndex - 1)
     }
   }
@@ -55,7 +55,7 @@ export const useChatHistoryHandler = () => {
     let tempIndex = messageHistoryIndex
     while (
       tempIndex < chatMessages.length - 1 &&
-      chatMessages[tempIndex + 1].message.role !== userRoleString
+      chatMessages[tempIndex + 1].role !== userRoleString
     ) {
       tempIndex++
     }
@@ -64,7 +64,7 @@ export const useChatHistoryHandler = () => {
       chatMessages.length > 0 && tempIndex < chatMessages.length - 1
         ? chatMessages[tempIndex + 1]
         : null
-    setUserInput(nextUserMessage?.message.content || "")
+    setUserInput(nextUserMessage?.content || "")
     setMessageHistoryIndex(
       nextUserMessage ? tempIndex + 1 : chatMessages.length
     )

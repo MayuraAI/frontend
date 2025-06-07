@@ -1,13 +1,8 @@
 import { MayuraContext } from "@/context/context"
-import { createChat } from "@/db/chats"
-import { updateChat } from "@/db/chats"
 import { deleteMessagesIncludingAndAfter } from "@/db/messages"
-import { createMessage } from "@/db/messages"
-import { buildFinalMessages } from "@/lib/build-prompt"
-import { Tables } from "@/supabase/types"
 import { ChatMessage } from "@/types"
 import { useRouter } from "next/navigation"
-import { useContext, useRef, useState } from "react"
+import { useContext, useRef } from "react"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
 import {
@@ -35,7 +30,6 @@ export const useChatHandler = () => {
   } = useContext(MayuraContext)
 
   const router = useRouter()
-  const [modelName, setModelName] = useState("")
   const chatInputRef = useRef<HTMLTextAreaElement>(null)
 
   const handleFocusChatInput = () => {
@@ -134,13 +128,12 @@ export const useChatHandler = () => {
         throw new Error("Failed to send message")
       }
 
-      const generatedText = await processResponse(
+      const [generatedText, modelName] = await processResponse(
         response,
         tempAssistantChatMessage,
         newAbortController,
         setFirstTokenReceived,
         setChatMessages,
-        setModelName
       )
 
       if (!selectedChat) {
@@ -153,7 +146,7 @@ export const useChatHandler = () => {
         )
 
         await handleCreateMessages(
-          messages,
+          tempUserChatMessage,
           generatedText,
           modelName,
           isRegeneration,
@@ -163,7 +156,7 @@ export const useChatHandler = () => {
         )
       } else {
         await handleCreateMessages(
-          messages,
+          tempUserChatMessage,
           generatedText,
           modelName,
           isRegeneration,

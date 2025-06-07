@@ -2,14 +2,9 @@
 
 import { createChat } from "@/db/chats"
 import { createMessages } from "@/db/messages"
-import {
-  buildFinalMessages,
-  adaptMessagesForGoogleGemini
-} from "@/lib/build-prompt"
-import { consumeReadableStream } from "@/lib/consume-stream"
 import { Tables } from "@/supabase/types"
 import { ChatMessage } from "@/types"
-import { ChatPayload, ChatSettings, LLM, TablesInsert } from "@/types"
+import { ChatSettings, LLM, TablesInsert } from "@/types"
 import React from "react"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
@@ -95,7 +90,7 @@ export const handleCreateChat = async (
 }
 
 export const handleCreateMessages = async (
-  messages: ChatMessage[],
+  message: ChatMessage,
   generatedText: string,
   modelName: string,
   isRegeneration: boolean,
@@ -105,47 +100,31 @@ export const handleCreateMessages = async (
 ) => {
   const now = new Date().toISOString()
 
-  const messagesToCreate: TablesInsert<"messages">[] = messages.map(
-    message => ({
-      id: uuidv4(),
-      chat_id: chatId,
-      content: message.content,
-      role: message.role,
-      user_id: profile.user_id,
-      model_name: modelName,
-      sequence_number: message.sequence_number,
-      created_at: now,
-      updated_at: null
-    })
-  )
+  const user_message: TablesInsert<"messages"> = {
+    id: uuidv4(),
+    chat_id: chatId,
+    content: message.content,
+    role: message.role,
+    user_id: profile.user_id,
+    model_name: modelName,
+    sequence_number: message.sequence_number,
+    created_at: now,
+    updated_at: null
+  }
 
-  if (!isRegeneration) {
-    messagesToCreate.push({
+  const assistant_message: TablesInsert<"messages"> = {
       id: uuidv4(),
       chat_id: chatId,
       user_id: profile.user_id,
       content: generatedText,
       role: "assistant",
       model_name: modelName,
-      sequence_number: messages.length + 1,
+      sequence_number: message.sequence_number + 1,
       created_at: now,
       updated_at: null
-    })
   }
 
-  const createdMessages = await createMessages(messagesToCreate)
-
-  setChatMessages(prevMessages => {
-    const newMessages = [...prevMessages]
-    createdMessages.forEach((createdMessage, index) => {
-      if (index < newMessages.length) {
-        newMessages[index] = createdMessage
-      } else {
-        newMessages.push(createdMessage)
-      }
-    })
-    return newMessages
-  })
+  await createMessages([user_message, assistant_message])
 }
 
 export const processResponse = async (
@@ -154,7 +133,6 @@ export const processResponse = async (
   controller: AbortController,
   setFirstTokenReceived: React.Dispatch<React.SetStateAction<boolean>>,
   setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>,
-  setModelName: React.Dispatch<React.SetStateAction<string>>
 ) => {
   let fullText = ""
   let modelName = ""
@@ -177,7 +155,6 @@ export const processResponse = async (
 
       if (data.model) {
         modelName = data.model
-        setModelName(modelName)
         continue
       }
 
@@ -189,7 +166,8 @@ export const processResponse = async (
             chatMessage.id === tempAssistantChatMessage.id
               ? {
                   ...chatMessage,
-                  content: fullText
+                  content: fullText,
+                  model_name: modelName
                 }
               : chatMessage
           )
@@ -205,5 +183,5 @@ export const processResponse = async (
     }
   }
 
-  return fullText
+  return [fullText, modelName]
 }
