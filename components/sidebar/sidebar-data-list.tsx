@@ -79,13 +79,13 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
   return (
     <div
       ref={divRef}
-      className={cn("flex-1 overflow-auto space-y-1", isOverflowing && "pr-2")}
+      className={cn("flex-1 space-y-1 overflow-auto", isOverflowing && "pr-2")}
       role="list"
       aria-label="Chat history"
     >
       {todayData.length > 0 && (
         <div className="mb-4">
-          <div className="px-2 text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
+          <div className="text-text-muted mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
             Today
           </div>
           <div className="space-y-1">
@@ -100,7 +100,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
 
       {yesterdayData.length > 0 && (
         <div className="mb-4">
-          <div className="px-2 text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
+          <div className="text-text-muted mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
             Yesterday
           </div>
           <div className="space-y-1">
@@ -115,7 +115,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
 
       {previousWeekData.length > 0 && (
         <div className="mb-4">
-          <div className="px-2 text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
+          <div className="text-text-muted mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
             Previous Week
           </div>
           <div className="space-y-1">
@@ -130,7 +130,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
 
       {olderData.length > 0 && (
         <div className="mb-4">
-          <div className="px-2 text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
+          <div className="text-text-muted mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
             Older
           </div>
           <div className="space-y-1">

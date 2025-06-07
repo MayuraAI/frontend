@@ -36,7 +36,7 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
     <div
       ref={itemRef}
       className={cn(
-        "focus-ring group flex w-full cursor-pointer items-center rounded-lg py-2 px-3 transition-smooth text-left",
+        "focus-ring transition-smooth group flex w-full cursor-pointer items-center rounded-lg px-3 py-2 text-left",
         isActive 
           ? "bg-interactive-active text-text-primary font-medium" 
           : "hover:bg-interactive-hover text-text-secondary"
@@ -47,7 +47,7 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
       role="button"
       aria-label={`Open chat: ${chat.name}`}
     >
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="truncate text-sm">
           {chat.name}
         </div>
@@ -59,7 +59,7 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
           e.preventDefault()
         }}
         className={cn(
-          "ml-2 flex items-center space-x-1 transition-smooth",
+          "transition-smooth ml-2 flex items-center space-x-1",
           isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
         )}
       >

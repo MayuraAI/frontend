@@ -21,7 +21,7 @@ export const ThemeSwitcher: FC<ThemeSwitcherProps> = () => {
   if (!mounted) {
     return (
       <Button
-        className="focus-ring p-2 rounded-lg hover:bg-interactive-hover transition-smooth bg-bg-tertiary border border-border-color"
+        className="focus-ring hover:bg-interactive-hover transition-smooth bg-bg-tertiary border-border-color rounded-lg border p-2"
         variant="ghost"
         disabled
       >
@@ -33,7 +33,7 @@ export const ThemeSwitcher: FC<ThemeSwitcherProps> = () => {
 
   return (
     <Button
-      className="focus-ring p-2 rounded-lg hover:bg-interactive-hover transition-smooth bg-bg-tertiary border border-border-color justify-start"
+      className="focus-ring hover:bg-interactive-hover transition-smooth bg-bg-tertiary border-border-color justify-start rounded-lg border p-2"
       variant="ghost"
       onClick={() => handleChange(theme === "light" ? "dark" : "light")}
       aria-label="Toggle theme"

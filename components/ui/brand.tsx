@@ -20,7 +20,7 @@ export const Brand: FC<BrandProps> = ({ theme = "dark" }) => {
       className="flex items-center gap-2"
     >
       <MayuraSVG scale={0.3} />
-      <div className="font-bold text-xl">Mayura AI</div>
+      <div className="text-xl font-bold">Mayura AI</div>
     </Link>
   )
 }

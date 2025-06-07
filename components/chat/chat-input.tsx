@@ -56,7 +56,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
         handleSubmit()
       }}
       className={cn(
-        "relative flex items-end bg-bg-secondary rounded-xl border transition-smooth",
+        "bg-bg-secondary transition-smooth relative flex items-end rounded-xl border",
         isFocused ? "border-brand-primary" : "border-border-color",
         "focus-within:border-brand-primary"
       )}
@@ -71,19 +71,19 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         placeholder="Ask Mayura anything..."
-        className="flex-1 py-3 pl-4 pr-12 bg-transparent resize-none border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 text-text-primary placeholder-text-muted min-h-[2.75rem] max-h-32"
+        className="text-text-primary placeholder:text-text-muted max-h-32 min-h-[2.75rem] flex-1 resize-none border-none bg-transparent py-3 pl-4 pr-12 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
         rows={1}
         disabled={isGenerating}
         aria-describedby="send-button"
       />
       
-      <div className="absolute right-2 bottom-2">
+      <div className="absolute bottom-2 right-2">
         {isGenerating ? (
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            className="focus-ring size-8 bg-destructive hover:bg-destructive/90 text-white rounded-lg"
+            className="focus-ring bg-destructive hover:bg-destructive/90 size-8 rounded-lg text-white"
             onClick={handleStopMessage}
             aria-label="Stop generating"
           >
@@ -93,7 +93,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
           <Button
             type="submit"
             className={cn(
-              "send-button focus-ring size-8 bg-brand-primary rounded-lg hover:bg-brand-primary/90 transition-smooth disabled:opacity-50 disabled:cursor-not-allowed",
+              "send-button focus-ring bg-brand-primary hover:bg-brand-primary/90 transition-smooth size-8 rounded-lg disabled:cursor-not-allowed disabled:opacity-50",
               hasContent ? "visible" : ""
             )}
             disabled={!hasContent || isGenerating}
@@ -106,8 +106,8 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
 
       {/* Typing Indicator (when AI is generating) */}
       {isGenerating && (
-        <div className="absolute -top-12 left-4 flex items-center gap-2 bg-bg-tertiary px-3 py-2 rounded-lg shadow-mayura-sm border border-border-color">
-          <span className="text-sm font-medium text-text-muted">Mayura is thinking</span>
+        <div className="bg-bg-tertiary shadow-mayura-sm border-border-color absolute -top-12 left-4 flex items-center gap-2 rounded-lg border px-3 py-2">
+          <span className="text-text-muted text-sm font-medium">Mayura is thinking</span>
           <div className="typing-indicator">
             <div className="typing-dot"></div>
             <div className="typing-dot"></div>

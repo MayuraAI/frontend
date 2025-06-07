@@ -78,7 +78,7 @@ export const Message: FC<MessageProps> = ({
   return (
     <div
       className={cn(
-        "message-enter mb-8 group",
+        "message-enter group mb-8",
         isUser ? "flex justify-end" : "flex justify-start"
       )}
       onMouseEnter={() => setShowActions(true)}
@@ -86,17 +86,17 @@ export const Message: FC<MessageProps> = ({
     >
       {isUser ? (
         // User Message (right side)
-        <div className="flex items-start gap-4 max-w-2xl">
+        <div className="flex max-w-2xl items-start gap-4">
           {isEditing ? (
-            <div className="flex-1 bg-bg-tertiary border border-border-color rounded-2xl p-4">
+            <div className="bg-bg-tertiary border-border-color flex-1 rounded-2xl border p-4">
               <Textarea
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="min-h-[100px] bg-transparent border-none focus-visible:ring-0 resize-none"
+                className="min-h-[100px] resize-none border-none bg-transparent focus-visible:ring-0"
                 placeholder="Edit your message..."
               />
-              <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border-light">
+              <div className="border-border-light mt-3 flex items-center gap-2 border-t pt-3">
                 <Button
                   onClick={handleSubmit}
                   size="sm"
@@ -112,36 +112,36 @@ export const Message: FC<MessageProps> = ({
               </div>
             </div>
           ) : (
-            <div className="flex-1 bg-user-bg text-user-text px-4 py-3 rounded-2xl rounded-br-lg shadow-mayura-sm">
+            <div className="bg-user-bg text-user-text shadow-mayura-sm flex-1 rounded-2xl rounded-br-lg px-4 py-3">
               <MarkdownContent aiResponse={message.content} />
             </div>
           )}
 
-          <div className="w-8 h-8 rounded-full bg-interactive-active flex items-center justify-center flex-shrink-0">
+          <div className="bg-interactive-active flex size-8 shrink-0 items-center justify-center rounded-full">
             <IconUser size={20} className="text-brand-primary" />
           </div>
         </div>
       ) : (
         // Assistant Message (left side)
-        <div className="max-w-4xl w-full">
+        <div className="w-full max-w-4xl">
           <div className="mb-3 flex items-center gap-2">
             {message.model_name && (
-              <span className="text-xs text-text-muted bg-interactive-active px-2 py-1 rounded-full">
+              <span className="text-text-muted bg-interactive-active rounded-full px-2 py-1 text-xs">
                 {message.model_name}
               </span>
             )}
           </div>
 
           {isEditing ? (
-            <div className="bg-bg-tertiary border border-border-color rounded-2xl p-4">
+            <div className="bg-bg-tertiary border-border-color rounded-2xl border p-4">
               <Textarea
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="min-h-[100px] bg-transparent border-none focus-visible:ring-0 resize-none"
+                className="min-h-[100px] resize-none border-none bg-transparent focus-visible:ring-0"
                 placeholder="Edit assistant response..."
               />
-              <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border-light">
+              <div className="border-border-light mt-3 flex items-center gap-2 border-t pt-3">
                 <Button
                   onClick={handleSubmit}
                   size="sm"
@@ -166,7 +166,7 @@ export const Message: FC<MessageProps> = ({
           {!isGenerating && !isEditing && (
             <div
               className={cn(
-                "flex items-center gap-1 mt-3 transition-smooth",
+                "transition-smooth mt-3 flex items-center gap-1",
                 showActions ? "opacity-100" : "opacity-0 group-hover:opacity-100"
               )}
             >
@@ -174,7 +174,7 @@ export const Message: FC<MessageProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={handleCopy}
-                className="h-8 px-2 hover:bg-interactive-hover text-text-muted hover:text-text-secondary"
+                className="hover:bg-interactive-hover text-text-muted hover:text-text-secondary h-8 px-2"
               >
                 {isCopied ? <IconCheck size={16} /> : <IconCopy size={16} />}
                 <span className="ml-1 text-xs">{isCopied ? "Copied" : "Copy"}</span>
@@ -186,7 +186,7 @@ export const Message: FC<MessageProps> = ({
                     variant="ghost"
                     size="sm"
                     onClick={handleStartEdit}
-                    className="h-8 px-2 hover:bg-interactive-hover text-text-muted hover:text-text-secondary"
+                    className="hover:bg-interactive-hover text-text-muted hover:text-text-secondary h-8 px-2"
                   >
                     <IconEdit size={16} />
                     <span className="ml-1 text-xs">Edit</span>
@@ -196,7 +196,7 @@ export const Message: FC<MessageProps> = ({
                     variant="ghost"
                     size="sm"
                     onClick={() => onSubmitEdit("", message.sequence_number)}
-                    className="h-8 px-2 hover:bg-destructive/10 text-text-muted hover:text-destructive"
+                    className="hover:bg-destructive/10 text-text-muted hover:text-destructive h-8 px-2"
                   >
                     <IconTrash size={16} />
                     <span className="ml-1 text-xs">Delete</span>

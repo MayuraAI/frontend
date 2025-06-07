@@ -22,11 +22,11 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
 
   return (
     <TabsContent
-      className="m-0 w-full h-full flex flex-col"
+      className="m-0 flex size-full flex-col"
       value={contentType}
     >
       {/* Workspace Selector Header */}
-      <header className="p-4 border-b border-border-light">
+      <header className="border-border-light border-b p-4">
         <div className="relative">
           <div className="flex items-center justify-between">
             <WorkspaceSwitcher />
@@ -36,7 +36,7 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
       </header>
 
       {/* Chat History Section */}
-      <section className="flex-1 px-4 overflow-hidden mt-2">
+      <section className="mt-2 flex-1 overflow-hidden px-4">
         <div className="h-full overflow-y-auto">
           <SidebarContent
             contentType={contentType}
@@ -46,9 +46,9 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
         
         {/* Empty State */}
         {(!chats || chats.length === 0) && (
-          <div className="text-center py-8 px-4 text-text-muted">
+          <div className="text-text-muted px-4 py-8 text-center">
             <div className="mb-3 opacity-50">
-              <svg className="w-12 h-12 mx-auto" 
+              <svg className="mx-auto size-12" 
                    fill="none" 
                    stroke="currentColor" 
                    viewBox="0 0 24 24">
@@ -56,13 +56,13 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
               </svg>
             </div>
             <p className="text-sm">No chats in this workspace yet.</p>
-            <p className="text-xs mt-1">Start a conversation below!</p>
+            <p className="mt-1 text-xs">Start a conversation below!</p>
           </div>
         )}
       </section>
 
       {/* Settings Footer */}
-      <footer className="p-4 border-t border-border-light">
+      <footer className="border-border-light border-t p-4">
         <div className="flex justify-start">
           <WithTooltip
             display={<div>Profile Settings</div>}

@@ -132,25 +132,25 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
         <Button 
           size="icon"
           variant="ghost"
-          className="focus-ring hover:bg-interactive-hover rounded-lg transition-smooth"
+          className="focus-ring hover:bg-interactive-hover transition-smooth rounded-lg"
         >
           <IconUser size={24} className="text-text-primary" />
         </Button>
       </SheetTrigger>
 
       <SheetContent
-        className="flex flex-col justify-between bg-bg-secondary border-border-color"
+        className="bg-bg-secondary border-border-color flex flex-col justify-between"
         side="left"
         onKeyDown={handleKeyDown}
       >
         <div className="grow overflow-auto">
           <SheetHeader>
-            <SheetTitle className="flex items-center justify-between space-x-2 text-text-primary">
+            <SheetTitle className="text-text-primary flex items-center justify-between space-x-2">
               <div>User Settings</div>
 
               <Button
                 tabIndex={-1}
-                className="text-xs bg-destructive hover:bg-destructive/90 text-white"
+                className="bg-destructive hover:bg-destructive/90 text-xs text-white"
                 size="sm"
                 onClick={handleSignOut}
               >
@@ -197,7 +197,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                   {username.length > 0 && (
                     <div className="absolute inset-y-0 right-2 flex items-center">
                       {loadingUsername ? (
-                        <IconLoader2 className="animate-spin text-text-muted" size={20} />
+                        <IconLoader2 className="text-text-muted animate-spin" size={20} />
                       ) : usernameAvailable ? (
                         <WithTooltip
                           display={<div>Username is available</div>}
@@ -261,7 +261,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
         <div className="mt-6">
           <Button
             ref={buttonRef}
-            className="w-full bg-brand-primary hover:bg-brand-primary/90 text-white"
+            className="bg-brand-primary hover:bg-brand-primary/90 w-full text-white"
             disabled={
               !usernameAvailable ||
               username.length < PROFILE_USERNAME_MIN ||

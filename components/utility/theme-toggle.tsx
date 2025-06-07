@@ -18,7 +18,7 @@ export function ThemeToggle() {
       <Button
         variant="ghost"
         size="icon"
-        className="focus-ring size-8 rounded-lg hover:bg-interactive-hover transition-smooth"
+        className="focus-ring hover:bg-interactive-hover transition-smooth size-8 rounded-lg"
         disabled
       >
         <IconSun size={20} className="text-text-secondary" />
@@ -34,7 +34,7 @@ export function ThemeToggle() {
     <Button
       variant="ghost"
       size="icon"
-      className="focus-ring size-8 rounded-lg hover:bg-interactive-hover transition-smooth"
+      className="focus-ring hover:bg-interactive-hover transition-smooth size-8 rounded-lg"
       onClick={toggleTheme}
       aria-label="Toggle theme"
     >

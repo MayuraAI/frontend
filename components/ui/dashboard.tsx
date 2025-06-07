@@ -43,17 +43,17 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
   }
 
   if (!isLoaded) {
-    return <div className="flex h-screen w-full bg-bg-primary" />
+    return <div className="bg-bg-primary flex h-screen w-full" />
   }
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-bg-primary">
+    <div className="bg-bg-primary flex h-screen w-full overflow-hidden">
       <CommandK />
 
       {/* Sidebar Navigation */}
       <nav 
         className={cn(
-          "sidebar bg-bg-secondary flex flex-col absolute md:relative z-20 h-full transition-smooth border-r border-border-light",
+          "sidebar bg-bg-secondary transition-smooth border-border-light absolute z-20 flex h-full flex-col border-r md:relative",
           showSidebar ? "translate-x-0" : "-translate-x-full md:translate-x-0",
           showSidebar ? "w-72" : "w-0 md:w-72"
         )}
@@ -79,9 +79,9 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
       </nav>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col bg-bg-primary min-w-0">
+      <main className="bg-bg-primary flex min-w-0 flex-1 flex-col">
         {/* Mobile Header */}
-        <header className="md:hidden flex items-center justify-between p-4 bg-bg-secondary border-b border-border-light">
+        <header className="bg-bg-secondary border-border-light flex items-center justify-between border-b p-4 md:hidden">
           <Button
             variant="ghost"
             size="icon"
@@ -91,19 +91,19 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
           >
             <IconMenu2 size={24} className="text-text-primary" />
           </Button>
-          <h1 className="text-xl font-semibold text-text-primary">Mayura</h1>
+          <h1 className="text-text-primary text-xl font-semibold">Mayura</h1>
           <div className="w-10" aria-hidden="true" />
         </header>
 
         {/* Chat Content */}
-        <section className="flex-1 relative overflow-hidden">
+        <section className="relative flex-1 overflow-hidden">
           {children}
         </section>
 
         {/* Sidebar Toggle Button for Desktop */}
         <Button
           className={cn(
-            "absolute left-1 top-1/2 z-10 size-8 bg-bg-tertiary border border-border-color shadow-mayura-sm hover:bg-interactive-hover transition-smooth",
+            "bg-bg-tertiary border-border-color shadow-mayura-sm hover:bg-interactive-hover transition-smooth absolute left-1 top-1/2 z-10 size-8 border",
             "focus-ring"
           )}
           style={{
@@ -122,7 +122,7 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
       {/* Mobile Sidebar Overlay */}
       {showSidebar && (
         <div 
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-10"
+          className="fixed inset-0 z-10 bg-black bg-opacity-50 md:hidden"
           onClick={handleToggleSidebar}
           aria-hidden="true"
         />
