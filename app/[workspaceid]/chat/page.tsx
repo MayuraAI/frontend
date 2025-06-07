@@ -2,9 +2,9 @@
 
 import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
 import { ChatInput } from "@/components/chat/chat-input"
-import { ChatUI } from "@/components/chat/chat-ui"
+import { MayuraChat } from "@/components/chat/mayura-chat"
 import { Brand } from "@/components/ui/brand"
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import useHotkey from "@/lib/hooks/use-hotkey"
 import { useContext, useEffect, useState } from "react"
 
@@ -15,7 +15,7 @@ export default function ChatPage() {
   })
 
   const { chatMessages, selectedWorkspace, chats } =
-    useContext(ChatbotUIContext)
+    useContext(MayuraContext)
   const [isLoading, setIsLoading] = useState(true)
 
   const { handleNewChat, handleFocusChatInput } = useChatHandler()
@@ -68,7 +68,7 @@ export default function ChatPage() {
           </div>
         </div>
       ) : (
-        <ChatUI />
+        <MayuraChat />
       )}
     </>
   )

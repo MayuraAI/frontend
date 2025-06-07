@@ -1,4 +1,4 @@
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { createChat } from "@/db/chats"
 import { updateChat } from "@/db/chats"
 import { deleteMessagesIncludingAndAfter } from "@/db/messages"
@@ -32,7 +32,7 @@ export const useChatHandler = () => {
     setAbortController,
     setIsGenerating,
     setFirstTokenReceived
-  } = useContext(ChatbotUIContext)
+  } = useContext(MayuraContext)
 
   const router = useRouter()
   const [modelName, setModelName] = useState("")

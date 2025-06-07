@@ -1,4 +1,4 @@
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { CHAT_SETTING_LIMITS } from "@/lib/chat-setting-limits"
 import useHotkey from "@/lib/hooks/use-hotkey"
 import { LLMID, ModelProvider } from "@/types"
@@ -13,7 +13,7 @@ interface ChatSettingsProps {}
 export const ChatSettings: FC<ChatSettingsProps> = ({}) => {
   useHotkey("i", () => handleClick())
 
-  const { chatSettings, setChatSettings } = useContext(ChatbotUIContext)
+  const { chatSettings, setChatSettings } = useContext(MayuraContext)
 
   const buttonRef = useRef<HTMLButtonElement>(null)
 

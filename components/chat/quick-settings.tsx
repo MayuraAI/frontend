@@ -1,4 +1,4 @@
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import useHotkey from "@/lib/hooks/use-hotkey"
 import { IconChevronDown } from "@tabler/icons-react"
 import { FC, useContext, useEffect, useRef, useState } from "react"
@@ -18,7 +18,7 @@ export const QuickSettings: FC<QuickSettingsProps> = ({}) => {
 
   useHotkey("p", () => setIsOpen(prevState => !prevState))
 
-  const { selectedWorkspace } = useContext(ChatbotUIContext)
+  const { selectedWorkspace } = useContext(MayuraContext)
 
   const inputRef = useRef<HTMLInputElement>(null)
 

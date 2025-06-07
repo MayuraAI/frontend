@@ -1,4 +1,4 @@
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { createChats } from "@/db/chats"
 import { Tables } from "@/supabase/types"
 import { IconUpload, IconX } from "@tabler/icons-react"
@@ -21,7 +21,7 @@ interface ImportProps {
 }
 
 export const Import: FC<ImportProps> = ({ selectedWorkspace }) => {
-  const { profile } = useContext(ChatbotUIContext)
+  const { profile } = useContext(MayuraContext)
 
   const [isOpen, setIsOpen] = useState(false)
   const [file, setFile] = useState<File | null>(null)

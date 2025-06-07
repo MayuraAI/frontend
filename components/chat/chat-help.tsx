@@ -31,11 +31,11 @@ export const ChatHelp: FC<ChatHelpProps> = ({}) => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
-        {/* <DropdownMenuLabel className="flex items-center justify-between">
+        <DropdownMenuLabel className="flex items-center justify-between">
           <div className="flex space-x-2">
             <Link
               className="cursor-pointer hover:opacity-50"
-              href="https://twitter.com/ChatbotUI"
+              href="https://twitter.com/MayuraAI"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -44,7 +44,7 @@ export const ChatHelp: FC<ChatHelpProps> = ({}) => {
 
             <Link
               className="cursor-pointer hover:opacity-50"
-              href="https://github.com/mckaywrigley/chatbot-ui"
+              href="https://github.com/mayura-ai"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -64,7 +64,7 @@ export const ChatHelp: FC<ChatHelpProps> = ({}) => {
               <IconHelpCircle size={24} />
             </Link>
           </div>
-        </DropdownMenuLabel> */}
+        </DropdownMenuLabel>
 
         <DropdownMenuSeparator />
 

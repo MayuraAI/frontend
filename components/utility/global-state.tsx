@@ -1,11 +1,11 @@
 "use client"
 
-import { ChatbotUIContext } from "@/context/context"
+import { FC, ReactNode, useContext, useEffect } from "react"
+import { MayuraContext } from "@/context/context"
 import { getProfileByUserId } from "@/db/profile"
 import { getWorkspacesByUserId } from "@/db/workspaces"
 import { supabase } from "@/lib/supabase/browser-client"
 import { useRouter } from "next/navigation"
-import { FC, ReactNode, useContext, useEffect } from "react"
 
 interface GlobalStateProps {
   children: ReactNode
@@ -14,21 +14,24 @@ interface GlobalStateProps {
 export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const router = useRouter()
   const {
+    profile,
     setProfile,
-    setWorkspaces,
+    selectedWorkspace,
     setSelectedWorkspace,
+    workspaces,
+    setWorkspaces,
+    chats,
     setChats,
+    selectedChat,
     setSelectedChat,
+    chatMessages,
     setChatMessages,
+    isGenerating,
     setIsGenerating,
-    setFirstTokenReceived,
-    setAbortController,
-    setUserInput,
-    setIsAtPickerOpen,
-    setIsToolPickerOpen,
+    isMessageModalOpen,
     setIsMessageModalOpen,
     setChatSettings
-  } = useContext(ChatbotUIContext)
+  } = useContext(MayuraContext)
 
   // Load initial data
   useEffect(() => {
@@ -73,11 +76,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
       setSelectedChat(null)
       setChatMessages([])
       setIsGenerating(false)
-      setFirstTokenReceived(false)
-      setAbortController(null)
-      setUserInput("")
-      setIsAtPickerOpen(false)
-      setIsToolPickerOpen(false)
       setIsMessageModalOpen(false)
       setChatSettings({
         model: "gpt-4",
@@ -103,11 +101,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
     setSelectedChat,
     setChatMessages,
     setIsGenerating,
-    setFirstTokenReceived,
-    setAbortController,
-    setUserInput,
-    setIsAtPickerOpen,
-    setIsToolPickerOpen,
     setIsMessageModalOpen,
     setChatSettings
   ])

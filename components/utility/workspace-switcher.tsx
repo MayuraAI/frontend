@@ -5,15 +5,15 @@ import {
   PopoverContent,
   PopoverTrigger
 } from "@/components/ui/popover"
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { createWorkspace } from "@/db/workspaces"
 import useHotkey from "@/lib/hooks/use-hotkey"
-import { IconBuilding, IconHome, IconPlus } from "@tabler/icons-react"
-import { ChevronsUpDown } from "lucide-react"
+import { IconBuilding, IconHome, IconPlus, IconChevronDown } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { FC, useContext, useEffect, useState } from "react"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
+import { cn } from "@/lib/utils"
 
 interface WorkspaceSwitcherProps {}
 
@@ -26,7 +26,7 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
     selectedWorkspace,
     setSelectedWorkspace,
     setWorkspaces
-  } = useContext(ChatbotUIContext)
+  } = useContext(MayuraContext)
 
   const router = useRouter()
 
@@ -39,6 +39,10 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
     return (
       workspaces.find(workspace => workspace.id === workspaceId)?.name || ""
     )
+  }
+
+  const getWorkspaceIcon = (workspaceName: string) => {
+    return workspaceName.charAt(0).toUpperCase()
   }
 
   const handleCreateWorkspace = async () => {
@@ -72,36 +76,54 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
     return router.push(`/${workspace.id}/chat`)
   }
 
-  const IconComponent = selectedWorkspace?.is_home ? IconHome : IconBuilding
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger
-        className="border-input flex h-[36px]
-        w-full cursor-pointer items-center justify-between rounded-md border px-2 py-1 hover:opacity-50"
-      >
-        <div className="flex items-center truncate">
-          {selectedWorkspace && (
-            <div className="flex items-center">
-              <IconComponent className="mb-0.5 mr-2" size={22} />
-            </div>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          className={cn(
+            "focus-ring w-full flex items-center justify-between p-3 rounded-lg hover:bg-interactive-hover transition-smooth",
+            open && "bg-interactive-hover"
           )}
-
-          {getWorkspaceName(value) || "Select workspace..."}
-        </div>
-
-        <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+          aria-haspopup="true"
+          aria-expanded={open}
+          aria-label="Select workspace"
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-9 h-9 rounded-lg bg-interactive-active flex items-center justify-center flex-shrink-0 text-brand-primary font-semibold">
+              <span aria-hidden="true">
+                {selectedWorkspace ? getWorkspaceIcon(selectedWorkspace.name) : "W"}
+              </span>
+            </div>
+            <span className="font-medium text-left truncate text-text-primary">
+              {getWorkspaceName(value) || "Select workspace..."}
+            </span>
+          </div>
+          <IconChevronDown 
+            size={20} 
+            className={cn(
+              "text-text-muted transition-smooth flex-shrink-0",
+              open && "rotate-180"
+            )}
+          />
+        </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="p-2">
+      <PopoverContent 
+        className="w-80 p-2 bg-bg-tertiary border border-border-color shadow-mayura-lg"
+        align="start"
+        role="menu"
+        aria-orientation="vertical"
+      >
         <div className="space-y-2">
           <Button
-            className="flex w-full items-center space-x-2"
+            className="flex w-full items-center justify-start gap-2 bg-brand-primary hover:bg-brand-primary/90 text-white"
             size="sm"
             onClick={handleCreateWorkspace}
+            role="menuitem"
           >
-            <IconPlus />
-            <div className="ml-2">New Workspace</div>
+            <IconPlus size={16} />
+            <span>New Workspace</span>
           </Button>
 
           <Input
@@ -109,21 +131,26 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
             autoFocus
             value={search}
             onChange={e => setSearch(e.target.value)}
+            className="bg-bg-secondary border-border-color focus:border-brand-primary"
           />
 
-          <div className="flex flex-col space-y-1">
+          <div className="flex flex-col space-y-1 max-h-64 overflow-y-auto">
             {workspaces
               .filter(workspace => workspace.is_home)
               .map(workspace => (
                 <Button
                   key={workspace.id}
-                  className="flex items-center justify-start"
+                  className="flex items-center justify-start gap-3 p-3 hover:bg-interactive-hover text-left h-auto"
                   variant="ghost"
                   onClick={() => handleSelect(workspace.id)}
+                  role="menuitem"
                 >
-                  <IconHome className="mr-3" size={28} />
-
-                  <div className="text-lg font-semibold">{workspace.name}</div>
+                  <div className="w-9 h-9 rounded-lg bg-interactive-active flex items-center justify-center flex-shrink-0 text-brand-primary font-semibold">
+                    <IconHome size={20} />
+                  </div>
+                  <span className="font-medium truncate text-text-primary">
+                    {workspace.name}
+                  </span>
                 </Button>
               ))}
 
@@ -137,13 +164,19 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
               .map(workspace => (
                 <Button
                   key={workspace.id}
-                  className="flex items-center justify-start"
+                  className="flex items-center justify-start gap-3 p-3 hover:bg-interactive-hover text-left h-auto"
                   variant="ghost"
                   onClick={() => handleSelect(workspace.id)}
+                  role="menuitem"
                 >
-                  <IconBuilding className="mr-3" size={28} />
-
-                  <div className="text-lg font-semibold">{workspace.name}</div>
+                  <div className="w-9 h-9 rounded-lg bg-interactive-active flex items-center justify-center flex-shrink-0 text-brand-primary font-semibold">
+                    <span aria-hidden="true">
+                      {getWorkspaceIcon(workspace.name)}
+                    </span>
+                  </div>
+                  <span className="font-medium truncate text-text-primary">
+                    {workspace.name}
+                  </span>
                 </Button>
               ))}
           </div>

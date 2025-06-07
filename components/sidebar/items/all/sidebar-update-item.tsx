@@ -9,7 +9,7 @@ import {
   SheetTrigger
 } from "@/components/ui/sheet"
 import { AssignWorkspaces } from "@/components/workspace/assign-workspaces"
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { updateChat } from "@/db/chats"
 import { Tables } from "@/supabase/types"
 import { ContentType, DataItemType, TablesUpdate } from "@/types"
@@ -35,7 +35,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
   isTyping
 }) => {
   const { workspaces, selectedWorkspace, setChats } =
-    useContext(ChatbotUIContext)
+    useContext(MayuraContext)
 
   const buttonRef = useRef<HTMLButtonElement>(null)
   const [isOpen, setIsOpen] = useState(false)
