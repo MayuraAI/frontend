@@ -1,7 +1,7 @@
 "use client"
 
-import { ChatUI } from "@/components/chat/chat-ui"
+import { MayuraChat } from "@/components/chat/mayura-chat"
 
 export default function ChatIDPage() {
-  return <ChatUI />
+  return <MayuraChat />
 }

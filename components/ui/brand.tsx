@@ -1,24 +1,26 @@
 "use client"
 
-import Link from "next/link"
 import { FC } from "react"
-import { ChatbotUISVG } from "../icons/chatbotui-svg"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { MayuraSVG } from "../icons/mayura-svg"
 
-interface BrandProps {}
+interface BrandProps {
+  theme?: "dark" | "light"
+}
 
-export const Brand: FC<BrandProps> = () => {
+export const Brand: FC<BrandProps> = ({ theme = "dark" }) => {
+  const router = useRouter()
+
   return (
     <Link
-      className="flex cursor-pointer flex-col items-center hover:opacity-50"
-      href="https://www.chatbotui.com"
+      href="https://www.mayura.ai"
       target="_blank"
       rel="noopener noreferrer"
+      className="flex items-center gap-2"
     >
-      <div className="mb-2">
-        <ChatbotUISVG scale={0.3} />
-      </div>
-
-      <div className="text-4xl font-bold tracking-wide">Chatbot UI</div>
+      <MayuraSVG scale={0.3} />
+      <div className="text-xl font-bold">Mayura AI</div>
     </Link>
   )
 }

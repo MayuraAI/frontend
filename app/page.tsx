@@ -1,6 +1,6 @@
 "use client"
 
-import { ChatbotUISVG } from "@/components/icons/chatbotui-svg"
+import { MayuraSVG } from "@/components/icons/mayura-svg"
 import { IconArrowRight } from "@tabler/icons-react"
 import Link from "next/link"
 
@@ -8,7 +8,7 @@ export default function HomePage() {
   return (
     <div className="flex size-full flex-col items-center justify-center">
       <div>
-        <ChatbotUISVG scale={0.3} />
+        <MayuraSVG scale={0.3} />
       </div>
 
       <div className="mt-2 text-4xl font-bold">Chatbot UI</div>

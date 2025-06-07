@@ -1,4 +1,4 @@
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { ContentType } from "@/types"
 import { FC, useContext } from "react"
 import { CreateChat } from "./items/chats/create-chat"
@@ -12,7 +12,7 @@ export const SidebarCreateButtons: FC<SidebarCreateButtonsProps> = ({
   contentType,
   hasData
 }) => {
-  const { selectedWorkspace } = useContext(ChatbotUIContext)
+  const { selectedWorkspace } = useContext(MayuraContext)
 
   if (!selectedWorkspace) return null
 

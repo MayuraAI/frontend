@@ -6,7 +6,7 @@ import {
   SheetHeader,
   SheetTitle
 } from "@/components/ui/sheet"
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { createChat } from "@/db/chats"
 import { ContentType } from "@/types"
 import { FC, useContext, useRef, useState } from "react"
@@ -29,7 +29,7 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
   renderInputs,
   createState
 }) => {
-  const { profile, selectedWorkspace, setChats } = useContext(ChatbotUIContext)
+  const { profile, selectedWorkspace, setChats } = useContext(MayuraContext)
 
   const buttonRef = useRef<HTMLButtonElement>(null)
 

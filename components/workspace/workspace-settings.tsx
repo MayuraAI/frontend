@@ -1,4 +1,4 @@
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { WORKSPACE_INSTRUCTIONS_MAX } from "@/db/limits"
 import { updateWorkspace } from "@/db/workspaces"
 import { IconHome, IconSettings } from "@tabler/icons-react"
@@ -26,7 +26,7 @@ interface WorkspaceSettingsProps {}
 
 export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
   const { profile, selectedWorkspace, setSelectedWorkspace, setWorkspaces } =
-    useContext(ChatbotUIContext)
+    useContext(MayuraContext)
 
   const buttonRef = useRef<HTMLButtonElement>(null)
 

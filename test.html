@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mayura AI - Intelligent Routing Assistant</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- ================== STYLES ================== -->
+    <style>
+        /* --- CSS Variables for Theming --- */
+        :root {
+            /* Light Theme Colors */
+            --color-bg-primary: #F9FAFB;
+            --color-bg-secondary: #F3F4F6;
+            --color-bg-tertiary: #FFFFFF;
+            --color-text-primary: #030712;
+            --color-text-secondary: #6B7280;
+            --color-text-muted: #9CA3AF;
+            --color-border: #E5E7EB;
+            --color-border-light: #F3F4F6;
+            
+            /* Brand Colors */
+            --color-brand-primary: #9B59B6;
+            --color-brand-secondary: #00F5D4;
+            --color-brand-accent: #FF00A8;
+            
+            /* Interactive Colors */
+            --color-hover: rgba(156, 163, 175, 0.1);
+            --color-active: rgba(155, 89, 182, 0.1);
+            --color-focus: rgba(155, 89, 182, 0.2);
+            
+            /* Message Colors */
+            --color-user-bg: var(--color-brand-primary);
+            --color-user-text: #FFFFFF;
+            --color-ai-bg: transparent;
+            --color-ai-text: var(--color-text-primary);
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        html.dark {
+            /* Dark Theme Colors */
+            --color-bg-primary: #0A090F;
+            --color-bg-secondary: #15131D;
+            --color-bg-tertiary: #1F1D2B;
+            --color-text-primary: #F5F5F5;
+            --color-text-secondary: #A9A9A9;
+            --color-text-muted: #6B7280;
+            --color-border: #374151;
+            --color-border-light: #1F2937;
+            
+            /* Interactive Colors */
+            --color-hover: rgba(156, 163, 175, 0.05);
+            --color-active: rgba(155, 89, 182, 0.15);
+            --color-focus: rgba(155, 89, 182, 0.25);
+            
+            /* Message Colors */
+            --color-ai-text: rgba(245, 245, 245, 0.9);
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- Base Styles --- */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-text-muted);
+            border-radius: 3px;
+            opacity: 0.5;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-text-secondary);
+            opacity: 0.8;
+        }
+
+        /* --- Transitions --- */
+        .transition-smooth {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .transition-slow {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- Focus Styles --- */
+        .focus-ring:focus-visible {
+            outline: 2px solid var(--color-brand-primary);
+            outline-offset: 2px;
+        }
+
+        /* --- Message Animations --- */
+        .message-enter {
+            opacity: 0;
+            transform: translateY(8px) scale(0.98);
+            animation: messageSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes messageSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* --- Typing Indicator --- */
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--color-text-muted);
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        .typing-dot:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        /* --- Button Animations --- */
+        .send-button {
+            transform: scale(0);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .send-button.visible {
+            transform: scale(1);
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+        }
+
+        /* --- Reduced Motion Support --- */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* --- High Contrast Support --- */
+        @media (prefers-contrast: high) {
+            :root {
+                --color-border: #000000;
+                --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            }
+            html.dark {
+                --color-border: #FFFFFF;
+            }
+        }
+    </style>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-primary': 'var(--color-bg-primary)',
+                        'bg-secondary': 'var(--color-bg-secondary)',
+                        'bg-tertiary': 'var(--color-bg-tertiary)',
+                        'text-primary': 'var(--color-text-primary)',
+                        'text-secondary': 'var(--color-text-secondary)',
+                        'text-muted': 'var(--color-text-muted)',
+                        'border-color': 'var(--color-border)',
+                        'border-light': 'var(--color-border-light)',
+                        'brand-primary': 'var(--color-brand-primary)',
+                        'brand-secondary': 'var(--color-brand-secondary)',
+                        'brand-accent': 'var(--color-brand-accent)',
+                        'interactive-hover': 'var(--color-hover)',
+                        'interactive-active': 'var(--color-active)',
+                        'interactive-focus': 'var(--color-focus)',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                    fontSize: {
+                        'xs': ['0.75rem', { lineHeight: '1.5' }],
+                        'sm': ['0.875rem', { lineHeight: '1.6' }],
+                        'base': ['1rem', { lineHeight: '1.6' }],
+                        'lg': ['1.125rem', { lineHeight: '1.6' }],
+                        'xl': ['1.25rem', { lineHeight: '1.5' }],
+                        '2xl': ['1.5rem', { lineHeight: '1.4' }],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <!-- ================== APPLICATION CONTAINER ================== -->
+    <div class="flex h-screen w-full overflow-hidden">
+        
+        <!-- ================== SIDEBAR NAVIGATION ================== -->
+        <nav id="sidebar" 
+             class="sidebar w-72 bg-bg-secondary flex flex-col absolute md:relative z-20 h-full transition-smooth border-r border-border-light"
+             aria-label="Main navigation">
+            
+            <!-- Workspace Selector -->
+            <header class="p-4 border-b border-border-light">
+                <div class="relative">
+                    <button id="workspace-toggle" 
+                            class="focus-ring w-full flex items-center justify-between p-3 rounded-lg hover:bg-interactive-hover transition-smooth"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            aria-label="Select workspace">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-lg bg-interactive-active flex items-center justify-center flex-shrink-0 text-brand-primary font-semibold">
+                                <span id="workspace-icon" aria-hidden="true"></span>
+                            </div>
+                            <span id="workspace-name" class="font-medium text-left truncate"></span>
+                        </div>
+                        <svg class="w-5 h-5 text-text-muted transition-smooth" 
+                             fill="none" 
+                             stroke="currentColor" 
+                             viewBox="0 0 24 24"
+                             aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                        </svg>
+                    </button>
+                    
+                    <div id="workspace-dropdown" 
+                         class="absolute top-full left-0 right-0 mt-2 bg-bg-tertiary p-2 rounded-lg shadow-lg hidden z-30 border border-border-color"
+                         role="menu"
+                         aria-orientation="vertical">
+                        <!-- Workspace items will be populated here -->
+                    </div>
+                </div>
+            </header>
+
+            <!-- New Chat Button -->
+            <div class="p-4">
+                <button id="new-chat-btn" 
+                        class="focus-ring w-full bg-brand-primary hover:bg-opacity-90 text-white font-medium py-3 px-4 rounded-lg transition-smooth flex items-center justify-center gap-2 shadow-sm"
+                        aria-label="Start new chat">
+                    <svg class="w-5 h-5" 
+                         fill="none" 
+                         stroke="currentColor" 
+                         viewBox="0 0 24 24" 
+                         aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span>New Chat</span>
+                </button>
+            </div>
+
+            <!-- Chat History -->
+            <section class="flex-1 px-4 overflow-hidden">
+                <h2 class="px-2 text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">
+                    Recent Chats
+                </h2>
+                <div id="chat-history" 
+                     class="space-y-1 overflow-y-auto h-full"
+                     role="list"
+                     aria-label="Chat history">
+                    <!-- Chat items will be populated here -->
+                </div>
+                
+                <!-- Empty State -->
+                <div id="empty-state" 
+                     class="hidden text-center py-8 px-4 text-text-muted">
+                    <div class="mb-3 opacity-50">
+                        <svg class="w-12 h-12 mx-auto" 
+                             fill="none" 
+                             stroke="currentColor" 
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-sm">No chats in this workspace yet.</p>
+                    <p class="text-xs mt-1">Start a conversation below!</p>
+                </div>
+            </section>
+
+            <!-- Settings Footer -->
+            <footer class="p-4 border-t border-border-light">
+                <div class="flex items-center justify-between">
+                    <button id="profile-button" 
+                            class="focus-ring flex items-center gap-3 hover:bg-interactive-hover p-2 rounded-lg transition-smooth flex-1"
+                            aria-label="User profile settings">
+                        <div class="w-8 h-8 rounded-full bg-interactive-active flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-brand-primary" 
+                                 fill="currentColor" 
+                                 viewBox="0 0 20 20"
+                                 aria-hidden="true">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <span class="font-medium text-sm">User</span>
+                    </button>
+                    
+                    <button id="theme-toggle" 
+                            class="focus-ring p-2 rounded-lg hover:bg-interactive-hover transition-smooth"
+                            aria-label="Toggle theme">
+                        <svg id="theme-icon-light" 
+                             class="w-5 h-5" 
+                             fill="none" 
+                             stroke="currentColor" 
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        <svg id="theme-icon-dark" 
+                             class="w-5 h-5 hidden" 
+                             fill="none" 
+                             stroke="currentColor" 
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </footer>
+        </nav>
+
+        <!-- ================== MAIN CHAT AREA ================== -->
+        <main class="flex-1 flex flex-col bg-bg-primary min-w-0">
+            
+            <!-- Mobile Header -->
+            <header class="md:hidden flex items-center justify-between p-4 bg-bg-secondary border-b border-border-light">
+                <button id="menu-toggle" 
+                        class="focus-ring p-2 -ml-2"
+                        aria-label="Toggle navigation menu">
+                    <svg class="w-6 h-6" 
+                         fill="none" 
+                         stroke="currentColor" 
+                         viewBox="0 0 24 24"
+                         aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+                <h1 class="text-xl font-semibold">Mayura</h1>
+                <div class="w-10" aria-hidden="true"></div>
+            </header>
+            
+            <!-- Chat Messages -->
+            <section id="chat-window" 
+                     class="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto"
+                     role="log"
+                     aria-live="polite"
+                     aria-label="Chat messages">
+                <!-- Messages will be populated here -->
+            </section>
+
+            <!-- Input Area -->
+            <footer class="p-4 md:p-6 border-t border-border-light bg-bg-primary">
+                <div class="max-w-4xl mx-auto">
+                    <form id="chat-form" 
+                          class="relative flex items-end bg-bg-secondary rounded-xl border border-border-color focus-within:border-brand-primary transition-smooth">
+                        <label for="chat-input" class="sr-only">Type your message</label>
+                        <textarea id="chat-input" 
+                                  rows="1" 
+                                  class="flex-1 py-3 pl-4 pr-12 bg-transparent resize-none focus:outline-none text-text-primary placeholder-text-muted max-h-32 min-h-[2.75rem]" 
+                                  placeholder="Ask Mayura anything..."
+                                  aria-describedby="send-button"></textarea>
+                        
+                        <button type="submit" 
+                                id="send-button" 
+                                class="send-button focus-ring absolute right-2 bottom-2 p-2 bg-brand-primary rounded-lg hover:bg-opacity-90 transition-smooth disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled
+                                aria-label="Send message">
+                            <svg class="w-5 h-5 text-white" 
+                                 viewBox="0 0 24 24" 
+                                 fill="none" 
+                                 aria-hidden="true">
+                                <path d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2Z" 
+                                      stroke="currentColor" 
+                                      stroke-width="2" 
+                                      stroke-linecap="round" 
+                                      stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- ================== JAVASCRIPT APPLICATION ================== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================== DATA SERVICE ================== //
+            const DataService = {
+                async getModels() {
+                    // Simulate API call
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            resolve({
+                                mayura: { name: 'Mayura', description: 'Intelligent routing assistant' },
+                                gpt: { name: 'GPT-4', description: 'Advanced language model' },
+                                claude: { name: 'Claude 3', description: 'Anthropic AI assistant' },
+                                gemini: { name: 'Gemini Pro', description: 'Google AI model' }
+                            });
+                        }, 100);
+                    });
+                },
+
+                async getWorkspaces() {
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            resolve({
+                                ws1: {
+                                    name: "Personal Projects",
+                                    chats: [
+                                        { id: 'chat1', title: 'Futuristic story about fungi cities', timestamp: Date.now() - 3600000 },
+                                        { id: 'chat2', title: 'Logo design for tech startup', timestamp: Date.now() - 7200000 }
+                                    ]
+                                },
+                                ws2: {
+                                    name: "Work Streams",
+                                    chats: [
+                                        { id: 'chat3', title: 'Q2 Marketing Report Analysis', timestamp: Date.now() - 1800000 },
+                                        { id: 'chat4', title: 'Competitor Analysis Framework', timestamp: Date.now() - 5400000 },
+                                        { id: 'chat5', title: 'Product Feature Brainstorm', timestamp: Date.now() - 9000000 }
+                                    ]
+                                }
+                            });
+                        }, 150);
+                    });
+                },
+
+                async getAIResponses() {
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            resolve({
+                                gpt: [
+                                    "As GPT-4, I've analyzed this with extensive knowledge and reasoning capabilities. The answer involves multiple considerations that I'll break down systematically.",
+                                    "From GPT-4's perspective, this question touches on fundamental aspects of artificial intelligence and human creativity. Let me explore the nuances.",
+                                    "GPT-4 here. Your request calls for a creative solution that balances innovation with practicality. I'd suggest approaching this through iterative design thinking."
+                                ],
+                                claude: [
+                                    "Claude 3 here. Your query has an interesting philosophical dimension that deserves careful consideration. Let me think through this step by step.",
+                                    "As Claude, I appreciate the human-centric nature of your question. The key is to prioritize empathy and understanding in our approach.",
+                                    "From Claude's analytical perspective, this calls for a nuanced response that considers multiple stakeholder viewpoints and ethical implications."
+                                ],
+                                gemini: [
+                                    "Gemini Pro has processed your request across multiple modalities. Here's a comprehensive analysis with cross-referenced insights.",
+                                    "As Gemini, I've identified several interconnected patterns in your query. Let me provide a multi-faceted response that addresses each dimension.",
+                                    "Gemini's analysis suggests a data-driven approach would be most effective here. I'll outline a framework with measurable outcomes."
+                                ]
+                            });
+                        }, 200);
+                    });
+                }
+            };
+
+            // ================== STATE MANAGER ================== //
+            const StateManager = {
+                state: {
+                    isThinking: false,
+                    currentWorkspaceId: 'ws1',
+                    activeChatId: null,
+                    theme: 'dark',
+                    sidebarOpen: false,
+                    workspaceDropdownOpen: false,
+                    models: {},
+                    workspaces: {},
+                    aiResponses: {}
+                },
+
+                setState(updates) {
+                    Object.assign(this.state, updates);
+                    this.notifyStateChange();
+                },
+
+                getState() {
+                    return this.state;
+                },
+
+                notifyStateChange() {
+                    // Emit custom event for state changes
+                    document.dispatchEvent(new CustomEvent('statechange', { 
+                        detail: this.state 
+                    }));
+                }
+            };
+
+            // ================== UI CONTROLLER ================== //
+            const UIController = {
+                elements: {},
+
+                init() {
+                    this.cacheElements();
+                    this.setupEventListeners();
+                },
+
+                cacheElements() {
+                    this.elements = {
+                        sidebar: document.getElementById('sidebar'),
+                        chatWindow: document.getElementById('chat-window'),
+                        chatForm: document.getElementById('chat-form'),
+                        chatInput: document.getElementById('chat-input'),
+                        sendButton: document.getElementById('send-button'),
+                        menuToggle: document.getElementById('menu-toggle'),
+                        themeToggle: document.getElementById('theme-toggle'),
+                        themeIconLight: document.getElementById('theme-icon-light'),
+                        themeIconDark: document.getElementById('theme-icon-dark'),
+                        workspaceToggle: document.getElementById('workspace-toggle'),
+                        workspaceDropdown: document.getElementById('workspace-dropdown'),
+                        workspaceName: document.getElementById('workspace-name'),
+                        workspaceIcon: document.getElementById('workspace-icon'),
+                        chatHistory: document.getElementById('chat-history'),
+                        emptyState: document.getElementById('empty-state'),
+                        newChatBtn: document.getElementById('new-chat-btn'),
+                        profileButton: document.getElementById('profile-button')
+                    };
+                },
+
+                setupEventListeners() {
+                    // Form submission
+                    this.elements.chatForm.addEventListener('submit', this.handleChatSubmit.bind(this));
+                    
+                    // Input handling
+                    this.elements.chatInput.addEventListener('input', this.handleInputChange.bind(this));
+                    this.elements.chatInput.addEventListener('keydown', this.handleInputKeydown.bind(this));
+                    
+                    // Navigation
+                    this.elements.menuToggle?.addEventListener('click', this.toggleSidebar.bind(this));
+                    this.elements.themeToggle.addEventListener('click', this.toggleTheme.bind(this));
+                    this.elements.workspaceToggle.addEventListener('click', this.toggleWorkspaceDropdown.bind(this));
+                    this.elements.newChatBtn.addEventListener('click', this.startNewChat.bind(this));
+                    
+                    // Click outside handlers
+                    document.addEventListener('click', this.handleDocumentClick.bind(this));
+                    
+                    // Keyboard navigation
+                    document.addEventListener('keydown', this.handleGlobalKeydown.bind(this));
+                    
+                    // State change listener
+                    document.addEventListener('statechange', this.handleStateChange.bind(this));
+                },
+
+                handleChatSubmit(e) {
+                    e.preventDefault();
+                    const input = this.elements.chatInput.value.trim();
+                    if (input && !StateManager.getState().isThinking) {
+                        this.addMessage('user', input);
+                        this.requestAIResponse(input);
+                        this.elements.chatInput.value = '';
+                        this.updateSendButton();
+                        this.autoResizeTextarea();
+                    }
+                },
+
+                handleInputChange() {
+                    this.autoResizeTextarea();
+                    this.updateSendButton();
+                },
+
+                handleInputKeydown(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.elements.chatForm.requestSubmit();
+                    }
+                },
+
+                handleGlobalKeydown(e) {
+                    // Escape key handling
+                    if (e.key === 'Escape') {
+                        if (StateManager.getState().workspaceDropdownOpen) {
+                            this.closeWorkspaceDropdown();
+                        } else if (StateManager.getState().sidebarOpen && window.innerWidth < 768) {
+                            this.closeSidebar();
+                        }
+                    }
+                },
+
+                handleDocumentClick(e) {
+                    // Close workspace dropdown when clicking outside
+                    if (!this.elements.workspaceToggle.contains(e.target) && 
+                        !this.elements.workspaceDropdown.contains(e.target)) {
+                        this.closeWorkspaceDropdown();
+                    }
+                    
+                    // Close sidebar on mobile when clicking outside
+                    if (window.innerWidth < 768 && 
+                        !this.elements.sidebar.contains(e.target) && 
+                        !this.elements.menuToggle?.contains(e.target)) {
+                        this.closeSidebar();
+                    }
+                },
+
+                handleStateChange(e) {
+                    const state = e.detail;
+                    this.updateUIFromState(state);
+                },
+
+                updateUIFromState(state) {
+                    // Update workspace UI
+                    if (state.workspaces[state.currentWorkspaceId]) {
+                        this.updateWorkspaceDisplay(state.currentWorkspaceId);
+                        this.updateChatHistory(state.currentWorkspaceId);
+                    }
+                    
+                    // Update theme
+                    this.updateThemeDisplay(state.theme);
+                    
+                    // Update sidebar state
+                    this.elements.sidebar.classList.toggle('open', state.sidebarOpen);
+                    
+                    // Update workspace dropdown
+                    this.elements.workspaceDropdown.classList.toggle('hidden', !state.workspaceDropdownOpen);
+                    this.elements.workspaceToggle.setAttribute('aria-expanded', state.workspaceDropdownOpen);
+                },
+
+                autoResizeTextarea() {
+                    const textarea = this.elements.chatInput;
+                    textarea.style.height = 'auto';
+                    textarea.style.height = Math.min(textarea.scrollHeight, 128) + 'px';
+                },
+
+                updateSendButton() {
+                    const hasText = this.elements.chatInput.value.trim().length > 0;
+                    const isThinking = StateManager.getState().isThinking;
+                    
+                    this.elements.sendButton.disabled = !hasText || isThinking;
+                    this.elements.sendButton.classList.toggle('visible', hasText && !isThinking);
+                },
+
+                addMessage(sender, text, modelKey = 'mayura') {
+                    const messageWrapper = document.createElement('div');
+                    messageWrapper.className = 'message-enter mb-8';
+                    messageWrapper.setAttribute('role', sender === 'user' ? 'log' : 'log');
+
+                    if (sender === 'user') {
+                        messageWrapper.innerHTML = `
+                            <div class="flex items-start gap-4 max-w-2xl ml-auto">
+                                <div class="flex-1 bg-brand-primary text-white px-4 py-3 rounded-2xl rounded-br-lg">
+                                    <p class="whitespace-pre-wrap">${this.escapeHtml(text)}</p>
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-interactive-active flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-brand-primary" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        const model = StateManager.getState().models[modelKey];
+                        messageWrapper.innerHTML = `
+                            <div class="max-w-4xl">
+                                <div class="mb-3">
+                                    <span class="text-sm font-semibold text-brand-primary">${model?.name || 'AI'}</span>
+                                </div>
+                                <div class="prose prose-neutral dark:prose-invert max-w-none">
+                                    <p class="text-text-primary leading-relaxed whitespace-pre-wrap">${this.escapeHtml(text)}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    this.elements.chatWindow.appendChild(messageWrapper);
+                    this.scrollToBottom();
+                },
+
+                showTypingIndicator() {
+                    StateManager.setState({ isThinking: true });
+                    this.updateSendButton();
+                    
+                    const indicator = document.createElement('div');
+                    indicator.id = 'typing-indicator';
+                    indicator.className = 'message-enter flex items-center gap-3 mb-8';
+                    indicator.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-medium text-text-muted">Mayura is thinking</span>
+                        </div>
+                        <div class="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    `;
+                    
+                    this.elements.chatWindow.appendChild(indicator);
+                    this.scrollToBottom();
+                },
+
+                hideTypingIndicator() {
+                    StateManager.setState({ isThinking: false });
+                    this.updateSendButton();
+                    document.getElementById('typing-indicator')?.remove();
+                },
+
+                async requestAIResponse(prompt) {
+                    this.showTypingIndicator();
+                    
+                    // Simulate AI processing time
+                    const delay = 1200 + Math.random() * 800;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    
+                    this.hideTypingIndicator();
+                    
+                    // Route to random AI model
+                    const responses = StateManager.getState().aiResponses;
+                    const modelKeys = Object.keys(responses);
+                    const selectedModel = modelKeys[Math.floor(Math.random() * modelKeys.length)];
+                    const modelResponses = responses[selectedModel];
+                    const response = modelResponses[Math.floor(Math.random() * modelResponses.length)];
+                    
+                    this.addMessage('ai', response, selectedModel);
+                },
+
+                toggleSidebar() {
+                    const isOpen = !StateManager.getState().sidebarOpen;
+                    StateManager.setState({ sidebarOpen: isOpen });
+                },
+
+                closeSidebar() {
+                    StateManager.setState({ sidebarOpen: false });
+                },
+
+                toggleTheme() {
+                    const currentTheme = StateManager.getState().theme;
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    StateManager.setState({ theme: newTheme });
+                    localStorage.setItem('theme', newTheme);
+                },
+
+                updateThemeDisplay(theme) {
+                    document.documentElement.classList.toggle('dark', theme === 'dark');
+                    this.elements.themeIconLight.classList.toggle('hidden', theme === 'dark');
+                    this.elements.themeIconDark.classList.toggle('hidden', theme === 'light');
+                },
+
+                toggleWorkspaceDropdown() {
+                    const isOpen = !StateManager.getState().workspaceDropdownOpen;
+                    StateManager.setState({ workspaceDropdownOpen: isOpen });
+                    
+                    if (isOpen) {
+                        this.populateWorkspaceDropdown();
+                        // Focus first item for keyboard navigation
+                        setTimeout(() => {
+                            const firstItem = this.elements.workspaceDropdown.querySelector('button');
+                            firstItem?.focus();
+                        }, 0);
+                    }
+                },
+
+                closeWorkspaceDropdown() {
+                    StateManager.setState({ workspaceDropdownOpen: false });
+                    this.elements.workspaceToggle.focus();
+                },
+
+                populateWorkspaceDropdown() {
+                    const state = StateManager.getState();
+                    const workspaces = state.workspaces;
+                    
+                    this.elements.workspaceDropdown.innerHTML = '';
+                    
+                    Object.entries(workspaces).forEach(([id, workspace]) => {
+                        if (id === state.currentWorkspaceId) return;
+                        
+                        const item = document.createElement('button');
+                        item.className = 'focus-ring w-full flex items-center gap-3 p-3 rounded-lg hover:bg-interactive-hover text-left transition-smooth';
+                        item.setAttribute('role', 'menuitem');
+                        item.innerHTML = `
+                            <div class="w-9 h-9 rounded-lg bg-interactive-active flex items-center justify-center flex-shrink-0 text-brand-primary font-semibold">
+                                <span aria-hidden="true">${workspace.name.charAt(0).toUpperCase()}</span>
+                            </div>
+                            <span class="font-medium truncate">${workspace.name}</span>
+                        `;
+                        
+                        item.addEventListener('click', () => {
+                            StateManager.setState({ currentWorkspaceId: id });
+                            this.closeWorkspaceDropdown();
+                        });
+                        
+                        this.elements.workspaceDropdown.appendChild(item);
+                    });
+                },
+
+                updateWorkspaceDisplay(workspaceId) {
+                    const workspace = StateManager.getState().workspaces[workspaceId];
+                    if (!workspace) return;
+                    
+                    this.elements.workspaceName.textContent = workspace.name;
+                    this.elements.workspaceIcon.textContent = workspace.name.charAt(0).toUpperCase();
+                },
+
+                updateChatHistory(workspaceId) {
+                    const workspace = StateManager.getState().workspaces[workspaceId];
+                    if (!workspace) return;
+                    
+                    this.elements.chatHistory.innerHTML = '';
+                    
+                    if (workspace.chats.length === 0) {
+                        this.elements.emptyState.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    this.elements.emptyState.classList.add('hidden');
+                    
+                    workspace.chats.forEach((chat, index) => {
+                        const chatItem = document.createElement('button');
+                        chatItem.className = `focus-ring w-full p-3 rounded-lg text-left transition-smooth truncate ${
+                            index === 0 
+                                ? 'bg-interactive-active text-text-primary font-medium' 
+                                : 'hover:bg-interactive-hover text-text-secondary'
+                        }`;
+                        chatItem.setAttribute('role', 'listitem');
+                        chatItem.textContent = chat.title;
+                        chatItem.title = chat.title;
+                        
+                        chatItem.addEventListener('click', () => {
+                            StateManager.setState({ activeChatId: chat.id });
+                            // Load chat messages here
+                        });
+                        
+                        this.elements.chatHistory.appendChild(chatItem);
+                    });
+                },
+
+                startNewChat() {
+                    // Clear current chat
+                    this.elements.chatWindow.innerHTML = '';
+                    StateManager.setState({ activeChatId: null });
+                    
+                    // Add welcome message
+                    this.addMessage('ai', "Hello! I'm Mayura, your intelligent routing assistant. I analyze your questions and connect you with the best AI model for each task. What can I help you with today?", 'mayura');
+                    
+                    // Focus input
+                    this.elements.chatInput.focus();
+                },
+
+                scrollToBottom() {
+                    this.elements.chatWindow.scrollTop = this.elements.chatWindow.scrollHeight;
+                },
+
+                escapeHtml(text) {
+                    const div = document.createElement('div');
+                    div.textContent = text;
+                    return div.innerHTML;
+                }
+            };
+
+            // ================== APPLICATION INITIALIZER ================== //
+            const App = {
+                async init() {
+                    try {
+                        // Load initial data
+                        const [models, workspaces, aiResponses] = await Promise.all([
+                            DataService.getModels(),
+                            DataService.getWorkspaces(),
+                            DataService.getAIResponses()
+                        ]);
+                        
+                        // Initialize state
+                        const savedTheme = localStorage.getItem('theme') || 
+                            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        
+                        StateManager.setState({
+                            models,
+                            workspaces,
+                            aiResponses,
+                            theme: savedTheme
+                        });
+                        
+                        // Initialize UI
+                        UIController.init();
+                        
+                        // Start with a new chat
+                        UIController.startNewChat();
+                        
+                        console.log('Mayura AI initialized successfully');
+                        
+                    } catch (error) {
+                        console.error('Failed to initialize Mayura AI:', error);
+                    }
+                }
+            };
+
+            // Initialize when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', App.init);
+            } else {
+                App.init();
+            }
+
+        })();
+    </script>
+</body>
+</html>

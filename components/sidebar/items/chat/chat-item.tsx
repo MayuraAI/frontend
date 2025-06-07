@@ -1,4 +1,4 @@
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { cn } from "@/lib/utils"
 import { Tables } from "@/supabase/types"
 import { IconMessage } from "@tabler/icons-react"
@@ -12,7 +12,7 @@ interface ChatItemProps {
 }
 
 export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
-  const { selectedWorkspace, selectedChat } = useContext(ChatbotUIContext)
+  const { selectedWorkspace, selectedChat } = useContext(MayuraContext)
 
   const router = useRouter()
   const params = useParams()
@@ -36,20 +36,21 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
     <div
       ref={itemRef}
       className={cn(
-        "hover:bg-accent focus:bg-accent group flex w-full cursor-pointer items-center rounded p-2 hover:opacity-50 focus:outline-none",
-        isActive && "bg-accent"
+        "focus-ring transition-smooth group flex w-full cursor-pointer items-center rounded-lg px-3 py-2 text-left",
+        isActive 
+          ? "bg-interactive-active text-text-primary font-medium" 
+          : "hover:bg-interactive-hover text-text-secondary"
       )}
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onClick={handleClick}
+      role="button"
+      aria-label={`Open chat: ${chat.name}`}
     >
-      <IconMessage
-        className="bg-primary text-secondary border-primary rounded border-DEFAULT p-1"
-        size={30}
-      />
-
-      <div className="ml-3 flex-1 truncate text-sm font-semibold">
-        {chat.name}
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm">
+          {chat.name}
+        </div>
       </div>
 
       <div
@@ -57,10 +58,12 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
           e.stopPropagation()
           e.preventDefault()
         }}
-        className={`ml-2 flex space-x-2 ${!isActive && "w-11 opacity-0 group-hover:opacity-100"}`}
+        className={cn(
+          "transition-smooth ml-2 flex items-center space-x-1",
+          isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+        )}
       >
         <UpdateChat chat={chat} />
-
         <DeleteChat chat={chat} />
       </div>
     </div>

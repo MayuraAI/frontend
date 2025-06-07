@@ -7,13 +7,15 @@ export const CreateChat: FC = () => {
   const { handleNewChat } = useChatHandler()
 
   return (
-    <Button
-      variant="ghost"
+    <div className="w-full">
+    <Button 
       onClick={handleNewChat}
-      className="flex w-full justify-start gap-3"
+      className="focus-ring bg-brand-primary hover:bg-brand-primary/90 transition-smooth shadow-mayura-sm flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 font-medium text-white"
+      aria-label="Start new chat"
     >
       <IconPlus size={20} />
-      Create
+      <span>New Chat</span>
     </Button>
+  </div>
   )
 }

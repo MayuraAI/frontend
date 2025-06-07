@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog"
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { deleteChat } from "@/db/chats"
 import { Tables } from "@/supabase/types"
 import { FC, useContext, useState } from "react"
@@ -24,7 +24,7 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
   item,
   children
 }) => {
-  const { setChats } = useContext(ChatbotUIContext)
+  const { setChats } = useContext(MayuraContext)
 
   const [isOpen, setIsOpen] = useState(false)
 

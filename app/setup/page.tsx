@@ -1,6 +1,6 @@
 "use client"
 
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { getProfileByUserId, updateProfile } from "@/db/profile"
 import { getHomeWorkspaceByUserId } from "@/db/workspaces"
 import { supabase } from "@/lib/supabase/browser-client"
@@ -14,7 +14,7 @@ import {
 } from "../../components/setup/step-container"
 
 export default function SetupPage() {
-  const { profile, setProfile } = useContext(ChatbotUIContext)
+  const { profile, setProfile } = useContext(MayuraContext)
 
   const router = useRouter()
 

@@ -1,4 +1,4 @@
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { Tables } from "@/supabase/types"
 import { cn } from "@/lib/utils"
 import { ContentType, DataItemType, DataListType } from "@/types"
@@ -79,42 +79,68 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
   return (
     <div
       ref={divRef}
-      className={cn("flex-1 overflow-auto", isOverflowing && "pr-2")}
+      className={cn("flex-1 space-y-1 overflow-auto", isOverflowing && "pr-2")}
+      role="list"
+      aria-label="Chat history"
     >
       {todayData.length > 0 && (
-        <>
-          <div className="mb-2 ml-3 text-xs font-bold">Today</div>
-          {todayData.map(item => (
-            <div key={item.id}>{getDataListComponent(contentType, item)}</div>
-          ))}
-        </>
+        <div className="mb-4">
+          <div className="text-text-muted mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
+            Today
+          </div>
+          <div className="space-y-1">
+            {todayData.map(item => (
+              <div key={item.id} role="listitem">
+                {getDataListComponent(contentType, item)}
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {yesterdayData.length > 0 && (
-        <>
-          <div className="mb-2 ml-3 text-xs font-bold">Yesterday</div>
-          {yesterdayData.map(item => (
-            <div key={item.id}>{getDataListComponent(contentType, item)}</div>
-          ))}
-        </>
+        <div className="mb-4">
+          <div className="text-text-muted mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
+            Yesterday
+          </div>
+          <div className="space-y-1">
+            {yesterdayData.map(item => (
+              <div key={item.id} role="listitem">
+                {getDataListComponent(contentType, item)}
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {previousWeekData.length > 0 && (
-        <>
-          <div className="mb-2 ml-3 text-xs font-bold">Previous Week</div>
-          {previousWeekData.map(item => (
-            <div key={item.id}>{getDataListComponent(contentType, item)}</div>
-          ))}
-        </>
+        <div className="mb-4">
+          <div className="text-text-muted mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
+            Previous Week
+          </div>
+          <div className="space-y-1">
+            {previousWeekData.map(item => (
+              <div key={item.id} role="listitem">
+                {getDataListComponent(contentType, item)}
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {olderData.length > 0 && (
-        <>
-          <div className="mb-2 ml-3 text-xs font-bold">Older</div>
-          {olderData.map(item => (
-            <div key={item.id}>{getDataListComponent(contentType, item)}</div>
-          ))}
-        </>
+        <div className="mb-4">
+          <div className="text-text-muted mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
+            Older
+          </div>
+          <div className="space-y-1">
+            {olderData.map(item => (
+              <div key={item.id} role="listitem">
+                {getDataListComponent(contentType, item)}
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   )

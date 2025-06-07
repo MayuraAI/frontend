@@ -1,4 +1,4 @@
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { FC, useContext, useState } from "react"
 import { useChatHandler } from "./chat-hooks/use-chat-handler"
 import { Message } from "@/components/chat/message"
@@ -7,7 +7,7 @@ import { Tables } from "@/supabase/types"
 interface ChatMessagesProps {}
 
 export const ChatMessages: FC<ChatMessagesProps> = ({}) => {
-  const { chatMessages } = useContext(ChatbotUIContext)
+  const { chatMessages } = useContext(MayuraContext)
   const { handleSendEdit } = useChatHandler()
   const [editingMessage, setEditingMessage] = useState<Tables<"messages">>()
 

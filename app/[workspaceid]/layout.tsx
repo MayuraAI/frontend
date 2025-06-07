@@ -1,7 +1,7 @@
 "use client"
 
 import { Dashboard } from "@/components/ui/dashboard"
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { getChatsByWorkspaceId } from "@/db/chats"
 import { getWorkspaceById } from "@/db/workspaces"
 import { supabase } from "@/lib/supabase/browser-client"
@@ -29,7 +29,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     setUserInput,
     setIsGenerating,
     setFirstTokenReceived
-  } = useContext(ChatbotUIContext)
+  } = useContext(MayuraContext)
 
   const [loading, setLoading] = useState(true)
 

@@ -1,4 +1,4 @@
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import {
   PROFILE_CONTEXT_MAX,
   PROFILE_DISPLAY_NAME_MAX,
@@ -18,7 +18,6 @@ import {
 import { useRouter } from "next/navigation"
 import { FC, useCallback, useContext, useRef, useState } from "react"
 import { toast } from "sonner"
-import { SIDEBAR_ICON_SIZE } from "../sidebar/sidebar-switcher"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
@@ -37,7 +36,7 @@ import { ThemeSwitcher } from "./theme-switcher"
 interface ProfileSettingsProps {}
 
 export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
-  const { profile, setProfile } = useContext(ChatbotUIContext)
+  const { profile, setProfile } = useContext(MayuraContext)
 
   const router = useRouter()
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -130,24 +129,28 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button size="icon" variant="ghost">
-          <IconUser size={SIDEBAR_ICON_SIZE} />
+        <Button 
+          size="icon"
+          variant="ghost"
+          className="focus-ring hover:bg-interactive-hover transition-smooth rounded-lg"
+        >
+          <IconUser size={24} className="text-text-primary" />
         </Button>
       </SheetTrigger>
 
       <SheetContent
-        className="flex flex-col justify-between"
+        className="bg-bg-secondary border-border-color flex flex-col justify-between"
         side="left"
         onKeyDown={handleKeyDown}
       >
         <div className="grow overflow-auto">
           <SheetHeader>
-            <SheetTitle className="flex items-center justify-between space-x-2">
+            <SheetTitle className="text-text-primary flex items-center justify-between space-x-2">
               <div>User Settings</div>
 
               <Button
                 tabIndex={-1}
-                className="text-xs"
+                className="bg-destructive hover:bg-destructive/90 text-xs text-white"
                 size="sm"
                 onClick={handleSignOut}
               >
@@ -159,13 +162,14 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
 
           <div className="mt-4 space-y-4">
             <div className="space-y-2">
-              <Label>Display Name</Label>
+              <Label className="text-text-primary">Display Name</Label>
 
               <div className="space-y-1">
                 <Input
                   placeholder="Display Name"
                   value={displayName}
                   onChange={e => setDisplayName(e.target.value)}
+                  className="bg-bg-tertiary border-border-color focus:border-brand-primary text-text-primary"
                 />
 
                 <LimitDisplay
@@ -176,7 +180,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
             </div>
 
             <div className="space-y-2">
-              <Label>Username</Label>
+              <Label className="text-text-primary">Username</Label>
 
               <div className="space-y-1">
                 <div className="relative">
@@ -187,12 +191,13 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                       setUsername(e.target.value)
                       checkUsernameAvailability(e.target.value)
                     }}
+                    className="bg-bg-tertiary border-border-color focus:border-brand-primary text-text-primary"
                   />
 
                   {username.length > 0 && (
                     <div className="absolute inset-y-0 right-2 flex items-center">
                       {loadingUsername ? (
-                        <IconLoader2 className="animate-spin" size={20} />
+                        <IconLoader2 className="text-text-muted animate-spin" size={20} />
                       ) : usernameAvailable ? (
                         <WithTooltip
                           display={<div>Username is available</div>}
@@ -226,7 +231,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
             </div>
 
             <div className="space-y-2">
-              <Label>Profile Instructions</Label>
+              <Label className="text-text-primary">Profile Instructions</Label>
 
               <div className="space-y-1">
                 <TextareaAutosize
@@ -235,6 +240,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                   onValueChange={setProfileInstructions}
                   minRows={3}
                   maxRows={6}
+                  className="bg-bg-tertiary border-border-color focus:border-brand-primary text-text-primary"
                 />
 
                 <LimitDisplay
@@ -245,7 +251,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
             </div>
 
             <div className="space-y-2">
-              <Label>Theme</Label>
+              <Label className="text-text-primary">Theme</Label>
 
               <ThemeSwitcher />
             </div>
@@ -255,7 +261,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
         <div className="mt-6">
           <Button
             ref={buttonRef}
-            className="w-full"
+            className="bg-brand-primary hover:bg-brand-primary/90 w-full text-white"
             disabled={
               !usernameAvailable ||
               username.length < PROFILE_USERNAME_MIN ||

@@ -2,7 +2,7 @@ import { Tables } from "@/supabase/types"
 import { ChatMessage, ChatSettings } from "@/types"
 import { Dispatch, SetStateAction, createContext, useState } from "react"
 
-export interface ChatbotUIContextProps {
+export interface MayuraContextProps {
   profile: Tables<"profiles"> | null
   setProfile: React.Dispatch<React.SetStateAction<Tables<"profiles"> | null>>
 
@@ -50,7 +50,7 @@ export interface ChatbotUIContextProps {
   setChatSettings: React.Dispatch<React.SetStateAction<ChatSettings>>
 }
 
-export const ChatbotUIContext = createContext<ChatbotUIContextProps>({
+export const MayuraContext = createContext<MayuraContextProps>({
   profile: null,
   setProfile: () => {},
 
@@ -102,7 +102,7 @@ export const ChatbotUIContext = createContext<ChatbotUIContextProps>({
   setChatSettings: () => {}
 })
 
-export function ChatbotUIProvider({ children }: { children: React.ReactNode }) {
+export function MayuraProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Tables<"profiles"> | null>(null)
   const [selectedWorkspace, setSelectedWorkspace] =
     useState<Tables<"workspaces"> | null>(null)
@@ -129,7 +129,7 @@ export function ChatbotUIProvider({ children }: { children: React.ReactNode }) {
   })
 
   return (
-    <ChatbotUIContext.Provider
+    <MayuraContext.Provider
       value={{
         profile,
         setProfile,
@@ -162,6 +162,6 @@ export function ChatbotUIProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
-    </ChatbotUIContext.Provider>
+    </MayuraContext.Provider>
   )
 }

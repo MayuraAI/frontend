@@ -1,4 +1,4 @@
-import { ChatbotUIContext } from "@/context/context"
+import { MayuraContext } from "@/context/context"
 import { cn } from "@/lib/utils"
 import { ContentType, DataItemType } from "@/types"
 import { FC, useContext, useRef, useState } from "react"
@@ -21,7 +21,7 @@ export const SidebarItem: FC<SidebarItemProps> = ({
   icon,
   isTyping
 }) => {
-  const { selectedWorkspace } = useContext(ChatbotUIContext)
+  const { selectedWorkspace } = useContext(MayuraContext)
 
   const itemRef = useRef<HTMLDivElement>(null)
   const [isHovering, setIsHovering] = useState(false)
