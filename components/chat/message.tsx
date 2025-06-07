@@ -126,9 +126,14 @@ export const Message: FC<MessageProps> = ({
         <div className="w-full max-w-4xl">
           <div className="mb-3 flex items-center gap-2">
             {message.model_name && (
-              <span className="text-text-muted bg-interactive-active rounded-full px-2 py-1 text-xs">
-                {message.model_name}
-              </span>
+              <div>
+                <span className="font-medium text-base mr-2 text-text-primary">
+                  Mayura AI
+                </span>
+                <span className="text-text-muted bg-interactive-active rounded-full px-2 py-1 text-xs">
+                  {message.model_name}
+                </span>
+              </div>
             )}
           </div>
 

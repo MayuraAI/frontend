@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     messages[messages.length - 1].content +
     "\n"
 
-  console.log("message", message)
+  // console.log("message", message)
 
   try {
     const response = await fetch(
