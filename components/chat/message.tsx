@@ -1,5 +1,5 @@
 import { Tables } from "@/supabase/types";
-import { FC, useState, useContext } from "react";
+import { FC, useState, useContext, useRef, useEffect } from "react";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { MayuraContext } from "@/context/context";
@@ -37,6 +37,25 @@ export const Message: FC<MessageProps> = ({
   const [editedContent, setEditedContent] = useState(message.content);
   const [isCopied, setIsCopied] = useState(false);
   const [showActions, setShowActions] = useState(false);
+  
+  // Add refs for textarea elements to ensure proper focus management
+  const userTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const assistantTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Focus textarea when editing starts
+  useEffect(() => {
+    if (isEditing) {
+      const textareaRef = message.role === "user" ? userTextareaRef : assistantTextareaRef;
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+        // Set cursor to end of text
+        textareaRef.current.setSelectionRange(
+          textareaRef.current.value.length,
+          textareaRef.current.value.length
+        );
+      }
+    }
+  }, [isEditing, message.role]);
 
   const handleCopy = () => {
     if (!message.content) return;
@@ -55,7 +74,7 @@ export const Message: FC<MessageProps> = ({
     setEditedContent(message.content);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
@@ -90,6 +109,7 @@ export const Message: FC<MessageProps> = ({
           {isEditing ? (
             <div className="bg-bg-tertiary border-border-color flex-1 rounded-2xl border p-4">
               <Textarea
+                ref={userTextareaRef}
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -113,13 +133,9 @@ export const Message: FC<MessageProps> = ({
             </div>
           ) : (
             <div className="bg-user-bg text-user-text shadow-mayura-sm flex-1 rounded-2xl rounded-br-lg px-4 py-3">
-              <MarkdownContent aiResponse={message.content} />
+              {message.content}
             </div>
           )}
-
-          <div className="bg-interactive-active flex size-8 shrink-0 items-center justify-center rounded-full">
-            <IconUser size={20} className="text-brand-primary" />
-          </div>
         </div>
       ) : (
         // Assistant Message (left side)
@@ -127,7 +143,7 @@ export const Message: FC<MessageProps> = ({
           <div className="mb-3 flex items-center gap-2">
             {message.model_name && (
               <div>
-                <span className="font-normal text-xs mr-2" style={{ color: '#888888' }}>
+                <span className="mr-2 text-xs font-normal" style={{ color: '#888888' }}>
                   Mayura AI
                 </span>
                 <span className="rounded-full px-2 py-1 text-xs font-normal" style={{ color: '#aaaaaa', backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
@@ -140,6 +156,7 @@ export const Message: FC<MessageProps> = ({
           {isEditing ? (
             <div className="bg-bg-tertiary border-border-color rounded-2xl border p-4">
               <Textarea
+                ref={assistantTextareaRef}
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 onKeyDown={handleKeyDown}
