@@ -9,7 +9,7 @@ import { cookies } from "next/headers"
 import { ReactNode } from "react"
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const APP_NAME = "Mayura AI"
 const APP_DEFAULT_TITLE = "Mayura AI - Intelligent Routing Assistant"
 const APP_TITLE_TEMPLATE = "%s - Mayura AI"
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#9B59B6"
+  themeColor: "hsl(262 83% 58%)"
 }
 
 export default async function RootLayout({
@@ -81,10 +81,10 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning className="dark">
-      <body className={inter.className}>
+      <body className={`${inter.variable} font-sans antialiased`}>
         <Providers attribute="class" defaultTheme="dark">
           <Toaster richColors position="top-center" duration={3000} />
-          <div className="flex h-dvh flex-col items-center overflow-x-auto" style={{ backgroundColor: 'var(--color-bg-primary)', color: 'var(--color-text-primary)' }}>
+          <div className="flex h-screen w-full flex-col items-center overflow-hidden bg-background text-foreground">
             {session ? <GlobalState>{children}</GlobalState> : children}
           </div>
         </Providers>

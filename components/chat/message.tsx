@@ -4,6 +4,9 @@ import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { MayuraContext } from "@/context/context";
 import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Badge } from "../ui/badge";
+import { Card, CardContent } from "../ui/card";
 import {
   IconCheck,
   IconCopy,
@@ -11,9 +14,10 @@ import {
   IconTrash,
   IconX,
   IconUser,
+  IconRobot,
 } from "@tabler/icons-react";
 import { toast } from "sonner";
-import MarkdownContent from "../ui/markdown-content"; // Make sure this path is correct
+import MarkdownContent from "../ui/markdown-content";
 
 interface MessageProps {
   message: Tables<"messages">;
@@ -37,8 +41,7 @@ export const Message: FC<MessageProps> = ({
   const [editedContent, setEditedContent] = useState(message.content);
   const [isCopied, setIsCopied] = useState(false);
   const [showActions, setShowActions] = useState(false);
-  
-  // Add refs for textarea elements to ensure proper focus management
+
   const userTextareaRef = useRef<HTMLTextAreaElement>(null);
   const assistantTextareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -48,7 +51,6 @@ export const Message: FC<MessageProps> = ({
       const textareaRef = message.role === "user" ? userTextareaRef : assistantTextareaRef;
       if (textareaRef.current) {
         textareaRef.current.focus();
-        // Set cursor to end of text
         textareaRef.current.setSelectionRange(
           textareaRef.current.value.length,
           textareaRef.current.value.length
@@ -97,7 +99,7 @@ export const Message: FC<MessageProps> = ({
   return (
     <div
       className={cn(
-        "message-enter group mb-8",
+        "message-enter group mb-6 transition-all duration-200",
         isUser ? "flex justify-end" : "flex justify-start"
       )}
       onMouseEnter={() => setShowActions(true)}
@@ -105,128 +107,127 @@ export const Message: FC<MessageProps> = ({
     >
       {isUser ? (
         // User Message (right side)
-        <div className="flex max-w-2xl items-start gap-4">
-          {isEditing ? (
-            <div className="bg-bg-tertiary border-border-color flex-1 rounded-2xl border p-4">
-              <Textarea
-                ref={userTextareaRef}
-                value={editedContent}
-                onChange={(e) => setEditedContent(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="min-h-[100px] resize-none border-none bg-transparent focus-visible:ring-0"
-                placeholder="Edit your message..."
-              />
-              <div className="border-border-light mt-3 flex items-center gap-2 border-t pt-3">
-                <Button
-                  onClick={handleSubmit}
-                  size="sm"
-                  className="bg-brand-primary hover:bg-brand-primary/90"
-                >
-                  <IconCheck size={16} className="mr-1" />
-                  Save
-                </Button>
-                <Button variant="ghost" size="sm" onClick={onCancelEdit}>
-                  <IconX size={16} className="mr-1" />
-                  Cancel
-                </Button>
+        <div className="flex max-w-2xl items-start gap-3">
+          <div className="flex flex-col items-end space-y-2">
+            {isEditing ? (
+              <Card className="w-full">
+                <CardContent className="p-4">
+                  <Textarea
+                    ref={userTextareaRef}
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    className="min-h-[100px] resize-none border-none bg-transparent p-0 focus-visible:ring-0"
+                    placeholder="Edit your message..."
+                  />
+                  <div className="mt-4 flex items-center gap-2 border-t pt-4">
+                    <Button
+                      onClick={handleSubmit}
+                      size="sm"
+                      className="h-8"
+                    >
+                      <IconCheck size={14} className="mr-1" />
+                      Save
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={onCancelEdit} className="h-8">
+                      <IconX size={14} className="mr-1" />
+                      Cancel
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="rounded-2xl rounded-br-md bg-primary px-4 py-3 text-primary-foreground shadow-sm">
+                <p className="text-sm leading-relaxed">{message.content}</p>
               </div>
-            </div>
-          ) : (
-            <div className="bg-user-bg text-user-text shadow-mayura-sm flex-1 rounded-2xl rounded-br-lg px-4 py-3">
-              {message.content}
-            </div>
-          )}
+            )}
+          </div>
         </div>
       ) : (
         // Assistant Message (left side)
         <div className="w-full max-w-4xl">
-          <div className="mb-3 flex items-center gap-2">
-            {message.model_name && (
-              <div>
-                <span className="mr-2 text-xs font-normal" style={{ color: '#888888' }}>
-                  Mayura AI
-                </span>
-                <span className="rounded-full px-2 py-1 text-xs font-normal" style={{ color: '#aaaaaa', backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
-                  {message.model_name}
-                </span>
-              </div>
-            )}
-          </div>
+          <div className="flex items-start gap-3">
 
-          {isEditing ? (
-            <div className="bg-bg-tertiary border-border-color rounded-2xl border p-4">
-              <Textarea
-                ref={assistantTextareaRef}
-                value={editedContent}
-                onChange={(e) => setEditedContent(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="min-h-[100px] resize-none border-none bg-transparent focus-visible:ring-0"
-                placeholder="Edit assistant response..."
-              />
-              <div className="border-border-light mt-3 flex items-center gap-2 border-t pt-3">
-                <Button
-                  onClick={handleSubmit}
-                  size="sm"
-                  className="bg-brand-primary hover:bg-brand-primary/90"
-                >
-                  <IconCheck size={16} className="mr-1" />
-                  Save
-                </Button>
-                <Button variant="ghost" size="sm" onClick={onCancelEdit}>
-                  <IconX size={16} className="mr-1" />
-                  Cancel
-                </Button>
+            <div className="flex-1 space-y-2">
+              {/* Model Badge */}
+              <div className="flex items-center space-x-1 text-sm text-muted-foreground">
+                {/* <span className="italic">via</span> */}
+                {message.model_name && (
+                  <span className="px-2 py-[1px] rounded-md bg-muted border border-border text-xs font-mono tracking-wide italic opacity-60 hover:opacity-100 transition-opacity duration-200">
+                    {message.model_name}
+                  </span>
+                )}
               </div>
-            </div>
-          ) : (
-            <div className="prose prose-neutral dark:prose-invert max-w-none">
-              <MarkdownContent aiResponse={message.content} />
-            </div>
-          )}
 
-          {/* Message Actions */}
-          {!isGenerating && !isEditing && (
-            <div
-              className={cn(
-                "transition-smooth mt-3 flex items-center gap-1",
-                showActions ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+              {/* Message Content */}
+              {isEditing ? (
+                <Card>
+                  <CardContent className="p-4">
+                    <Textarea
+                      ref={assistantTextareaRef}
+                      value={editedContent}
+                      onChange={(e) => setEditedContent(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      className="min-h-[100px] resize-none border-none bg-transparent p-0 focus-visible:ring-0"
+                      placeholder="Edit assistant response..."
+                    />
+                    <div className="mt-4 flex items-center gap-2 border-t pt-4">
+                      <Button
+                        onClick={handleSubmit}
+                        size="sm"
+                        className="h-8"
+                      >
+                        <IconCheck size={14} className="mr-1" />
+                        Save
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={onCancelEdit} className="h-8">
+                        <IconX size={14} className="mr-1" />
+                        Cancel
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="prose prose-sm dark:prose-invert max-w-none">
+                  <MarkdownContent aiResponse={message.content} />
+                </div>
               )}
-            >
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleCopy}
-                className="hover:bg-interactive-hover text-text-muted hover:text-text-secondary h-8 px-2"
-              >
-                {isCopied ? <IconCheck size={16} /> : <IconCopy size={16} />}
-                <span className="ml-1 text-xs">{isCopied ? "Copied" : "Copy"}</span>
-              </Button>
 
-              {message.role === "user" && isLast && (
-                <>
+              {/* Message Actions */}
+              {!isGenerating && !isEditing && (
+                <div
+                  className={cn(
+                    "flex items-center gap-1 transition-opacity duration-200",
+                    showActions ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                  )}
+                >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCopy}
+                    className="h-8 px-2 text-muted-foreground hover:text-foreground"
+                  >
+                    {isCopied ? (
+                      <IconCheck size={14} className="mr-1" />
+                    ) : (
+                      <IconCopy size={14} className="mr-1" />
+                    )}
+                    {isCopied ? "Copied" : "Copy"}
+                  </Button>
+
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={handleStartEdit}
-                    className="hover:bg-interactive-hover text-text-muted hover:text-text-secondary h-8 px-2"
+                    className="h-8 px-2 text-muted-foreground hover:text-foreground"
                   >
-                    <IconEdit size={16} />
-                    <span className="ml-1 text-xs">Edit</span>
+                    <IconEdit size={14} className="mr-1" />
+                    Edit
                   </Button>
-
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onSubmitEdit("", message.sequence_number)}
-                    className="hover:bg-destructive/10 text-text-muted hover:text-destructive h-8 px-2"
-                  >
-                    <IconTrash size={16} />
-                    <span className="ml-1 text-xs">Delete</span>
-                  </Button>
-                </>
+                </div>
               )}
             </div>
-          )}
+          </div>
         </div>
       )}
     </div>

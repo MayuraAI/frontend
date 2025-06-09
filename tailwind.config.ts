@@ -49,28 +49,10 @@ module.exports = {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
-        },
-        'bg-primary': 'var(--color-bg-primary)',
-        'bg-secondary': 'var(--color-bg-secondary)',
-        'bg-tertiary': 'var(--color-bg-tertiary)',
-        'text-primary': 'var(--color-text-primary)',
-        'text-secondary': 'var(--color-text-secondary)',
-        'text-muted': 'var(--color-text-muted)',
-        'border-color': 'var(--color-border)',
-        'border-light': 'var(--color-border-light)',
-        'brand-primary': 'var(--color-brand-primary)',
-        'brand-secondary': 'var(--color-brand-secondary)',
-        'brand-accent': 'var(--color-brand-accent)',
-        'interactive-hover': 'var(--color-hover)',
-        'interactive-active': 'var(--color-active)',
-        'interactive-focus': 'var(--color-focus)',
-        'user-bg': 'var(--color-user-bg)',
-        'user-text': 'var(--color-user-text)',
-        'ai-bg': 'var(--color-ai-bg)',
-        'ai-text': 'var(--color-ai-text)'
+        }
       },
       fontFamily: {
-        'sans': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        'sans': ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       fontSize: {
         'xs': ['0.75rem', { lineHeight: '1.5' }],
@@ -99,17 +81,17 @@ module.exports = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: 0 }
         },
-        'messageSlideIn': {
+        'slide-in-up': {
           '0%': {
             opacity: '0',
-            transform: 'translateY(8px) scale(0.98)'
+            transform: 'translateY(12px) scale(0.95)'
           },
           '100%': {
             opacity: '1',
             transform: 'translateY(0) scale(1)'
           }
         },
-        'typingBounce': {
+        'typing-bounce': {
           '0%, 80%, 100%': {
             transform: 'scale(0.8)',
             opacity: '0.5'
@@ -123,8 +105,8 @@ module.exports = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'message-enter': 'messageSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-        'typing-bounce': 'typingBounce 1.4s infinite ease-in-out'
+        'slide-in-up': 'slide-in-up 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        'typing-bounce': 'typing-bounce 1.4s infinite ease-in-out'
       }
     }
   },

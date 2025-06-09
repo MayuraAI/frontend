@@ -1,7 +1,8 @@
-import { Brand } from "@/components/ui/brand"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { SubmitButton } from "@/components/ui/submit-button"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { createClient } from "@/lib/supabase/server"
 import { getServerHomeWorkspace } from "@/lib/server/workspaces"
 import { Database } from "@/supabase/types"
@@ -10,6 +11,7 @@ import { get } from "@vercel/edge-config"
 import { Metadata } from "next"
 import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
+import { AlertCircle } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Login"
@@ -149,60 +151,76 @@ export default async function Login({
   }
 
   return (
-    <div className="flex w-full flex-1 flex-col justify-center gap-2 px-8 sm:max-w-md">
-      <form
-        className="animate-in text-foreground flex w-full flex-1 flex-col justify-center gap-2"
-        action={signIn}
-      >
-        <Brand />
+    <div className="flex min-h-screen w-full items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-1 text-center">
+          <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
+          <CardDescription>
+            Sign in to your account to continue
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form className="space-y-4" action={signIn}>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                required
+                className="w-full"
+              />
+            </div>
 
-        <Label className="text-md mt-4" htmlFor="email">
-          Email
-        </Label>
-        <Input
-          className="mb-3 rounded-md border bg-inherit px-4 py-2"
-          name="email"
-          placeholder="you@example.com"
-          required
-        />
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                required
+                className="w-full"
+              />
+            </div>
 
-        <Label className="text-md" htmlFor="password">
-          Password
-        </Label>
-        <Input
-          className="mb-6 rounded-md border bg-inherit px-4 py-2"
-          type="password"
-          name="password"
-          placeholder="••••••••"
-        />
+            <div className="space-y-2">
+              <Button type="submit" className="w-full">
+                Sign In
+              </Button>
+              
+              <Button 
+                type="submit" 
+                variant="outline" 
+                className="w-full"
+                formAction={signUp}
+              >
+                Create Account
+              </Button>
+            </div>
 
-        <SubmitButton className="mb-2 rounded-md bg-blue-700 px-4 py-2 text-white">
-          Login
-        </SubmitButton>
+            <div className="text-center">
+              <button
+                type="submit"
+                formAction={handleResetPassword}
+                className="text-sm text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
+              >
+                Forgot your password?
+              </button>
+            </div>
 
-        <SubmitButton
-          formAction={signUp}
-          className="border-foreground/20 mb-2 rounded-md border px-4 py-2"
-        >
-          Sign Up
-        </SubmitButton>
-
-        <div className="text-muted-foreground mt-1 flex justify-center text-sm">
-          <span className="mr-1">Forgot your password?</span>
-          <button
-            formAction={handleResetPassword}
-            className="text-primary ml-1 underline hover:opacity-80"
-          >
-            Reset
-          </button>
-        </div>
-
-        {searchParams?.message && (
-          <p className="bg-foreground/10 text-foreground mt-4 p-4 text-center">
-            {searchParams.message}
-          </p>
-        )}
-      </form>
+            {searchParams?.message && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  {searchParams.message}
+                </AlertDescription>
+              </Alert>
+            )}
+          </form>
+        </CardContent>
+      </Card>
     </div>
   )
 }

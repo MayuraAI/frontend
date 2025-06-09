@@ -43,17 +43,17 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
   }
 
   if (!isLoaded) {
-    return <div className="bg-bg-primary flex h-screen w-full" />
+    return <div className="flex h-screen w-full bg-background" />
   }
 
   return (
-    <div className="bg-bg-primary flex h-screen w-full overflow-hidden">
+    <div className="flex h-screen w-full overflow-hidden bg-background">
       <CommandK />
 
       {/* Sidebar Navigation */}
       <nav 
         className={cn(
-          "sidebar bg-bg-secondary transition-smooth border-border-light absolute z-20 flex h-full flex-col border-r md:relative",
+          "absolute z-20 flex h-full flex-col border-r bg-card transition-all duration-300 ease-in-out md:relative",
           showSidebar ? "translate-x-0" : "-translate-x-full md:translate-x-0",
           showSidebar ? "w-72" : "w-0 md:w-72"
         )}
@@ -79,9 +79,9 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
       </nav>
 
       {/* Main Content Area */}
-      <main className="bg-bg-primary flex min-w-0 flex-1 flex-col">
+      <main className="flex min-w-0 flex-1 flex-col bg-background">
         {/* Mobile Header */}
-        <header className="bg-bg-secondary border-border-light flex items-center justify-between border-b p-4 md:hidden">
+        <header className="flex items-center justify-between border-b bg-card p-4 md:hidden">
           <Button
             variant="ghost"
             size="icon"
@@ -89,9 +89,9 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
             onClick={handleToggleSidebar}
             aria-label="Toggle navigation menu"
           >
-            <IconMenu2 size={24} className="text-text-primary" />
+            <IconMenu2 size={24} />
           </Button>
-          <h1 className="text-text-primary text-xl font-semibold">Mayura</h1>
+          <h1 className="text-xl font-semibold text-foreground">Mayura AI</h1>
           <div className="w-10" aria-hidden="true" />
         </header>
 
@@ -103,8 +103,8 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
         {/* Sidebar Toggle Button for Desktop */}
         <Button
           className={cn(
-            "bg-bg-tertiary border-border-color shadow-mayura-sm hover:bg-interactive-hover transition-smooth absolute left-1 top-1/2 z-10 size-8 border",
-            "focus-ring"
+            "absolute left-1 top-1/2 z-10 h-8 w-8 border bg-card shadow-md transition-all duration-300 hover:bg-accent",
+            "focus-ring hidden md:flex"
           )}
           style={{
             transform: `translateY(-50%) ${showSidebar ? "rotate(180deg)" : "rotate(0deg)"}`,
@@ -115,14 +115,14 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
           onClick={handleToggleSidebar}
           aria-label={showSidebar ? "Hide sidebar" : "Show sidebar"}
         >
-          <IconChevronCompactRight size={20} className="text-text-secondary" />
+          <IconChevronCompactRight size={20} className="text-muted-foreground" />
         </Button>
       </main>
 
       {/* Mobile Sidebar Overlay */}
       {showSidebar && (
         <div 
-          className="fixed inset-0 z-10 bg-black bg-opacity-50 md:hidden"
+          className="fixed inset-0 z-10 bg-black/50 backdrop-blur-sm md:hidden"
           onClick={handleToggleSidebar}
           aria-hidden="true"
         />

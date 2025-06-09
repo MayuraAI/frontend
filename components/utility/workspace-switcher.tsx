@@ -8,11 +8,12 @@ import {
 import { MayuraContext } from "@/context/context"
 import { createWorkspace } from "@/db/workspaces"
 import useHotkey from "@/lib/hooks/use-hotkey"
-import { IconBuilding, IconHome, IconPlus, IconChevronDown } from "@tabler/icons-react"
+import { Building, Home, Plus, ChevronDown } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { FC, useContext, useEffect, useState } from "react"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
+import { Avatar, AvatarFallback } from "../ui/avatar"
 import { cn } from "@/lib/utils"
 
 interface WorkspaceSwitcherProps {}
@@ -82,27 +83,27 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
         <Button
           variant="ghost"
           className={cn(
-            "focus-ring hover:bg-interactive-hover transition-smooth flex w-full items-center justify-between rounded-lg p-3",
-            open && "bg-interactive-hover"
+            "w-full justify-between p-3 h-auto",
+            open && "bg-accent"
           )}
           aria-haspopup="true"
           aria-expanded={open}
           aria-label="Select workspace"
         >
           <div className="flex min-w-0 items-center gap-3">
-            <div className="bg-interactive-active text-brand-primary flex size-9 shrink-0 items-center justify-center rounded-lg font-semibold">
-              <span aria-hidden="true">
+            <Avatar className="h-9 w-9">
+              <AvatarFallback className="bg-primary/10 text-primary font-semibold">
                 {selectedWorkspace ? getWorkspaceIcon(selectedWorkspace.name) : "W"}
-              </span>
-            </div>
-            <span className="text-text-primary truncate text-left font-medium">
+              </AvatarFallback>
+            </Avatar>
+            <span className="truncate text-left font-medium text-foreground">
               {getWorkspaceName(value) || "Select workspace..."}
             </span>
           </div>
-          <IconChevronDown 
-            size={20} 
+          <ChevronDown 
+            size={16} 
             className={cn(
-              "text-text-muted transition-smooth shrink-0",
+              "shrink-0 text-muted-foreground transition-transform duration-200",
               open && "rotate-180"
             )}
           />
@@ -110,19 +111,19 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
       </PopoverTrigger>
 
       <PopoverContent 
-        className="bg-bg-tertiary border-border-color shadow-mayura-lg w-80 border p-2"
+        className="w-80 p-2"
         align="start"
         role="menu"
         aria-orientation="vertical"
       >
         <div className="space-y-2">
           <Button
-            className="bg-brand-primary hover:bg-brand-primary/90 flex w-full items-center justify-start gap-2 text-white"
+            className="w-full justify-start gap-2"
             size="sm"
             onClick={handleCreateWorkspace}
             role="menuitem"
           >
-            <IconPlus size={16} />
+            <Plus size={16} />
             <span>New Workspace</span>
           </Button>
 
@@ -131,7 +132,7 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
             autoFocus
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="bg-bg-secondary border-border-color focus:border-brand-primary"
+            className="h-9"
           />
 
           <div className="flex max-h-64 flex-col space-y-1 overflow-y-auto">
@@ -140,15 +141,17 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
               .map(workspace => (
                 <Button
                   key={workspace.id}
-                  className="hover:bg-interactive-hover flex h-auto items-center justify-start gap-3 p-3 text-left"
+                  className="h-auto justify-start gap-3 p-3"
                   variant="ghost"
                   onClick={() => handleSelect(workspace.id)}
                   role="menuitem"
                 >
-                  <div className="bg-interactive-active text-brand-primary flex size-9 shrink-0 items-center justify-center rounded-lg font-semibold">
-                    <IconHome size={20} />
-                  </div>
-                  <span className="text-text-primary truncate font-medium">
+                  <Avatar className="h-9 w-9">
+                    <AvatarFallback className="bg-primary/10 text-primary">
+                      <Home size={18} />
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="truncate font-medium text-foreground">
                     {workspace.name}
                   </span>
                 </Button>
@@ -164,17 +167,17 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
               .map(workspace => (
                 <Button
                   key={workspace.id}
-                  className="hover:bg-interactive-hover flex h-auto items-center justify-start gap-3 p-3 text-left"
+                  className="h-auto justify-start gap-3 p-3"
                   variant="ghost"
                   onClick={() => handleSelect(workspace.id)}
                   role="menuitem"
                 >
-                  <div className="bg-interactive-active text-brand-primary flex size-9 shrink-0 items-center justify-center rounded-lg font-semibold">
-                    <span aria-hidden="true">
+                  <Avatar className="h-9 w-9">
+                    <AvatarFallback className="bg-primary/10 text-primary font-semibold">
                       {getWorkspaceIcon(workspace.name)}
-                    </span>
-                  </div>
-                  <span className="text-text-primary truncate font-medium">
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="truncate font-medium text-foreground">
                     {workspace.name}
                   </span>
                 </Button>
