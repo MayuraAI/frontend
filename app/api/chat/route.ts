@@ -88,6 +88,24 @@ export async function POST(request: Request) {
         return new StreamingTextResponse(stream)
       }
 
+      if (response.status === 429) {
+        // Create a streaming error response for rate limiting
+        const errorMessage =
+          "Rate limit exceeded. Please wait before sending another message."
+        const encoder = new TextEncoder()
+        const stream = new ReadableStream({
+          start(controller) {
+            controller.enqueue(
+              encoder.encode(
+                `data: {"error": "${errorMessage}", "status": 429}\n\n`
+              )
+            )
+            controller.close()
+          }
+        })
+        return new StreamingTextResponse(stream)
+      }
+
       // Handle other backend errors with streaming format
       const errorMessage = `Backend error: ${response.status} ${response.statusText}`
       const encoder = new TextEncoder()

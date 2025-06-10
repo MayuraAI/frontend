@@ -144,6 +144,11 @@ export const useChatHandler = () => {
         if (response.status === 401) {
           throw new Error("Authentication failed. Please log in again.")
         }
+        if (response.status === 429) {
+          throw new Error(
+            "Rate limit exceeded. Please wait before sending another message."
+          )
+        }
         throw new Error(
           `Failed to send message: ${response.status} ${response.statusText}`
         )
