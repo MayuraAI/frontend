@@ -113,15 +113,15 @@ export const handleCreateMessages = async (
   }
 
   const assistant_message: TablesInsert<"messages"> = {
-      id: uuidv4(),
-      chat_id: chatId,
-      user_id: profile.user_id,
-      content: generatedText,
-      role: "assistant",
-      model_name: modelName,
-      sequence_number: message.sequence_number + 1,
-      created_at: now,
-      updated_at: null
+    id: uuidv4(),
+    chat_id: chatId,
+    user_id: profile.user_id,
+    content: generatedText,
+    role: "assistant",
+    model_name: modelName,
+    sequence_number: message.sequence_number + 1,
+    created_at: now,
+    updated_at: null
   }
 
   await createMessages([user_message, assistant_message])
@@ -132,7 +132,7 @@ export const processResponse = async (
   tempAssistantChatMessage: ChatMessage,
   controller: AbortController,
   setFirstTokenReceived: React.Dispatch<React.SetStateAction<boolean>>,
-  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>,
+  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>
 ) => {
   let fullText = ""
   let modelName = ""

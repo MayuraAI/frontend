@@ -93,9 +93,9 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
   ]
 
   return (
-    <div className="relative flex h-full flex-col bg-background">
+    <div className="bg-background relative flex h-full flex-col">
       {/* Chat Messages Area */}
-      <section 
+      <section
         className="flex-1 overflow-y-auto px-4 py-6 md:px-6 lg:px-8"
         role="log"
         aria-live="polite"
@@ -103,40 +103,40 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
       >
         <div className="mx-auto max-w-4xl">
           <ChatMessages />
-          
+
           {/* Welcome Message for New Chats */}
           {(!chatMessages || chatMessages.length === 0) && !isGenerating && (
             <div className="flex h-full min-h-[500px] flex-col items-center justify-center text-center">
               {/* Welcome Header */}
               <div className="mb-12">
-                <h1 className="mb-3 text-2xl font-bold tracking-tight text-foreground">
+                <h1 className="text-foreground mb-3 text-2xl font-bold tracking-tight">
                   Welcome to Mayura AI
                 </h1>
                 <p className="text-muted-foreground">
                   How can I help you today?
                 </p>
               </div>
-              
+
               {/* Example Prompts */}
               <div className="w-full max-w-2xl">
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {examplePrompts.map((prompt, index) => {
                     const IconComponent = prompt.icon
                     return (
-                      <Card 
+                      <Card
                         key={index}
-                        className="group cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 border border-border/50 hover:border-border"
+                        className="border-border/50 hover:border-border group cursor-pointer border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                       >
                         <CardContent className="p-4">
                           <div className="flex items-start space-x-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                              <IconComponent className="h-5 w-5 text-primary" />
+                            <div className="bg-primary/10 group-hover:bg-primary/20 flex size-10 items-center justify-center rounded-lg transition-colors">
+                              <IconComponent className="text-primary size-5" />
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-medium text-foreground group-hover:text-primary transition-colors">
+                            <div className="min-w-0 flex-1">
+                              <h3 className="text-foreground group-hover:text-primary font-medium transition-colors">
                                 {prompt.title}
                               </h3>
-                              <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+                              <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
                                 {prompt.description}
                               </p>
                             </div>
@@ -153,7 +153,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
       </section>
 
       {/* Chat Input Area */}
-      <footer className="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4 md:p-6">
+      <footer className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-t p-4 backdrop-blur md:p-6">
         <div className="mx-auto max-w-4xl">
           <ChatInput />
         </div>

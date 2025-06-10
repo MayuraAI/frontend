@@ -24,11 +24,11 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
 
   return (
     <TabsContent
-      className="m-0 flex h-full w-full flex-col bg-background"
+      className="bg-background m-0 flex size-full flex-col"
       value={contentType}
     >
       {/* Workspace Selector Header */}
-      <header className="shrink-0 border-b bg-card p-4">
+      <header className="bg-card shrink-0 border-b p-4">
         <div className="flex items-center justify-between">
           <WorkspaceSwitcher />
           <WorkspaceSettings />
@@ -43,18 +43,18 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
             data={getContentData(contentType)}
           />
         </div>
-        
+
         {/* Empty State */}
         {(!chats || chats.length === 0) && (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Card className="p-6 border-dashed">
+            <Card className="border-dashed p-6">
               <div className="flex flex-col items-center space-y-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-muted">
-                  <MessageCircle className="h-6 w-6 text-muted-foreground" />
+                <div className="bg-muted flex size-12 items-center justify-center rounded-xl">
+                  <MessageCircle className="text-muted-foreground size-6" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-medium text-foreground">No chats yet</h3>
-                  <p className="text-sm text-muted-foreground max-w-[200px]">
+                  <h3 className="text-foreground font-medium">No chats yet</h3>
+                  <p className="text-muted-foreground max-w-[200px] text-sm">
                     Start a conversation to see your chat history here
                   </p>
                 </div>
@@ -65,7 +65,7 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
       </section>
 
       {/* Settings Footer */}
-      <footer className="shrink-0 border-t bg-card p-4">
+      <footer className="bg-card shrink-0 border-t p-4">
         <div className="flex justify-start">
           <WithTooltip
             display={<div>Profile Settings</div>}

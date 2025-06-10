@@ -13,8 +13,7 @@ export default function ChatPage() {
     handleFocusChatInput()
   })
 
-  const { chatMessages, selectedWorkspace, chats } =
-    useContext(MayuraContext)
+  const { chatMessages, selectedWorkspace, chats } = useContext(MayuraContext)
   const [isLoading, setIsLoading] = useState(true)
 
   const { handleNewChat, handleFocusChatInput } = useChatHandler()
@@ -52,7 +51,5 @@ export default function ChatPage() {
     )
   }
 
-  return (
-        <MayuraChat />
-  )
+  return <MayuraChat />
 }

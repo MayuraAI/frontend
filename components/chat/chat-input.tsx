@@ -1,11 +1,4 @@
-import {
-  FC,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-} from "react"
+import { FC, useContext, useEffect, useRef, useState, useCallback } from "react"
 import { MayuraContext } from "@/context/context"
 import { Button } from "../ui/button"
 import { Textarea } from "../ui/textarea"
@@ -60,7 +53,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
     inputValue,
     isGenerating,
     handleSendMessage,
-    chatMessages,
+    chatMessages
   ])
 
   const handleKeyDown = useCallback(
@@ -87,9 +80,9 @@ export const ChatInput: FC<ChatInputProps> = () => {
     <form
       onSubmit={handleFormSubmit}
       className={cn(
-        "relative flex items-end gap-3 rounded-2xl border border-border bg-background px-3 py-1 shadow-sm transition-all duration-200", // Adjusted padding and shadow
+        "border-border bg-background relative flex items-end gap-3 rounded-2xl border px-3 py-1 shadow-sm transition-all duration-200", // Adjusted padding and shadow
         isFocused
-          ? "ring-2 ring-ring ring-offset-2 ring-offset-background"
+          ? "ring-ring ring-offset-background ring-2 ring-offset-2"
           : "hover:shadow-md"
       )}
     >
@@ -105,7 +98,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
         className={cn(
           "flex-1 resize-none overflow-y-auto border-none bg-transparent text-sm leading-relaxed outline-none", // Added overflow-y-auto, removed px-0 py-[10px] as it's handled by form padding
           "placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0",
-          "min-h-[24px] max-h-32" // Set minimum and maximum height for scroll
+          "max-h-32 min-h-[24px]" // Set minimum and maximum height for scroll
         )}
         rows={1} // Start with 1 row, let JS handle expansion
         maxLength={4000}
@@ -119,7 +112,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
             type="button"
             variant="destructive"
             size="icon"
-            className="h-9 w-9 shrink-0 rounded-md" // Adjusted size for better visual
+            className="size-9 shrink-0 rounded-md" // Adjusted size for better visual
             onClick={handleStopMessage}
             aria-label="Stop generating"
           >
@@ -130,7 +123,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
             type="submit"
             size="icon"
             className={cn(
-              "h-9 w-9 shrink-0 rounded-md transition-all duration-150", // Adjusted size and shrink-0
+              "size-9 shrink-0 rounded-md transition-all duration-150", // Adjusted size and shrink-0
               hasContent
                 ? "bg-primary text-primary-foreground hover:bg-primary/90"
                 : "bg-muted text-muted-foreground cursor-not-allowed opacity-60" // Added opacity for disabled

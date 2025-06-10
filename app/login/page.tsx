@@ -1,7 +1,13 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { createClient } from "@/lib/supabase/server"
 import { getServerHomeWorkspace } from "@/lib/server/workspaces"
@@ -151,13 +157,11 @@ export default async function Login({
   }
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-background p-4">
+    <div className="bg-background flex min-h-screen w-full items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
-          <CardDescription>
-            Sign in to your account to continue
-          </CardDescription>
+          <CardDescription>Sign in to your account to continue</CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-4" action={signIn}>
@@ -189,10 +193,10 @@ export default async function Login({
               <Button type="submit" className="w-full">
                 Sign In
               </Button>
-              
-              <Button 
-                type="submit" 
-                variant="outline" 
+
+              <Button
+                type="submit"
+                variant="outline"
                 className="w-full"
                 formAction={signUp}
               >
@@ -204,7 +208,7 @@ export default async function Login({
               <button
                 type="submit"
                 formAction={handleResetPassword}
-                className="text-sm text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
+                className="text-muted-foreground hover:text-primary text-sm underline-offset-4 hover:underline"
               >
                 Forgot your password?
               </button>
@@ -212,10 +216,8 @@ export default async function Login({
 
             {searchParams?.message && (
               <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  {searchParams.message}
-                </AlertDescription>
+                <AlertCircle className="size-4" />
+                <AlertDescription>{searchParams.message}</AlertDescription>
               </Alert>
             )}
           </form>

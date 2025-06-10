@@ -129,7 +129,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button 
+        <Button
           size="icon"
           variant="ghost"
           className="focus-ring hover:bg-interactive-hover transition-smooth rounded-lg"
@@ -197,7 +197,10 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                   {username.length > 0 && (
                     <div className="absolute inset-y-0 right-2 flex items-center">
                       {loadingUsername ? (
-                        <IconLoader2 className="text-text-muted animate-spin" size={20} />
+                        <IconLoader2
+                          className="text-text-muted animate-spin"
+                          size={20}
+                        />
                       ) : usernameAvailable ? (
                         <WithTooltip
                           display={<div>Username is available</div>}
@@ -252,8 +255,9 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
 
             <div className="space-y-2">
               <Label className="text-text-primary">Theme</Label>
-
-              <ThemeSwitcher />
+              <div className="flex items-center gap-2">
+                <ThemeSwitcher />
+              </div>
             </div>
           </div>
         </div>
@@ -261,7 +265,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
         <div className="mt-6">
           <Button
             ref={buttonRef}
-            className="bg-brand-primary hover:bg-brand-primary/90 w-full text-white"
+            className="bg-primary hover:bg-primary/90 w-full text-white"
             disabled={
               !usernameAvailable ||
               username.length < PROFILE_USERNAME_MIN ||

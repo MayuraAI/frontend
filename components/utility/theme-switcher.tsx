@@ -40,13 +40,13 @@ export const ThemeSwitcher: FC<ThemeSwitcherProps> = () => {
     >
       {theme === "dark" ? (
         <>
-          <IconMoon size={20} className="text-text-secondary mr-2" />
-          <span className="text-text-primary">Dark</span>
+          <IconSun size={20} className="text-text-secondary mr-2" />
+          <span className="text-text-primary">Light</span>
         </>
       ) : (
         <>
-          <IconSun size={20} className="text-text-secondary mr-2" />
-          <span className="text-text-primary">Light</span>
+          <IconMoon size={20} className="text-text-secondary mr-2" />
+          <span className="text-text-primary">Dark</span>
         </>
       )}
     </Button>

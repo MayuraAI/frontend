@@ -205,8 +205,12 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
           </Tabs>
         </div>
 
-        <div className="flex justify-end">
-          <Button ref={buttonRef} onClick={handleSave}>
+        <div className="mt-6">
+          <Button
+            ref={buttonRef}
+            onClick={handleSave}
+            className="bg-primary hover:bg-primary/90 w-full text-white"
+          >
             Save
           </Button>
         </div>

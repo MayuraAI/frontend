@@ -3,11 +3,11 @@ import { Card, CardContent } from "@/components/ui/card"
 
 export default function Loading() {
   return (
-    <div className="flex h-full w-full items-center justify-center bg-background">
+    <div className="bg-background flex size-full items-center justify-center">
       <Card className="w-full max-w-sm">
         <CardContent className="flex flex-col items-center space-y-4 p-8">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">Loading...</p>
+          <Loader2 className="text-primary size-8 animate-spin" />
+          <p className="text-muted-foreground text-sm">Loading...</p>
         </CardContent>
       </Card>
     </div>

@@ -8,7 +8,7 @@ export const CreateChat: FC = () => {
 
   return (
     <div className="w-full">
-      <Button 
+      <Button
         onClick={handleNewChat}
         className="w-full justify-start gap-2 font-medium"
         aria-label="Start new chat"

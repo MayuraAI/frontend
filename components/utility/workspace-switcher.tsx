@@ -83,7 +83,7 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
         <Button
           variant="ghost"
           className={cn(
-            "w-full justify-between p-3 h-auto",
+            "h-auto w-full justify-between border p-3",
             open && "bg-accent"
           )}
           aria-haspopup="true"
@@ -91,26 +91,28 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
           aria-label="Select workspace"
         >
           <div className="flex min-w-0 items-center gap-3">
-            <Avatar className="h-9 w-9">
+            <Avatar className="size-9">
               <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                {selectedWorkspace ? getWorkspaceIcon(selectedWorkspace.name) : "W"}
+                {selectedWorkspace
+                  ? getWorkspaceIcon(selectedWorkspace.name)
+                  : "W"}
               </AvatarFallback>
             </Avatar>
-            <span className="truncate text-left font-medium text-foreground">
+            <span className="text-foreground truncate text-left font-medium">
               {getWorkspaceName(value) || "Select workspace..."}
             </span>
           </div>
-          <ChevronDown 
-            size={16} 
+          <ChevronDown
+            size={16}
             className={cn(
-              "shrink-0 text-muted-foreground transition-transform duration-200",
+              "text-muted-foreground shrink-0 transition-transform duration-200",
               open && "rotate-180"
             )}
           />
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent 
+      <PopoverContent
         className="w-80 p-2"
         align="start"
         role="menu"
@@ -146,12 +148,12 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
                   onClick={() => handleSelect(workspace.id)}
                   role="menuitem"
                 >
-                  <Avatar className="h-9 w-9">
+                  <Avatar className="size-9">
                     <AvatarFallback className="bg-primary/10 text-primary">
                       <Home size={18} />
                     </AvatarFallback>
                   </Avatar>
-                  <span className="truncate font-medium text-foreground">
+                  <span className="text-foreground truncate font-medium">
                     {workspace.name}
                   </span>
                 </Button>
@@ -172,12 +174,12 @@ export const WorkspaceSwitcher: FC<WorkspaceSwitcherProps> = ({}) => {
                   onClick={() => handleSelect(workspace.id)}
                   role="menuitem"
                 >
-                  <Avatar className="h-9 w-9">
+                  <Avatar className="size-9">
                     <AvatarFallback className="bg-primary/10 text-primary font-semibold">
                       {getWorkspaceIcon(workspace.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="truncate font-medium text-foreground">
+                  <span className="text-foreground truncate font-medium">
                     {workspace.name}
                   </span>
                 </Button>

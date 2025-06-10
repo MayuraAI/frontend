@@ -122,19 +122,21 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
 
   if (loading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-background">
+      <div className="bg-background flex h-screen w-full items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="flex flex-col items-center space-y-6 p-8">
             <div className="flex items-center space-x-2">
-              <Loader2 className="h-6 w-6 animate-spin text-primary" />
-              <h2 className="text-lg font-semibold text-foreground">Loading workspace</h2>
+              <Loader2 className="text-primary size-6 animate-spin" />
+              <h2 className="text-foreground text-lg font-semibold">
+                Loading workspace
+              </h2>
             </div>
             <div className="w-full space-y-3">
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-3/4" />
               <Skeleton className="h-4 w-1/2" />
             </div>
-            <p className="text-sm text-muted-foreground text-center">
+            <p className="text-muted-foreground text-center text-sm">
               Setting up your workspace environment...
             </p>
           </CardContent>

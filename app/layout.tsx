@@ -13,7 +13,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const APP_NAME = "Mayura AI"
 const APP_DEFAULT_TITLE = "Mayura AI - Intelligent Routing Assistant"
 const APP_TITLE_TEMPLATE = "%s - Mayura AI"
-const APP_DESCRIPTION = "Your intelligent routing assistant. Connect with the best AI model for every task."
+const APP_DESCRIPTION =
+  "Your intelligent routing assistant. Connect with the best AI model for every task."
 
 interface RootLayoutProps {
   children: ReactNode
@@ -84,7 +85,7 @@ export default async function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <Providers attribute="class" defaultTheme="dark">
           <Toaster richColors position="top-center" duration={3000} />
-          <div className="flex h-screen w-full flex-col items-center overflow-hidden bg-background text-foreground">
+          <div className="bg-background text-foreground flex h-screen w-full flex-col items-center overflow-hidden">
             {session ? <GlobalState>{children}</GlobalState> : children}
           </div>
         </Providers>
