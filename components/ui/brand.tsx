@@ -3,7 +3,6 @@
 import { FC } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { MayuraSVG } from "../icons/mayura-svg"
 
 interface BrandProps {
   theme?: "dark" | "light"
@@ -19,7 +18,6 @@ export const Brand: FC<BrandProps> = ({ theme = "dark" }) => {
       rel="noopener noreferrer"
       className="flex items-center gap-2"
     >
-      <MayuraSVG scale={0.3} />
       <div className="text-xl font-bold">Mayura AI</div>
     </Link>
   )

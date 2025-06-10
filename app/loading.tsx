@@ -1,9 +1,15 @@
-import { IconLoader2 } from "@tabler/icons-react"
+import { Loader2 } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
 
 export default function Loading() {
   return (
-    <div className="flex size-full flex-col items-center justify-center">
-      <IconLoader2 className="mt-4 size-12 animate-spin" />
+    <div className="bg-background flex size-full items-center justify-center">
+      <Card className="w-full max-w-sm">
+        <CardContent className="flex flex-col items-center space-y-4 p-8">
+          <Loader2 className="text-primary size-8 animate-spin" />
+          <p className="text-muted-foreground text-sm">Loading...</p>
+        </CardContent>
+      </Card>
     </div>
   )
 }

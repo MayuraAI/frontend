@@ -7,6 +7,9 @@ import { getWorkspaceById } from "@/db/workspaces"
 import { supabase } from "@/lib/supabase/browser-client"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
 import { ReactNode, useContext, useEffect, useState } from "react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Loader2 } from "lucide-react"
 
 interface WorkspaceLayoutProps {
   children: ReactNode
@@ -88,7 +91,6 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
 
     try {
       const workspace = await getWorkspaceById(workspaceId)
-      // console.log("Fetched workspace:", workspace)
 
       if (!workspace) {
         console.error("Workspace not found")
@@ -108,7 +110,6 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
       })
 
       const chats = await getChatsByWorkspaceId(workspaceId)
-      // console.log("Fetched chats:", chats)
       setChats(chats)
 
       setLoading(false)
@@ -121,11 +122,25 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
 
   if (loading) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="text-xl font-bold">Loading workspace...</div>
-          <div className="size-8 animate-spin rounded-full border-y-2 border-blue-500"></div>
-        </div>
+      <div className="bg-background flex h-screen w-full items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="flex flex-col items-center space-y-6 p-8">
+            <div className="flex items-center space-x-2">
+              <Loader2 className="text-primary size-6 animate-spin" />
+              <h2 className="text-foreground text-lg font-semibold">
+                Loading workspace
+              </h2>
+            </div>
+            <div className="w-full space-y-3">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+            <p className="text-muted-foreground text-center text-sm">
+              Setting up your workspace environment...
+            </p>
+          </CardContent>
+        </Card>
       </div>
     )
   }

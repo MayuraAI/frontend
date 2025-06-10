@@ -23,4 +23,4 @@ export const MayuraSVG: FC<MayuraSVGProps> = ({ scale = 1 }) => {
       />
     </svg>
   )
-} 
+}

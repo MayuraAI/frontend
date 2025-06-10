@@ -34,8 +34,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
   updateState,
   isTyping
 }) => {
-  const { workspaces, selectedWorkspace, setChats } =
-    useContext(MayuraContext)
+  const { workspaces, selectedWorkspace, setChats } = useContext(MayuraContext)
 
   const buttonRef = useRef<HTMLButtonElement>(null)
   const [isOpen, setIsOpen] = useState(false)

@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useRef, useState } from "react"
+import { FC, useContext, useEffect, useRef, useState, useCallback } from "react"
 import { MayuraContext } from "@/context/context"
 import { Button } from "../ui/button"
 import { Textarea } from "../ui/textarea"
@@ -9,98 +9,132 @@ import { cn } from "@/lib/utils"
 interface ChatInputProps {}
 
 export const ChatInput: FC<ChatInputProps> = () => {
-  const { chatMessages, isGenerating, selectedWorkspace } = useContext(MayuraContext)
+  const { chatMessages, isGenerating, selectedWorkspace } =
+    useContext(MayuraContext)
   const { handleSendMessage, handleStopMessage } = useChatHandler()
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [inputValue, setInputValue] = useState("")
   const [isFocused, setIsFocused] = useState(false)
 
+  // Auto-resize textarea height based on content
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = "auto"
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 128)}px`
+      textareaRef.current.style.height = "auto" // Reset height
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px` // Set to scroll height
     }
   }, [inputValue])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(e.target.value)
-  }
+  // Focus textarea on component mount
+  useEffect(() => {
+    textareaRef.current?.focus()
+  }, [])
 
-  const handleSubmit = () => {
-    if (!selectedWorkspace || !inputValue.trim() || isGenerating) return
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setInputValue(e.target.value)
+    },
+    []
+  )
 
+  const handleSubmit = useCallback(() => {
     const content = inputValue.trim()
+    if (!selectedWorkspace || !content || isGenerating) return
+
     setInputValue("")
     handleSendMessage(content, chatMessages, false)
-  }
+    // Imperatively adjust height after sending to reset to single line if content is gone
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"
+    }
+    textareaRef.current?.focus()
+  }, [
+    selectedWorkspace,
+    inputValue,
+    isGenerating,
+    handleSendMessage,
+    chatMessages
+  ])
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault() // Prevent newline
+        handleSubmit()
+      }
+    },
+    [handleSubmit]
+  )
+
+  const handleFormSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
       handleSubmit()
-    }
-  }
+    },
+    [handleSubmit]
+  )
 
   const hasContent = inputValue.trim().length > 0
 
   return (
     <form
-  onSubmit={(e) => {
-    e.preventDefault()
-    handleSubmit()
-  }}
-  className={cn(
-    "relative flex items-center rounded-xl border bg-bg-secondary transition-all",
-    // isFocused ? "border-brand-primary" : "border-border-primary",
-    // "focus-within:border-brand-primary px-3 py-2"
-  )}
->
-  <label htmlFor="chat-input" className="sr-only">
-    Type your message
-  </label>
-
-  <Textarea
-    id="chat-input"
-    ref={textareaRef}
-    value={inputValue}
-    onChange={handleInputChange}
-    onKeyDown={handleKeyDown}
-    onFocus={() => setIsFocused(true)}
-    onBlur={() => setIsFocused(false)}
-    placeholder="Ask Mayura anything..."
-    className="text-text-primary placeholder:text-text-muted flex-1 resize-none border-brand-primary bg-transparent pr-10 outline-none max-h-32 min-h-[2.75rem]"
-    rows={1}
-    disabled={isGenerating}
-  />
-
-  {/* Send / Stop Button */}
-  <div className="absolute right-3 bottom-[9px]">
-    {isGenerating ? (
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        className="bg-destructive hover:bg-destructive/90 size-8 rounded-lg text-white"
-        onClick={handleStopMessage}
-        aria-label="Stop generating"
-      >
-        <IconPlayerStop size={16} />
-      </Button>
-    ) : (
-      <Button
-        type="submit"
-        size="icon"
+      onSubmit={handleFormSubmit}
+      className={cn(
+        "border-border bg-background relative flex items-end gap-3 rounded-2xl border px-3 py-1 shadow-sm transition-all duration-200", // Adjusted padding and shadow
+        isFocused
+          ? "ring-ring ring-offset-background ring-2 ring-offset-2"
+          : "hover:shadow-md"
+      )}
+    >
+      <Textarea
+        id="chat-input"
+        ref={textareaRef}
+        value={inputValue}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        placeholder="Ask Mayura anything..."
         className={cn(
-          "bg-brand-primary hover:bg-brand-primary/90 size-8 rounded-lg text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+          "flex-1 resize-none overflow-y-auto border-none bg-transparent text-sm leading-relaxed outline-none", // Added overflow-y-auto, removed px-0 py-[10px] as it's handled by form padding
+          "placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0",
+          "max-h-32 min-h-[24px]" // Set minimum and maximum height for scroll
         )}
-        disabled={!hasContent || isGenerating}
-        aria-label="Send message"
-      >
-        <IconSend size={16} />
-      </Button>
-    )}
-  </div>
-</form>
+        rows={1} // Start with 1 row, let JS handle expansion
+        maxLength={4000}
+        disabled={isGenerating}
+      />
+
+      {/* Send / Stop Button */}
+      <div className="flex items-center justify-center">
+        {isGenerating ? (
+          <Button
+            type="button"
+            variant="destructive"
+            size="icon"
+            className="size-9 shrink-0 rounded-md" // Adjusted size for better visual
+            onClick={handleStopMessage}
+            aria-label="Stop generating"
+          >
+            <IconPlayerStop size={18} /> {/* Slightly larger icon */}
+          </Button>
+        ) : (
+          <Button
+            type="submit"
+            size="icon"
+            className={cn(
+              "size-9 shrink-0 rounded-md transition-all duration-150", // Adjusted size and shrink-0
+              hasContent
+                ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                : "bg-muted text-muted-foreground cursor-not-allowed opacity-60" // Added opacity for disabled
+            )}
+            disabled={!hasContent || isGenerating}
+            aria-label="Send message"
+          >
+            <IconSend size={18} /> {/* Slightly larger icon */}
+          </Button>
+        )}
+      </div>
+    </form>
   )
 }

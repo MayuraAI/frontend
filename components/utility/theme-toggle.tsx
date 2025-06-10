@@ -39,10 +39,16 @@ export function ThemeToggle() {
       aria-label="Toggle theme"
     >
       {theme === "dark" ? (
-        <IconSun size={20} className="text-text-secondary hover:text-text-primary transition-smooth" />
+        <IconSun
+          size={20}
+          className="text-text-secondary hover:text-text-primary transition-smooth"
+        />
       ) : (
-        <IconMoon size={20} className="text-text-secondary hover:text-text-primary transition-smooth" />
+        <IconMoon
+          size={20}
+          className="text-text-secondary hover:text-text-primary transition-smooth"
+        />
       )}
     </Button>
   )
-} 
+}

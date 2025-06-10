@@ -79,7 +79,10 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
   return (
     <div
       ref={divRef}
-      className={cn("flex-1 space-y-1 overflow-auto scrollbar-hide", isOverflowing && "pr-2")}
+      className={cn(
+        "scrollbar-hide flex-1 space-y-1 overflow-auto",
+        isOverflowing && "pr-2"
+      )}
       role="list"
       aria-label="Chat history"
     >
@@ -90,7 +93,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
           </div>
           <div className="space-y-1">
             {todayData.map(item => (
-              <div key={item.id} role="listitem">
+              <div key={item.id} role="listitem" className="group">
                 {getDataListComponent(contentType, item)}
               </div>
             ))}
@@ -105,7 +108,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
           </div>
           <div className="space-y-1">
             {yesterdayData.map(item => (
-              <div key={item.id} role="listitem">
+              <div key={item.id} role="listitem" className="group">
                 {getDataListComponent(contentType, item)}
               </div>
             ))}
@@ -120,7 +123,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
           </div>
           <div className="space-y-1">
             {previousWeekData.map(item => (
-              <div key={item.id} role="listitem">
+              <div key={item.id} role="listitem" className="group">
                 {getDataListComponent(contentType, item)}
               </div>
             ))}
@@ -135,7 +138,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
           </div>
           <div className="space-y-1">
             {olderData.map(item => (
-              <div key={item.id} role="listitem">
+              <div key={item.id} role="listitem" className="group">
                 {getDataListComponent(contentType, item)}
               </div>
             ))}

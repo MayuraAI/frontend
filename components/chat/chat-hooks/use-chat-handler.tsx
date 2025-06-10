@@ -133,7 +133,7 @@ export const useChatHandler = () => {
         tempAssistantChatMessage,
         newAbortController,
         setFirstTokenReceived,
-        setChatMessages,
+        setChatMessages
       )
 
       if (!selectedChat) {
