@@ -147,7 +147,43 @@ export const processResponse = async (
 
       const text = new TextDecoder().decode(value)
       const lines = text.split("\n").filter(line => line.trim() !== "")
-      const data = JSON.parse(lines[0].slice(6))
+
+      if (lines.length === 0) continue
+
+      let data
+      try {
+        // Handle both SSE format "data: {...}" and raw JSON
+        const lineContent = lines[0].startsWith("data: ")
+          ? lines[0].slice(6)
+          : lines[0]
+        data = JSON.parse(lineContent)
+      } catch (parseError) {
+        console.error(
+          "Error parsing response data:",
+          parseError,
+          "Raw text:",
+          text
+        )
+        continue
+      }
+
+      // Handle error responses
+      if (data.error) {
+        const errorMessage = `Error: ${data.error}`
+        fullText = errorMessage
+        setChatMessages(prev =>
+          prev.map(chatMessage =>
+            chatMessage.id === tempAssistantChatMessage.id
+              ? {
+                  ...chatMessage,
+                  content: errorMessage,
+                  model_name: "error"
+                }
+              : chatMessage
+          )
+        )
+        throw new Error(data.error)
+      }
 
       if (data.type == "end") {
         break

@@ -1,5 +1,6 @@
 import { MayuraContext } from "@/context/context"
 import { deleteMessagesIncludingAndAfter } from "@/db/messages"
+import { supabase } from "@/lib/supabase/browser-client"
 import { ChatMessage } from "@/types"
 import { useRouter } from "next/navigation"
 import { useContext, useRef } from "react"
@@ -107,10 +108,25 @@ export const useChatHandler = () => {
         ? chatMessages
         : [...chatMessages, tempUserChatMessage]
 
+      // Get the access token from Supabase session
+      const {
+        data: { session },
+        error: sessionError
+      } = await supabase.auth.getSession()
+
+      if (sessionError) {
+        throw new Error("Failed to get session: " + sessionError.message)
+      }
+
+      if (!session?.access_token) {
+        throw new Error("No valid session found. Please log in again.")
+      }
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`
         },
         body: JSON.stringify({
           messages: messages,
@@ -125,7 +141,12 @@ export const useChatHandler = () => {
       })
 
       if (!response.ok) {
-        throw new Error("Failed to send message")
+        if (response.status === 401) {
+          throw new Error("Authentication failed. Please log in again.")
+        }
+        throw new Error(
+          `Failed to send message: ${response.status} ${response.statusText}`
+        )
       }
 
       const [generatedText, modelName] = await processResponse(
