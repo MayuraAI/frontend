@@ -76,7 +76,7 @@ export const DeleteChat: FC<DeleteChatProps> = ({ chat }) => {
 
           <Button
             ref={buttonRef}
-            variant="danger"
+            variant="destructive"
             onClick={handleDeleteChat}
             className="font-black"
           >
