@@ -21,7 +21,7 @@ import { redirect } from "next/navigation"
 import { AlertCircle, Zap, Lock, Mail, UserPlus, KeyRound } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Login - BRUTAL ACCESS"
+  title: "Login - Mayura AI" // Updated title
 }
 
 export default async function Login({
@@ -159,45 +159,28 @@ export default async function Login({
 
   return (
     <div className="bg-background relative flex min-h-screen w-full items-center justify-center overflow-hidden p-4">
-      {/* Decorative Background Elements */}
-      <div className="pointer-events-none absolute left-20 top-20 rotate-12 opacity-20">
-        <div className="bg-neo-electric shadow-neo size-32 border-4 border-black"></div>
-      </div>
-      <div className="pointer-events-none absolute bottom-20 right-20 -rotate-12 opacity-20">
-        <div className="bg-neo-neon shadow-neo size-24 border-4 border-black"></div>
-      </div>
-      <div className="pointer-events-none absolute left-10 top-1/2 rotate-45 opacity-15">
-        <div className="bg-neo-cyber shadow-neo size-20 border-4 border-black"></div>
-      </div>
+      {/* Removed Decorative Background Elements for consistency with Mayura homepage */}
 
       <div className="z-10 w-full max-w-md">
-        {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="font-brutal text-shadow-neo rotate-slight mb-4 text-5xl font-black">
-            BRUTAL ACCESS
-          </h1>
-          <Badge variant="electric" className="rotate-slight-reverse px-4 py-2 text-lg">
-            <Zap className="mr-2 size-5" />
-            POWER UP
+          <Badge variant="default" className="px-4 py-2 text-lg"> {/* Changed badge variant */}
+            Mayura AI
           </Badge>
         </div>
 
-        <Card className="rotate-slight-reverse shadow-neo-lg">
-          <CardHeader className="space-y-3 pb-6 text-center">
-            <CardTitle className="font-brutal flex items-center justify-center gap-3 text-3xl font-black">
-              <Lock className="size-8" />
-              ENTER THE ZONE
-            </CardTitle>
-            <CardDescription className="text-lg font-bold">
-              Sign in to unleash brutal AI intelligence
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
+        <Card className="shadow-lg"> {/* Adjusted shadow */}
+          {/* <CardHeader className="space-y-3 pb-6 text-center">
+            <CardContent className="flex items-center justify-center gap-3 text-3xl font-bold text-zinc-800">
+              <Lock className="size-8 text-primary" />
+              Sign in to Mayura AI
+            </CardContent>
+          </CardHeader> */}
+          <CardContent className="space-y-6 pt-6">
             <form className="space-y-6" action={signIn}>
-              <div className="neo-form-group">
-                <Label htmlFor="email" className="flex items-center gap-2">
+              <div className="space-y-2"> {/* Simplified form group styling */}
+                <Label htmlFor="email" className="flex items-center gap-2 text-zinc-700"> {/* Adjusted label color */}
                   <Mail className="size-5" />
-                  EMAIL ADDRESS
+                  Email Address
                 </Label>
                 <Input
                   id="email"
@@ -205,14 +188,14 @@ export default async function Login({
                   type="email"
                   placeholder="your@email.com"
                   required
-                  className="w-full"
+                  className="w-full border-zinc-300 focus-visible:ring-primary" // Consistent border/focus
                 />
               </div>
 
-              <div className="neo-form-group">
-                <Label htmlFor="password" className="flex items-center gap-2">
+              <div className="space-y-2"> {/* Simplified form group styling */}
+                <Label htmlFor="password" className="flex items-center gap-2 text-zinc-700"> {/* Adjusted label color */}
                   <KeyRound className="size-5" />
-                  PASSWORD
+                  Password
                 </Label>
                 <Input
                   id="password"
@@ -220,25 +203,25 @@ export default async function Login({
                   type="password"
                   placeholder="Enter your password"
                   required
-                  className="w-full"
+                  className="w-full border-zinc-300 focus-visible:ring-primary" // Consistent border/focus
                 />
               </div>
 
               <div className="space-y-4">
-                <Button type="submit" className="w-full" size="lg" variant="electric">
+                <Button type="submit" className="w-full" size="lg"> {/* Default button variant */}
                   <Zap className="mr-2 size-5" />
-                  SIGN IN NOW
+                  Sign In
                 </Button>
 
                 <Button
                   type="submit"
-                  variant="neon"
+                  variant="outline" // Outline variant for secondary action
                   size="lg"
                   className="w-full"
                   formAction={signUp}
                 >
                   <UserPlus className="mr-2 size-5" />
-                  CREATE ACCOUNT
+                  Create Account
                 </Button>
               </div>
 
@@ -246,16 +229,16 @@ export default async function Login({
                 <button
                   type="submit"
                   formAction={handleResetPassword}
-                  className="text-primary hover:bg-primary hover:text-primary-foreground shadow-neo-sm hover:shadow-neo border-2 border-transparent px-4 py-2 text-lg font-black transition-all duration-100 hover:border-black"
+                  className="text-primary hover:text-primary-foreground hover:bg-primary py-2 px-4 rounded-md transition-colors duration-200" // Styled to match link buttons
                 >
-                  FORGOT PASSWORD?
+                  Forgot Password?
                 </button>
               </div>
 
               {searchParams?.message && (
                 <Alert variant="destructive" className="mt-6">
                   <AlertCircle className="size-6" />
-                  <AlertDescription className="text-lg font-black">
+                  <AlertDescription className="text-base"> {/* Adjusted font size */}
                     {searchParams.message}
                   </AlertDescription>
                 </Alert>
@@ -263,17 +246,6 @@ export default async function Login({
             </form>
           </CardContent>
         </Card>
-
-        {/* Footer Message */}
-        <div className="mt-8 text-center">
-          <div className="bg-neo-warning shadow-neo rotate-slight border-4 border-black p-4">
-            <p className="text-lg font-black">
-              Ready to experience BRUTAL efficiency? 
-              <br />
-              <span className="text-2xl">⚡ POWER UP NOW ⚡</span>
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   )
