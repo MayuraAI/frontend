@@ -1,9 +1,12 @@
-import React from "react"
+import React, { useState, useRef } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import rehypeRaw from "rehype-raw"
 import rehypeHighlight from "rehype-highlight"
 import "highlight.js/styles/github-dark.css" // or any theme you want
+import { Button } from "./button" // Assuming button is in the same ui folder
+import { IconCheck, IconCopy } from "@tabler/icons-react"
+import { toast } from "sonner"
 
 interface MarkdownContentProps {
   aiResponse: string
@@ -12,7 +15,7 @@ interface MarkdownContentProps {
 const MarkdownContent: React.FC<MarkdownContentProps> = ({ aiResponse }) => {
   if (!aiResponse) {
     return (
-      <div className="italic text-gray-500">
+      <div className="text-muted-foreground italic">
         <span className="loading-wave">Mayura is thinking</span>
         <span className="loading-dots">...</span>
         <style>
@@ -54,6 +57,47 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ aiResponse }) => {
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeRaw, rehypeHighlight]}
+      components={{
+        pre: ({ children, ...props }) => {
+          const [copied, setCopied] = useState(false);
+          const preRef = useRef<HTMLPreElement>(null);
+
+          // This function now correctly handles copying the full text content of the <pre> block
+          const handleCopy = () => {
+            if (preRef.current?.innerText) {
+              navigator.clipboard.writeText(preRef.current.innerText);
+              setCopied(true);
+              toast.success("Code copied to clipboard");
+              setTimeout(() => setCopied(false), 2000);
+            }
+          };
+
+          return (
+            <div className="group relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="bg-background/80 hover:bg-background absolute right-2 top-2 z-10 size-7 opacity-0 backdrop-blur transition-opacity duration-200 group-hover:opacity-100"
+                onClick={handleCopy}
+              >
+                {copied ? <IconCheck className="size-4" /> : <IconCopy className="size-4" />}
+              </Button>
+              <pre ref={preRef} {...props} className="my-4 overflow-x-auto rounded-lg bg-gray-900 p-4 text-sm">
+                {children}
+              </pre>
+            </div>
+          );
+        },
+        code: ({ className, children, ...props }) => {
+          const match = /language-(\w+)/.exec(className || '');
+          // Style for inline code
+          if (!match) {
+            return <code className={`${className} rounded bg-gray-200 px-1 py-0.5 font-mono text-red-600`} {...props}>{children}</code>
+          }
+          // Style for code blocks (handled by rehype-highlight)
+          return <code className={className} {...props}>{children}</code>
+        }
+      }}
     >
       {aiResponse}
     </ReactMarkdown>

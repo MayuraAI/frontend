@@ -80,10 +80,10 @@ export const ChatInput: FC<ChatInputProps> = () => {
     <form
       onSubmit={handleFormSubmit}
       className={cn(
-        "border-border bg-background relative flex items-end gap-3 rounded-2xl border px-3 py-1 shadow-sm transition-all duration-200", // Adjusted padding and shadow
+        "border-3 relative flex items-end gap-4 border-black bg-white px-6 py-4 shadow-[4px_4px_0px_0px_black] transition-all duration-200",
         isFocused
-          ? "ring-ring ring-offset-background ring-2 ring-offset-2"
-          : "hover:shadow-md"
+          ? "translate-x-[-2px] translate-y-[-2px] shadow-[6px_6px_0px_0px_black]"
+          : "hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_black]"
       )}
     >
       <Textarea
@@ -94,11 +94,11 @@ export const ChatInput: FC<ChatInputProps> = () => {
         onKeyDown={handleKeyDown}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        placeholder="Ask Mayura anything..."
+        placeholder="ASK MAYURA ANYTHING..."
         className={cn(
-          "flex-1 resize-none overflow-y-auto border-none bg-transparent text-sm leading-relaxed outline-none", // Added overflow-y-auto, removed px-0 py-[10px] as it's handled by form padding
-          "placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0",
-          "max-h-32 min-h-[24px]" // Set minimum and maximum height for scroll
+          "flex-1 resize-none overflow-y-auto border-none bg-transparent font-mono text-base leading-relaxed outline-none",
+          "placeholder:text-muted-foreground placeholder:font-bold placeholder:uppercase focus-visible:ring-0 focus-visible:ring-offset-0",
+          "max-h-32 min-h-[32px]" // Set minimum and maximum height for scroll
         )}
         rows={1} // Start with 1 row, let JS handle expansion
         maxLength={4000}
@@ -110,28 +110,25 @@ export const ChatInput: FC<ChatInputProps> = () => {
         {isGenerating ? (
           <Button
             type="button"
-            variant="destructive"
-            size="icon"
-            className="size-9 shrink-0 rounded-md" // Adjusted size for better visual
+            className="btn-neobrutalist bg-destructive text-destructive-foreground hover:bg-destructive size-12 shrink-0"
             onClick={handleStopMessage}
             aria-label="Stop generating"
           >
-            <IconPlayerStop size={18} /> {/* Slightly larger icon */}
+            <IconPlayerStop size={20} strokeWidth={3} />
           </Button>
         ) : (
           <Button
             type="submit"
-            size="icon"
             className={cn(
-              "size-9 shrink-0 rounded-md transition-all duration-150", // Adjusted size and shrink-0
+              "btn-neobrutalist size-12 shrink-0 transition-all duration-150",
               hasContent
-                ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                : "bg-muted text-muted-foreground cursor-not-allowed opacity-60" // Added opacity for disabled
+                ? "bg-neobrutalist-blue hover:bg-neobrutalist-blue text-white"
+                : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
             )}
             disabled={!hasContent || isGenerating}
             aria-label="Send message"
           >
-            <IconSend size={18} /> {/* Slightly larger icon */}
+            <IconSend size={20} strokeWidth={3} />
           </Button>
         )}
       </div>

@@ -10,8 +10,7 @@ import { useScroll } from "./chat-hooks/use-scroll"
 import { ChatInput } from "./chat-input"
 import { ChatMessages } from "./chat-messages"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { MessageCircle, Sparkles, Code2, Brain, BarChart3 } from "lucide-react"
+import { Sparkles, Code2, Brain, BarChart3 } from "lucide-react"
 
 interface MayuraChatProps {}
 
@@ -74,7 +73,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
     },
     {
       icon: Code2,
-      title: "Code Analysis",
+      title: "Code Analysis", 
       description: "Review my Python code for improvements",
       category: "code"
     },
@@ -101,42 +100,42 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
         aria-live="polite"
         aria-label="Chat messages"
       >
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-4xl space-y-4">
           <ChatMessages />
 
           {/* Welcome Message for New Chats */}
           {(!chatMessages || chatMessages.length === 0) && !isGenerating && (
             <div className="flex h-full min-h-[500px] flex-col items-center justify-center text-center">
               {/* Welcome Header */}
-              <div className="mb-12">
-                <h1 className="text-foreground mb-3 text-2xl font-bold tracking-tight">
+              <div className="mb-16">
+                <h1 className="text-foreground mb-4 text-4xl font-bold">
                   Welcome to Mayura AI
                 </h1>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground max-w-md text-lg">
                   How can I help you today?
                 </p>
               </div>
 
               {/* Example Prompts */}
-              <div className="w-full max-w-2xl">
+              <div className="w-full max-w-4xl">
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {examplePrompts.map((prompt, index) => {
                     const IconComponent = prompt.icon
                     return (
                       <Card
                         key={index}
-                        className="border-border/50 hover:border-border group cursor-pointer border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                        className="border-border rounded-12 cursor-pointer border transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
                       >
-                        <CardContent className="p-4">
-                          <div className="flex items-start space-x-3">
-                            <div className="bg-primary/10 group-hover:bg-primary/20 flex size-10 items-center justify-center rounded-lg transition-colors">
-                              <IconComponent className="text-primary size-5" />
+                        <CardContent className="p-6">
+                          <div className="flex items-start space-x-4">
+                            <div className="bg-muted rounded-12 p-3">
+                              <IconComponent className="text-muted-foreground size-6" />
                             </div>
                             <div className="min-w-0 flex-1">
-                              <h3 className="text-foreground group-hover:text-primary font-medium transition-colors">
+                              <h3 className="text-foreground mb-2 font-semibold">
                                 {prompt.title}
                               </h3>
-                              <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
+                              <p className="text-muted-foreground text-sm leading-relaxed">
                                 {prompt.description}
                               </p>
                             </div>
@@ -153,7 +152,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
       </section>
 
       {/* Chat Input Area */}
-      <footer className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-t p-4 backdrop-blur md:p-6">
+      <footer className="border-border bg-background/95 supports-[backdrop-filter]:bg-background/60 border-t p-4 backdrop-blur md:p-6">
         <div className="mx-auto max-w-4xl">
           <ChatInput />
         </div>

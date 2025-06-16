@@ -76,22 +76,28 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
   const previousWeekData = getSortedData(data, "Previous Week")
   const olderData = getSortedData(data, "Older")
 
+  const SectionHeader = ({ title }: { title: string }) => (
+    <div className="mb-6 px-3">
+      <h3 className="font-sans text-sm font-black uppercase tracking-widest text-black">
+        {title}
+      </h3>
+    </div>
+  )
+
   return (
     <div
       ref={divRef}
       className={cn(
-        "scrollbar-hide flex-1 space-y-1 overflow-auto",
+        "scrollbar-hide flex-1 space-y-2 overflow-auto",
         isOverflowing && "pr-2"
       )}
       role="list"
       aria-label="Chat history"
     >
       {todayData.length > 0 && (
-        <div className="mb-4">
-          <div className="text-text-muted mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
-            Today
-          </div>
-          <div className="space-y-1">
+        <div className="mb-8">
+          <SectionHeader title="TODAY" />
+          <div className="space-y-2">
             {todayData.map(item => (
               <div key={item.id} role="listitem" className="group">
                 {getDataListComponent(contentType, item)}
@@ -102,11 +108,9 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
       )}
 
       {yesterdayData.length > 0 && (
-        <div className="mb-4">
-          <div className="text-text-muted mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
-            Yesterday
-          </div>
-          <div className="space-y-1">
+        <div className="mb-8">
+          <SectionHeader title="YESTERDAY" />
+          <div className="space-y-2">
             {yesterdayData.map(item => (
               <div key={item.id} role="listitem" className="group">
                 {getDataListComponent(contentType, item)}
@@ -117,11 +121,9 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
       )}
 
       {previousWeekData.length > 0 && (
-        <div className="mb-4">
-          <div className="text-text-muted mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
-            Previous Week
-          </div>
-          <div className="space-y-1">
+        <div className="mb-8">
+          <SectionHeader title="PREVIOUS WEEK" />
+          <div className="space-y-2">
             {previousWeekData.map(item => (
               <div key={item.id} role="listitem" className="group">
                 {getDataListComponent(contentType, item)}
@@ -132,11 +134,9 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
       )}
 
       {olderData.length > 0 && (
-        <div className="mb-4">
-          <div className="text-text-muted mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
-            Older
-          </div>
-          <div className="space-y-1">
+        <div className="mb-8">
+          <SectionHeader title="OLDER" />
+          <div className="space-y-2">
             {olderData.map(item => (
               <div key={item.id} role="listitem" className="group">
                 {getDataListComponent(contentType, item)}

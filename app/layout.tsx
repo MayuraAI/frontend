@@ -4,17 +4,22 @@ import { Providers } from "@/components/utility/providers"
 import { Database } from "@/supabase/types"
 import { createServerClient } from "@supabase/ssr"
 import { Metadata, Viewport } from "next"
-import { Inter } from "next/font/google"
+import { DM_Sans } from "next/font/google"
 import { cookies } from "next/headers"
 import { ReactNode } from "react"
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["400", "500", "700"]
+})
+
 const APP_NAME = "Mayura AI"
-const APP_DEFAULT_TITLE = "Mayura AI - Intelligent Routing Assistant"
+const APP_DEFAULT_TITLE = "Mayura AI - Brutal Intelligence"
 const APP_TITLE_TEMPLATE = "%s - Mayura AI"
 const APP_DESCRIPTION =
-  "Your intelligent routing assistant. Connect with the best AI model for every task."
+  "Your brutally efficient AI routing assistant. Raw power meets intelligent routing."
 
 interface RootLayoutProps {
   children: ReactNode
@@ -59,7 +64,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "hsl(262 83% 58%)"
+  themeColor: "#FFFFFF"
 }
 
 export default async function RootLayout({
@@ -81,11 +86,15 @@ export default async function RootLayout({
   const session = (await supabase.auth.getSession()).data.session
 
   return (
-    <html lang="en" suppressHydrationWarning className="dark">
-      <body className={`${inter.variable} font-sans antialiased`}>
-        <Providers attribute="class" defaultTheme="dark">
-          <Toaster richColors position="top-center" duration={3000} />
-          <div className="bg-background text-foreground flex h-screen w-full flex-col items-center overflow-hidden">
+    <html lang="en" className="light">
+      <body className={`${dmSans.variable} font-sans antialiased`}>
+        <Providers>
+          <Toaster
+            richColors
+            position="top-center"
+            duration={3000}
+          />
+          <div className="bg-background text-foreground flex h-screen w-full flex-col items-center">
             {session ? <GlobalState>{children}</GlobalState> : children}
           </div>
         </Providers>
