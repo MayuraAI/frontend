@@ -48,7 +48,7 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
     >
       <div className="min-w-0 flex-1">
         <div className={cn(
-          "truncate font-sans text-sm font-bold uppercase leading-relaxed tracking-wide",
+          "truncate font-sans text-sm font-bold leading-relaxed tracking-wide",
           isActive ? "text-black" : "text-black"
         )}>
           {chat.name}

@@ -8,7 +8,6 @@ import {
   SheetTitle,
   SheetTrigger
 } from "@/components/ui/sheet"
-import { AssignWorkspaces } from "@/components/workspace/assign-workspaces"
 import { MayuraContext } from "@/context/context"
 import { updateChat } from "@/db/chats"
 import { Tables } from "@/supabase/types"

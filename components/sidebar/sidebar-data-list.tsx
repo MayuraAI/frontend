@@ -78,7 +78,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
 
   const SectionHeader = ({ title }: { title: string }) => (
     <div className="mb-6 px-3">
-      <h3 className="font-sans text-sm font-black uppercase tracking-widest text-black">
+      <h3 className="font-sans text-sm font-black tracking-widest text-black">
         {title}
       </h3>
     </div>

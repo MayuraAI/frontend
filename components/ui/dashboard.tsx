@@ -98,12 +98,12 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
         {/* Clean Sidebar Toggle Button for Desktop */}
         <Button
           className={cn(
-            "bg-card hover:bg-accent border-border rounded-12 absolute left-1 top-1/2 z-10 size-12 border-2 shadow-md transition-all duration-300",
+            "bg-card hover:bg-accent border-border rounded-12 absolute left-1 top-1/2 z-100 size-8 border-2 shadow-md transition-all duration-300",
             "hidden md:flex"
           )}
           style={{
             transform: `translateY(-50%) ${showSidebar ? "rotate(180deg)" : "rotate(0deg)"}`,
-            left: showSidebar ? `${SIDEBAR_WIDTH - 20}px` : "8px"
+            left: showSidebar ? `${SIDEBAR_WIDTH + 10}px` : "8px"
           }}
           variant="outline"
           size="icon"

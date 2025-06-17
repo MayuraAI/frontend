@@ -6,7 +6,9 @@ import { MayuraContext } from "@/context/context"
 import {
   IconCheck,
   IconCopy,
-  IconX
+  IconX,
+  IconChevronDown,
+  IconChevronUp
 } from "@tabler/icons-react"
 import { toast } from "sonner"
 import MarkdownContent from "../ui/markdown-content"
@@ -32,8 +34,12 @@ export const Message: FC<MessageProps> = ({
 
   const [editedContent, setEditedContent] = useState(message.content)
   const [isCopied, setIsCopied] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   const userTextareaRef = useRef<HTMLTextAreaElement>(null)
+  
+  // Define threshold for collapsing user messages (in characters)
+  const COLLAPSE_THRESHOLD = 200
   
   useEffect(() => {
     if (isEditing && message.role === "user" && userTextareaRef.current) {
@@ -79,7 +85,15 @@ export const Message: FC<MessageProps> = ({
     onCancelEdit()
   }
 
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded)
+  }
+
   const isUser = message.role === "user"
+  const shouldCollapse = isUser && message.content.length > COLLAPSE_THRESHOLD
+  const displayContent = shouldCollapse && !isExpanded 
+    ? message.content.substring(0, COLLAPSE_THRESHOLD) + "..."
+    : message.content
 
   const getModelName = () => {
     return message.model_name || "mayura"
@@ -122,7 +136,58 @@ export const Message: FC<MessageProps> = ({
               </div>
             ) : (
               <div className="message-block message-block--user">
-                <p className="whitespace-pre-wrap font-mono text-sm leading-relaxed">{message.content}</p>
+                <p className="whitespace-pre-wrap font-mono text-sm leading-relaxed">{displayContent}</p>
+                {shouldCollapse && (
+                  <div className="mt-3 flex justify-end gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleCopy}
+                      className="btn-neobrutalist hover:bg-neobrutalist-blue h-8 bg-white px-3 text-xs text-black hover:text-white"
+                    >
+                      {isCopied ? (
+                        <IconCheck size={14} strokeWidth={3} />
+                      ) : (
+                        <IconCopy size={14} strokeWidth={3} />
+                      )}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={toggleExpanded}
+                      className="btn-neobrutalist hover:bg-neobrutalist-blue h-8 bg-white px-3 text-xs text-black hover:text-white"
+                    >
+                      {isExpanded ? (
+                        <>
+                          <IconChevronUp size={14} strokeWidth={3} className="mr-1" />
+                          COLLAPSE
+                        </>
+                      ) : (
+                        <>
+                          <IconChevronDown size={14} strokeWidth={3} className="mr-1" />
+                          EXPAND
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
+                {/* Add copy button for short messages that don't collapse */}
+                {!shouldCollapse && (
+                  <div className="mt-3 flex justify-end opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleCopy}
+                      className="btn-neobrutalist hover:bg-neobrutalist-blue h-8 bg-white px-3 text-xs text-black hover:text-white"
+                    >
+                      {isCopied ? (
+                        <IconCheck size={14} strokeWidth={3} />
+                      ) : (
+                        <IconCopy size={14} strokeWidth={3} />
+                      )}
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -132,7 +197,7 @@ export const Message: FC<MessageProps> = ({
         <div className="w-full max-w-[80%]">
           <div className="space-y-4">
             <div className="message-block message-block--ai relative w-full pt-6">
-              <div className="absolute right-4 top-0 z-10 w-fit -translate-y-1/2 border border-black bg-[#E9ECEF] px-2 py-1 font-mono text-xs font-bold uppercase tracking-wide text-black">
+              <div className="absolute right-4 top-0 z-10 w-fit -translate-y-1/2 border border-black bg-[#E9ECEF] px-2 py-1 font-mono text-xs font-bold tracking-wide text-black">
                 {getModelName()}
               </div>
               

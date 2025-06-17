@@ -76,7 +76,7 @@ export default function HomePage() {
       <main className="w-full flex-1">
         {/* Hero Section */}
         <section className="w-full px-6 py-16 md:py-24 lg:py-32">
-          <div className="container mx-auto">
+          <div className="container mx-auto py-12">
             <div className="mx-auto flex max-w-4xl flex-col items-center space-y-6 text-center">
               <div className="space-y-4">
                 <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">

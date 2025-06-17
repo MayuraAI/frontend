@@ -28,16 +28,16 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
     >
       {/* App Header with Neobrutalist Logo */}
       <header className="bg-sidebar border-b-3 shrink-0 border-black p-6">
-        <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="border-2 border-black bg-black p-3 shadow-[3px_3px_0px_0px_black]">
+            {/* <div className="border-2 border-black bg-black p-3 shadow-[3px_3px_0px_0px_black]">
               <span className="font-mono text-lg font-bold text-white">M</span>
-            </div>
-            <h1 className="font-sans text-xl font-black uppercase tracking-wide">MAYURA AI</h1>
+            </div> */}
+            <h1 className="font-fleur">Mayura</h1>
           </div>
+        <div className="mt-6 flex items-center justify-between">
+          <WorkspaceSwitcher />
           <WorkspaceSettings />
         </div>
-        <WorkspaceSwitcher />
       </header>
 
       {/* Chat History Section */}
@@ -53,7 +53,7 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="container-neobrutalist max-w-xs p-8">
                 <MessageCircle className="mx-auto mb-6 size-16 text-black" strokeWidth={3} />
-                <h3 className="mb-4 font-sans text-xl font-black uppercase text-black">NO CHATS YET</h3>
+                <h3 className="mb-4 font-sans text-xl font-black text-black">NO CHATS YET</h3>
                 <p className="font-mono text-sm font-bold leading-relaxed text-black">
                   START A CONVERSATION TO SEE YOUR CHAT HISTORY HERE
                 </p>

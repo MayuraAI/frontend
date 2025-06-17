@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fleur+De+Leah:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -87,8 +88,15 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Inter', sans-serif;
     font-weight: 900;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     letter-spacing: -0.025em;
+  }
+
+  .font-fleur {
+    font-family: "Fleur De Leah", cursive;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 3rem;
   }
 
   .font-mono {
@@ -125,7 +133,7 @@
 @layer components {
   /* Neobrutalist Button Base */
   .btn-neobrutalist {
-    @apply font-bold uppercase tracking-wide border-3 border-black shadow-[4px_4px_0px_0px_black] transition-all duration-150;
+    @apply font-bold tracking-wide border-3 border-black shadow-[4px_4px_0px_0px_black] transition-all duration-150;
     font-family: 'Inter', sans-serif;
   }
 

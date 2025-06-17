@@ -14,7 +14,7 @@ export const CreateChat: FC = () => {
                    border-black p-4 
                    font-sans text-base 
                    font-bold 
-                   uppercase 
+                    
                    tracking-wide text-black
                    shadow-[4px_4px_0px_0px_black] 
                    transition-all duration-150

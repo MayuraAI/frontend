@@ -97,7 +97,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
         placeholder="ASK MAYURA ANYTHING..."
         className={cn(
           "flex-1 resize-none overflow-y-auto border-none bg-transparent font-mono text-base leading-relaxed outline-none",
-          "placeholder:text-muted-foreground placeholder:font-bold placeholder:uppercase focus-visible:ring-0 focus-visible:ring-offset-0",
+          "placeholder:text-muted-foreground placeholder:font-bold focus-visible:ring-0 focus-visible:ring-offset-0",
           "max-h-32 min-h-[32px]" // Set minimum and maximum height for scroll
         )}
         rows={1} // Start with 1 row, let JS handle expansion
