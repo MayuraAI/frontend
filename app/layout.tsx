@@ -16,10 +16,10 @@ const dmSans = DM_Sans({
 })
 
 const APP_NAME = "Mayura AI"
-const APP_DEFAULT_TITLE = "Mayura AI - Brutal Intelligence"
+const APP_DEFAULT_TITLE = "Mayura AI"
 const APP_TITLE_TEMPLATE = "%s - Mayura AI"
 const APP_DESCRIPTION =
-  "Your brutally efficient AI routing assistant. Raw power meets intelligent routing."
+  "Your intelligent routing assistant."
 
 interface RootLayoutProps {
   children: ReactNode
