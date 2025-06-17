@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS chats (
 
     -- REQUIRED RELATIONSHIPS
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-    workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
 
     -- METADATA
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -24,7 +23,6 @@ CREATE TABLE IF NOT EXISTS chats (
 -- INDEXES --
 
 CREATE INDEX idx_chats_user_id ON chats (user_id);
-CREATE INDEX idx_chats_workspace_id ON chats (workspace_id);
 
 -- RLS --
 
