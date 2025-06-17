@@ -1,5 +1,6 @@
 import { Tables } from "@/supabase/types"
 import { ChatMessage, ChatSettings } from "@/types"
+import { RateLimitStatus } from "@/types/rate-limit"
 import { Dispatch, SetStateAction, createContext, useState } from "react"
 
 export interface MayuraContextProps {
@@ -40,6 +41,12 @@ export interface MayuraContextProps {
 
   chatSettings: ChatSettings
   setChatSettings: React.Dispatch<React.SetStateAction<ChatSettings>>
+
+  rateLimitStatus: RateLimitStatus | null
+  setRateLimitStatus: React.Dispatch<React.SetStateAction<RateLimitStatus | null>>
+
+  rateLimitRefreshTrigger: number
+  refreshRateLimit: () => void
 }
 
 export const MayuraContext = createContext<MayuraContextProps>({
@@ -84,7 +91,13 @@ export const MayuraContext = createContext<MayuraContextProps>({
     includeProfileContext: true,
     embeddingsProvider: "openai"
   },
-  setChatSettings: () => {}
+  setChatSettings: () => {},
+
+  rateLimitStatus: null,
+  setRateLimitStatus: () => {},
+
+  rateLimitRefreshTrigger: 0,
+  refreshRateLimit: () => {}
 })
 
 export function MayuraProvider({ children }: { children: React.ReactNode }) {
@@ -108,6 +121,13 @@ export function MayuraProvider({ children }: { children: React.ReactNode }) {
     includeProfileContext: true,
     embeddingsProvider: "openai"
   })
+  const [rateLimitStatus, setRateLimitStatus] = useState<RateLimitStatus | null>(null)
+  const [rateLimitRefreshTrigger, setRateLimitRefreshTrigger] = useState<number>(0)
+
+  const refreshRateLimit = () => {
+    // Trigger a refresh in the RateLimitStatus component by updating a counter
+    setRateLimitRefreshTrigger(prev => prev + 1)
+  }
 
   return (
     <MayuraContext.Provider
@@ -135,7 +155,11 @@ export function MayuraProvider({ children }: { children: React.ReactNode }) {
         isMessageModalOpen,
         setIsMessageModalOpen,
         chatSettings,
-        setChatSettings
+        setChatSettings,
+        rateLimitStatus,
+        setRateLimitStatus,
+        rateLimitRefreshTrigger,
+        refreshRateLimit
       }}
     >
       {children}

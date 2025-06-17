@@ -11,6 +11,7 @@ import {
   handleCreateMessages,
   processResponse
 } from "../chat-helpers"
+import { useRateLimit } from "@/lib/hooks/use-rate-limit"
 
 export const useChatHandler = () => {
   const {
@@ -27,11 +28,13 @@ export const useChatHandler = () => {
     setAbortController,
     setIsGenerating,
     firstTokenReceived,
-    setFirstTokenReceived
+    setFirstTokenReceived,
+    refreshRateLimit
   } = useContext(MayuraContext)
 
   const router = useRouter()
   const chatInputRef = useRef<HTMLTextAreaElement>(null)
+  const { updateFromHeaders, getStatusSummary } = useRateLimit()
 
   const handleFocusChatInput = () => {
     if (chatInputRef.current) {
@@ -152,6 +155,25 @@ export const useChatHandler = () => {
         throw new Error(
           `Failed to send message: ${response.status} ${response.statusText}`
         )
+      }
+
+      // Update rate limit status from response headers
+      const updatedStatus = updateFromHeaders(response.headers)
+      // Always trigger UI refresh after sending a message
+      refreshRateLimit()
+      if (updatedStatus) {
+        const summary = getStatusSummary()
+        
+        // Show appropriate toasts based on rate limit status
+        if (summary?.isRunningLow && !summary.isInFreeMode) {
+          toast.warning(`Only ${summary.requestsRemaining} pro requests remaining today!`, {
+            description: `${summary.timeUntilReset}`
+          })
+        } else if (summary?.isInFreeMode) {
+          toast.info("You're now in free mode - unlimited requests!", {
+            description: "Pro requests will reset tomorrow"
+          })
+        }
       }
 
             const [generatedText, modelName] = await processResponse(

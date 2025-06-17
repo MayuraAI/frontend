@@ -10,6 +10,7 @@ import { FC, ReactNode, useContext, useEffect, useState } from "react"
 import { Button } from "./button"
 import { Sidebar } from "../sidebar/sidebar"
 import useHotkey from "@/lib/hooks/use-hotkey"
+import RateLimitStatus from "./rate-limit-status"
 
 export const SIDEBAR_WIDTH = 288 // 18rem in pixels
 
@@ -87,8 +88,13 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
             <IconMenu2 size={24} />
           </Button>
           <h1 className="text-foreground text-lg font-semibold">MAYURA AI</h1>
-          <div className="w-10" aria-hidden="true" />
+          <RateLimitStatus compact className="ml-2" />
         </header>
+
+        {/* Desktop Rate Limit Status - Top Right Corner */}
+        <div className="hidden md:block absolute top-4 right-4 z-50">
+          <RateLimitStatus compact />
+        </div>
 
         {/* Chat Content Area */}
         <section className="bg-background rounded-12 relative m-2 flex-1 overflow-hidden shadow-sm">
