@@ -11,7 +11,7 @@ interface ChatItemProps {
 }
 
 export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
-  const { selectedWorkspace, selectedChat } = useContext(MayuraContext)
+  const { selectedChat } = useContext(MayuraContext)
 
   const router = useRouter()
   const params = useParams()
@@ -20,8 +20,7 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
   const itemRef = useRef<HTMLDivElement>(null)
 
   const handleClick = () => {
-    if (!selectedWorkspace) return
-    return router.push(`/${selectedWorkspace.id}/chat/${chat.id}`)
+    return router.push(`/chat/${chat.id}`)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {

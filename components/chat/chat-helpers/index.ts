@@ -13,7 +13,6 @@ export const validateChatSettings = (
   chatSettings: ChatSettings | null,
   modelData: LLM | undefined,
   profile: Tables<"profiles"> | null,
-  selectedWorkspace: Tables<"workspaces"> | null,
   messageContent: string
 ) => {
   if (!chatSettings) {
@@ -26,10 +25,6 @@ export const validateChatSettings = (
 
   if (!profile) {
     throw new Error("Profile not found")
-  }
-
-  if (!selectedWorkspace) {
-    throw new Error("Workspace not found")
   }
 
   if (!messageContent) {
@@ -71,14 +66,12 @@ export const fetchChatResponse = async (
 
 export const handleCreateChat = async (
   profile: Tables<"profiles">,
-  selectedWorkspace: Tables<"workspaces">,
   messageContent: string,
   setSelectedChat: React.Dispatch<React.SetStateAction<Tables<"chats"> | null>>,
   setChats: React.Dispatch<React.SetStateAction<Tables<"chats">[]>>
 ) => {
   const newChat: TablesInsert<"chats"> = {
     user_id: profile.user_id,
-    workspace_id: selectedWorkspace.id,
     name: messageContent.slice(0, 100),
     sharing: "private"
   }

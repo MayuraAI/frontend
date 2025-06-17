@@ -2,8 +2,6 @@ import { MayuraContext } from "@/context/context"
 import { ContentType } from "@/types"
 import { FC, useContext } from "react"
 import { TabsContent } from "../ui/tabs"
-import { WorkspaceSwitcher } from "../utility/workspace-switcher"
-import { WorkspaceSettings } from "../workspace/workspace-settings"
 import { SidebarContent } from "./sidebar-content"
 import { WithTooltip } from "../ui/with-tooltip"
 import { ProfileSettings } from "../utility/profile-settings"
@@ -32,12 +30,8 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
             {/* <div className="border-2 border-black bg-black p-3 shadow-[3px_3px_0px_0px_black]">
               <span className="font-mono text-lg font-bold text-white">M</span>
             </div> */}
-            <h1 className="font-fleur">Mayura</h1>
+            <h1 className="font-yellowtail">Mayura (beta)</h1>
           </div>
-        <div className="mt-6 flex items-center justify-between">
-          <WorkspaceSwitcher />
-          <WorkspaceSettings />
-        </div>
       </header>
 
       {/* Chat History Section */}

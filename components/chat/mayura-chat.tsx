@@ -9,6 +9,7 @@ import { FC, useContext, useEffect, useState } from "react"
 import { useScroll } from "./chat-hooks/use-scroll"
 import { ChatInput } from "./chat-input"
 import { ChatMessages } from "./chat-messages"
+
 import { Card, CardContent } from "@/components/ui/card"
 import { Sparkles, Code2, Brain, BarChart3 } from "lucide-react"
 
@@ -19,9 +20,12 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
     useContext(MayuraContext)
 
   const params = useParams()
-  const { scrollToBottom } = useScroll()
+  const { 
+    scrollToBottom, 
+    messagesStartRef, 
+    messagesEndRef 
+  } = useScroll()
   const [loading, setLoading] = useState(false)
-  const [autoScroll, setAutoScroll] = useState(true)
   const [isReady, setIsReady] = useState(true)
 
   useEffect(() => {
@@ -48,17 +52,16 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
     }
   }, [params.chatid, setChatMessages, setSelectedChat])
 
+  // Auto-scroll to bottom when messages are first loaded
   useEffect(() => {
-    if (autoScroll && chatMessages && chatMessages.length > 0) {
-      scrollToBottom()
+    if (chatMessages && chatMessages.length > 0 && isReady && !loading) {
+      // Small delay to ensure DOM is rendered
+      const timer = setTimeout(() => {
+        scrollToBottom()
+      }, 300)
+      return () => clearTimeout(timer)
     }
-  }, [chatMessages, autoScroll, scrollToBottom])
-
-  useEffect(() => {
-    if (isGenerating) {
-      setAutoScroll(true)
-    }
-  }, [isGenerating])
+  }, [isReady, chatMessages.length > 0, scrollToBottom, loading])
 
   if (loading) {
     return <Loading />
@@ -101,7 +104,9 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
         aria-label="Chat messages"
       >
         <div className="mx-auto max-w-4xl space-y-4">
+          <div ref={messagesStartRef} />
           <ChatMessages />
+          <div ref={messagesEndRef} />
 
           {/* Welcome Message for New Chats */}
           {(!chatMessages || chatMessages.length === 0) && !isGenerating && (

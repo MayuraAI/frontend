@@ -2,7 +2,6 @@
 
 import { MayuraContext } from "@/context/context"
 import { getProfileByUserId, updateProfile } from "@/db/profile"
-import { getHomeWorkspaceByUserId } from "@/db/workspaces"
 import { supabase } from "@/lib/supabase/browser-client"
 import { useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
@@ -48,10 +47,7 @@ export default function SetupPage() {
         setDisplayName(profile.display_name || "")
 
         if (profile.has_onboarded) {
-          const homeWorkspaceId = await getHomeWorkspaceByUserId(user.id)
-          if (homeWorkspaceId) {
-            return router.push(`/${homeWorkspaceId}/chat`)
-          }
+          return router.push("/chat")
         }
 
         setLoading(false)
@@ -86,8 +82,7 @@ export default function SetupPage() {
 
     setProfile(updatedProfile)
 
-    const homeWorkspaceId = await getHomeWorkspaceByUserId(profile.id)
-    router.push(`/${homeWorkspaceId}/chat`)
+    router.push("/chat")
   }
 
   const renderStep = (stepNum: number) => {

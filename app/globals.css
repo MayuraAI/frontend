@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fleur+De+Leah:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Yellowtail:wght@400;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -101,6 +102,13 @@
 
   .font-mono {
     font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .font-yellowtail {
+    font-family: 'Yellowtail';
+    font-weight: 500;
+    font-style: normal;
+    font-size: 3rem;
   }
 
   /* NO CUSTOM SCROLLBAR - Keep it standard and bold */

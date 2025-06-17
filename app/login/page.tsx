@@ -11,7 +11,6 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { createClient } from "@/lib/supabase/server"
-import { getServerHomeWorkspace } from "@/lib/server/workspaces"
 import { Database } from "@/supabase/types"
 import { createServerClient } from "@supabase/ssr"
 import { get } from "@vercel/edge-config"
@@ -44,8 +43,7 @@ export default async function Login({
   const session = (await supabase.auth.getSession()).data.session
 
   if (session) {
-    const homeWorkspace = await getServerHomeWorkspace(session.user.id)
-    return redirect(`/${homeWorkspace.id}/chat`)
+    return redirect(`/chat`)
   }
 
   const signIn = async (formData: FormData) => {
@@ -73,8 +71,7 @@ export default async function Login({
       return redirect(`/login?message=Failed to establish session`)
     }
 
-    const homeWorkspace = await getServerHomeWorkspace(session.user.id)
-    return redirect(`/${homeWorkspace.id}/chat`)
+    return redirect(`/chat`)
   }
 
   const getEnvVarOrEdgeConfigValue = async (name: string) => {

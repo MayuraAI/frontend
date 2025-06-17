@@ -135,7 +135,7 @@ export const Message: FC<MessageProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="message-block message-block--user">
+              <div className="message-block message-block--user relative">
                 <p className="whitespace-pre-wrap font-mono text-sm leading-relaxed">{displayContent}</p>
                 {shouldCollapse && (
                   <div className="mt-3 flex justify-end gap-2">
@@ -173,7 +173,7 @@ export const Message: FC<MessageProps> = ({
                 )}
                 {/* Add copy button for short messages that don't collapse */}
                 {!shouldCollapse && (
-                  <div className="mt-3 flex justify-end opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                  <div className="absolute right-2 top-2">
                     <Button
                       variant="ghost"
                       size="sm"

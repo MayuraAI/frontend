@@ -1,11 +1,9 @@
 import { MayuraContext } from "@/context/context"
 import {
-  type UIEventHandler,
   useCallback,
   useContext,
   useEffect,
-  useRef,
-  useState
+  useRef
 } from "react"
 
 export const useScroll = () => {
@@ -13,75 +11,63 @@ export const useScroll = () => {
 
   const messagesStartRef = useRef<HTMLDivElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const isAutoScrolling = useRef(false)
-
-  const [isAtTop, setIsAtTop] = useState(false)
-  const [isAtBottom, setIsAtBottom] = useState(true)
-  const [userScrolled, setUserScrolled] = useState(false)
-  const [isOverflowing, setIsOverflowing] = useState(false)
-
-  useEffect(() => {
-    setUserScrolled(false)
-
-    if (!isGenerating && userScrolled) {
-      setUserScrolled(false)
-    }
-  }, [isGenerating])
-
-  useEffect(() => {
-    if (isGenerating && !userScrolled) {
-      scrollToBottom()
-    }
-  }, [chatMessages])
-
-  const handleScroll: UIEventHandler<HTMLDivElement> = useCallback(e => {
-    const target = e.target as HTMLDivElement
-    const bottom =
-      Math.round(target.scrollHeight) - Math.round(target.scrollTop) ===
-      Math.round(target.clientHeight)
-    setIsAtBottom(bottom)
-
-    const top = target.scrollTop === 0
-    setIsAtTop(top)
-
-    if (!bottom && !isAutoScrolling.current) {
-      setUserScrolled(true)
-    } else {
-      setUserScrolled(false)
-    }
-
-    const isOverflow = target.scrollHeight > target.clientHeight
-    setIsOverflowing(isOverflow)
-  }, [])
-
-  const scrollToTop = useCallback(() => {
-    if (messagesStartRef.current) {
-      messagesStartRef.current.scrollIntoView({ behavior: "instant" })
-    }
-  }, [])
 
   const scrollToBottom = useCallback(() => {
-    isAutoScrolling.current = true
-
-    setTimeout(() => {
-      if (messagesEndRef.current) {
-        messagesEndRef.current.scrollIntoView({ behavior: "instant" })
-      }
-
-      isAutoScrolling.current = false
-    }, 100)
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ 
+        behavior: "smooth",
+        block: "end" 
+      })
+    }
   }, [])
+
+  const scrollToBottomInstant = useCallback(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ 
+        behavior: "instant",
+        block: "end" 
+      })
+    }
+  }, [])
+
+  // Auto-scroll to bottom when chat is first loaded with messages
+  useEffect(() => {
+    if (chatMessages.length > 0) {
+      // Small delay to ensure DOM is rendered
+      const timer = setTimeout(() => {
+        scrollToBottom()
+      }, 200)
+      return () => clearTimeout(timer)
+    }
+  }, [chatMessages.length > 0 ? chatMessages[0]?.id : null, scrollToBottom])
+
+  // Auto-scroll during message generation (streaming)
+  useEffect(() => {
+    if (isGenerating) {
+      // Continuously scroll to bottom during generation
+      const scrollInterval = setInterval(() => {
+        scrollToBottomInstant()
+      }, 100) // Scroll every 100ms during generation
+      
+      return () => clearInterval(scrollInterval)
+    }
+  }, [isGenerating, scrollToBottomInstant])
+
+  // Auto-scroll when streaming ends to show UI elements (copy button, etc.)
+  useEffect(() => {
+    // When isGenerating changes from true to false (streaming ends)
+    if (!isGenerating && chatMessages.length > 0) {
+      // Small delay to let UI elements render, then scroll to bottom
+      const timer = setTimeout(() => {
+        scrollToBottom()
+      }, 200)
+      return () => clearTimeout(timer)
+    }
+  }, [isGenerating, scrollToBottom, chatMessages.length])
 
   return {
     messagesStartRef,
     messagesEndRef,
-    isAtTop,
-    isAtBottom,
-    userScrolled,
-    isOverflowing,
-    handleScroll,
-    scrollToTop,
-    scrollToBottom,
-    setIsAtBottom
+    scrollToBottom
   }
 }

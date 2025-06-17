@@ -39,10 +39,9 @@ export async function POST(request: Request) {
   }
 
   const json = await request.json()
-  const { messages, profile_context, workspace_instructions } = json as {
+  const { messages, profile_context } = json as {
     messages: ChatMessage[]
     profile_context?: string
-    workspace_instructions?: string
   }
 
   const latestPrompt = messages[messages.length - 1].content
@@ -63,9 +62,9 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           previous_messages: messages,
           prompt: latestPrompt,
-          profile_context,
-          workspace_instructions
-        })
+          profile_context
+        }),
+        signal: request.signal
       }
     )
 
@@ -126,6 +125,12 @@ export async function POST(request: Request) {
     const stream = response.body
     return new StreamingTextResponse(stream!)
   } catch (error: any) {
+    // Handle abort errors gracefully
+    if (error.name === "AbortError" || error.code === "ECONNRESET") {
+      console.log("Request aborted by client")
+      return new Response(null, { status: 499 }) // Client Closed Request
+    }
+
     const errorMessage = error.message || "An unexpected error occurred"
     const errorCode = error.status || 500
 

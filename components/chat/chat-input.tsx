@@ -3,13 +3,14 @@ import { MayuraContext } from "@/context/context"
 import { Button } from "../ui/button"
 import { Textarea } from "../ui/textarea"
 import { IconPlayerStop, IconSend } from "@tabler/icons-react"
-import { useChatHandler } from "./chat-hooks/use-chat-handler"
+import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
 import { cn } from "@/lib/utils"
+import { Send, Square } from "lucide-react"
 
 interface ChatInputProps {}
 
 export const ChatInput: FC<ChatInputProps> = () => {
-  const { chatMessages, isGenerating, selectedWorkspace } =
+  const { chatMessages, isGenerating, profile } =
     useContext(MayuraContext)
   const { handleSendMessage, handleStopMessage } = useChatHandler()
 
@@ -39,7 +40,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
 
   const handleSubmit = useCallback(() => {
     const content = inputValue.trim()
-    if (!selectedWorkspace || !content || isGenerating) return
+    if (!profile || !content || isGenerating) return
 
     setInputValue("")
     handleSendMessage(content, chatMessages, false)
@@ -49,7 +50,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
     }
     textareaRef.current?.focus()
   }, [
-    selectedWorkspace,
+    profile,
     inputValue,
     isGenerating,
     handleSendMessage,
@@ -75,63 +76,70 @@ export const ChatInput: FC<ChatInputProps> = () => {
   )
 
   const hasContent = inputValue.trim().length > 0
+  const canSend = hasContent && !isGenerating && profile
 
   return (
-    <form
-      onSubmit={handleFormSubmit}
-      className={cn(
-        "border-3 relative flex items-end gap-4 border-black bg-white px-6 py-4 shadow-[4px_4px_0px_0px_black] transition-all duration-200",
-        isFocused
-          ? "translate-x-[-2px] translate-y-[-2px] shadow-[6px_6px_0px_0px_black]"
-          : "hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_black]"
-      )}
-    >
-      <Textarea
-        id="chat-input"
-        ref={textareaRef}
-        value={inputValue}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        placeholder="ASK MAYURA ANYTHING..."
-        className={cn(
-          "flex-1 resize-none overflow-y-auto border-none bg-transparent font-mono text-base leading-relaxed outline-none",
-          "placeholder:text-muted-foreground placeholder:font-bold focus-visible:ring-0 focus-visible:ring-offset-0",
-          "max-h-32 min-h-[32px]" // Set minimum and maximum height for scroll
-        )}
-        rows={1} // Start with 1 row, let JS handle expansion
-        maxLength={4000}
-        disabled={isGenerating}
-      />
-
-      {/* Send / Stop Button */}
-      <div className="flex items-center justify-center">
-        {isGenerating ? (
-          <Button
-            type="button"
-            className="btn-neobrutalist bg-destructive text-destructive-foreground hover:bg-destructive size-12 shrink-0"
-            onClick={handleStopMessage}
-            aria-label="Stop generating"
-          >
-            <IconPlayerStop size={20} strokeWidth={3} />
-          </Button>
-        ) : (
-          <Button
-            type="submit"
+    <div>
+      <div className="mx-auto max-w-4xl">
+        <form onSubmit={handleFormSubmit} className="relative">
+          <div
             className={cn(
-              "btn-neobrutalist size-12 shrink-0 transition-all duration-150",
-              hasContent
-                ? "bg-neobrutalist-blue hover:bg-neobrutalist-blue text-white"
-                : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
+              "border-3 flex min-h-[60px] items-start border-black bg-white shadow-[4px_4px_0px_0px_black] transition-all duration-200",
+              isFocused && "shadow-[6px_6px_0px_0px_black]"
             )}
-            disabled={!hasContent || isGenerating}
-            aria-label="Send message"
           >
-            <IconSend size={20} strokeWidth={3} />
-          </Button>
-        )}
+            <textarea
+              ref={textareaRef}
+              value={inputValue}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              placeholder={
+                isGenerating
+                  ? "AI is thinking..."
+                  : "TYPE YOUR MESSAGE HERE..."
+              }
+              disabled={isGenerating}
+              className="w-full resize-none border-0 bg-transparent p-4 font-mono text-base font-bold leading-relaxed text-black placeholder-gray-500 focus:outline-none"
+              rows={1}
+              style={{
+                maxHeight: "200px",
+                overflowY: inputValue.split("\n").length > 6 ? "scroll" : "hidden"
+              }}
+            />
+
+            <div className="flex shrink-0 items-start p-4">
+              {isGenerating ? (
+                <button
+                  type="button"
+                  onClick={handleStopMessage}
+                  className="btn-neobrutalist flex items-center gap-2 bg-red-400 px-4 py-2 text-black transition-all duration-150 hover:bg-red-500"
+                  aria-label="Stop generation"
+                >
+                  <Square size={16} strokeWidth={3} />
+                  <span className="font-sans font-bold">STOP</span>
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={!canSend}
+                  className={cn(
+                    "btn-neobrutalist flex items-center gap-2 px-4 py-2 font-sans font-bold text-black transition-all duration-150",
+                    canSend
+                      ? "bg-neobrutalist-green hover:bg-green-400"
+                      : "cursor-not-allowed bg-gray-300 text-gray-500"
+                  )}
+                  aria-label="Send message"
+                >
+                  <Send size={16} strokeWidth={3} />
+                  <span>SEND</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
   )
 }

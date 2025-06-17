@@ -6,14 +6,6 @@ export interface MayuraContextProps {
   profile: Tables<"profiles"> | null
   setProfile: React.Dispatch<React.SetStateAction<Tables<"profiles"> | null>>
 
-  selectedWorkspace: Tables<"workspaces"> | null
-  setSelectedWorkspace: React.Dispatch<
-    React.SetStateAction<Tables<"workspaces"> | null>
-  >
-
-  workspaces: Tables<"workspaces">[]
-  setWorkspaces: React.Dispatch<React.SetStateAction<Tables<"workspaces">[]>>
-
   chats: Tables<"chats">[]
   setChats: React.Dispatch<React.SetStateAction<Tables<"chats">[]>>
 
@@ -54,12 +46,6 @@ export const MayuraContext = createContext<MayuraContextProps>({
   profile: null,
   setProfile: () => {},
 
-  selectedWorkspace: null,
-  setSelectedWorkspace: () => {},
-
-  workspaces: [],
-  setWorkspaces: () => {},
-
   chats: [],
   setChats: () => {},
 
@@ -96,7 +82,6 @@ export const MayuraContext = createContext<MayuraContextProps>({
     temperature: 0.5,
     contextLength: 4096,
     includeProfileContext: true,
-    includeWorkspaceInstructions: true,
     embeddingsProvider: "openai"
   },
   setChatSettings: () => {}
@@ -104,9 +89,6 @@ export const MayuraContext = createContext<MayuraContextProps>({
 
 export function MayuraProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Tables<"profiles"> | null>(null)
-  const [selectedWorkspace, setSelectedWorkspace] =
-    useState<Tables<"workspaces"> | null>(null)
-  const [workspaces, setWorkspaces] = useState<Tables<"workspaces">[]>([])
   const [chats, setChats] = useState<Tables<"chats">[]>([])
   const [selectedChat, setSelectedChat] = useState<Tables<"chats"> | null>(null)
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
@@ -124,7 +106,6 @@ export function MayuraProvider({ children }: { children: React.ReactNode }) {
     temperature: 0.5,
     contextLength: 4096,
     includeProfileContext: true,
-    includeWorkspaceInstructions: true,
     embeddingsProvider: "openai"
   })
 
@@ -133,10 +114,6 @@ export function MayuraProvider({ children }: { children: React.ReactNode }) {
       value={{
         profile,
         setProfile,
-        selectedWorkspace,
-        setSelectedWorkspace,
-        workspaces,
-        setWorkspaces,
         chats,
         setChats,
         selectedChat,

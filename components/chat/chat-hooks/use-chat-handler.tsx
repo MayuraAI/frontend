@@ -15,7 +15,6 @@ import {
 export const useChatHandler = () => {
   const {
     profile,
-    selectedWorkspace,
     chatSettings,
     userInput,
     setUserInput,
@@ -27,6 +26,7 @@ export const useChatHandler = () => {
     abortController,
     setAbortController,
     setIsGenerating,
+    firstTokenReceived,
     setFirstTokenReceived
   } = useContext(MayuraContext)
 
@@ -40,19 +40,22 @@ export const useChatHandler = () => {
   }
 
   const handleNewChat = async () => {
-    if (!profile || !selectedWorkspace) return
+    if (!profile) return
 
     setChatMessages([])
     setSelectedChat(null)
     setUserInput("")
     setIsGenerating(false)
     setFirstTokenReceived(false)
-    router.push(`/${selectedWorkspace.id}/chat`)
+    router.push("/chat")
   }
 
   const handleStopMessage = () => {
     if (abortController) {
       abortController.abort()
+      setAbortController(null)
+      setIsGenerating(false)
+      setFirstTokenReceived(false)
     }
   }
 
@@ -61,7 +64,7 @@ export const useChatHandler = () => {
     chatMessages: ChatMessage[],
     isRegeneration: boolean
   ) => {
-    if (!profile || !selectedWorkspace) return
+    if (!profile) return
 
     try {
       setIsGenerating(true)
@@ -130,14 +133,11 @@ export const useChatHandler = () => {
         },
         body: JSON.stringify({
           messages: messages,
-          profile_context: selectedWorkspace.include_profile_context
+          profile_context: chatSettings.includeProfileContext
             ? profile.profile_context
-            : undefined,
-          workspace_instructions:
-            selectedWorkspace.include_workspace_instructions
-              ? selectedWorkspace.instructions
-              : undefined
-        })
+            : undefined
+        }),
+        signal: newAbortController.signal
       })
 
       if (!response.ok) {
@@ -154,7 +154,7 @@ export const useChatHandler = () => {
         )
       }
 
-      const [generatedText, modelName] = await processResponse(
+            const [generatedText, modelName] = await processResponse(
         response,
         tempAssistantChatMessage,
         newAbortController,
@@ -162,41 +162,48 @@ export const useChatHandler = () => {
         setChatMessages
       )
 
-      if (!selectedChat) {
-        const chat = await handleCreateChat(
-          profile,
-          selectedWorkspace,
-          messageContent,
-          setSelectedChat,
-          setChats
-        )
+      // Only save to database if we got some content
+      if (generatedText) {
+        if (!selectedChat) {
+          const chat = await handleCreateChat(
+            profile,
+            messageContent,
+            setSelectedChat,
+            setChats
+          )
 
-        await handleCreateMessages(
-          tempUserChatMessage,
-          generatedText,
-          modelName,
-          isRegeneration,
-          chat.id,
-          profile,
-          setChatMessages
-        )
-      } else {
-        await handleCreateMessages(
-          tempUserChatMessage,
-          generatedText,
-          modelName,
-          isRegeneration,
-          selectedChat.id,
-          profile,
-          setChatMessages
-        )
+          await handleCreateMessages(
+            tempUserChatMessage,
+            generatedText,
+            modelName,
+            isRegeneration,
+            chat.id,
+            profile,
+            setChatMessages
+          )
+        } else {
+          await handleCreateMessages(
+            tempUserChatMessage,
+            generatedText,
+            modelName,
+            isRegeneration,
+            selectedChat.id,
+            profile,
+            setChatMessages
+          )
+        }
       }
 
       setUserInput("")
       setIsGenerating(false)
       setFirstTokenReceived(false)
     } catch (error) {
-      toast.error("Error sending message")
+      if (error instanceof Error && error.name === "AbortError") {
+        console.log("Request aborted by user")
+      } else {
+        toast.error("Error sending message")
+        setChatMessages(prev => prev.slice(0, -1))
+      }
       setIsGenerating(false)
       setFirstTokenReceived(false)
     }

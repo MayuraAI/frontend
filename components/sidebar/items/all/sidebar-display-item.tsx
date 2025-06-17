@@ -21,8 +21,6 @@ export const SidebarItem: FC<SidebarItemProps> = ({
   icon,
   isTyping
 }) => {
-  const { selectedWorkspace } = useContext(MayuraContext)
-
   const itemRef = useRef<HTMLDivElement>(null)
   const [isHovering, setIsHovering] = useState(false)
 

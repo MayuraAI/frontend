@@ -13,21 +13,20 @@ export default function ChatPage() {
     handleFocusChatInput()
   })
 
-  const { chatMessages, selectedWorkspace, chats } = useContext(MayuraContext)
+  const { chatMessages, profile, chats } = useContext(MayuraContext)
   const [isLoading, setIsLoading] = useState(true)
 
   const { handleNewChat, handleFocusChatInput } = useChatHandler()
 
   useEffect(() => {
     const checkDataLoaded = () => {
-      if (selectedWorkspace && chats !== undefined) {
-        // console.log("Data loaded:", { selectedWorkspace, chats })
+      if (profile && chats !== undefined) {
         setIsLoading(false)
       }
     }
 
     checkDataLoaded()
-  }, [selectedWorkspace, chats])
+  }, [profile, chats])
 
   if (isLoading) {
     return (
@@ -40,16 +39,16 @@ export default function ChatPage() {
     )
   }
 
-  if (!selectedWorkspace) {
-    console.error("No workspace selected")
+  if (!profile) {
+    console.error("No profile found")
     return (
       <div className="flex h-full items-center justify-center">
         <div className="text-xl font-bold text-red-500">
-          Workspace not found
+          Profile not found
         </div>
       </div>
     )
   }
 
   return <MayuraChat />
-}
+} 
