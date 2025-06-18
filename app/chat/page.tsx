@@ -43,12 +43,10 @@ export default function ChatPage() {
     console.error("No profile found")
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="text-xl font-bold text-red-500">
-          Profile not found
-        </div>
+        <div className="text-xl font-bold text-red-500">Profile not found</div>
       </div>
     )
   }
 
   return <MayuraChat />
-} 
+}

@@ -19,6 +19,7 @@ export default function SetupPage() {
 
   const [loading, setLoading] = useState(true)
   const [currentStep, setCurrentStep] = useState(1)
+  const [currentUserId, setCurrentUserId] = useState<string>("")
 
   const [username, setUsername] = useState("")
   const [usernameAvailable, setUsernameAvailable] = useState(false)
@@ -34,6 +35,8 @@ export default function SetupPage() {
         }
 
         const user = session.user
+        setCurrentUserId(user.id)
+
         const profile = await getProfileByUserId(user.id)
 
         if (!profile) {
@@ -45,6 +48,10 @@ export default function SetupPage() {
         setProfile(profile)
         setUsername(profile.username || "")
         setDisplayName(profile.display_name || "")
+
+        if (profile.username) {
+          setUsernameAvailable(true)
+        }
 
         if (profile.has_onboarded) {
           return router.push("/chat")
@@ -102,6 +109,7 @@ export default function SetupPage() {
               username={username}
               usernameAvailable={usernameAvailable}
               displayName={displayName}
+              currentUserId={currentUserId}
               onUsernameAvailableChange={setUsernameAvailable}
               onUsernameChange={setUsername}
               onDisplayNameChange={setDisplayName}

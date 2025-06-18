@@ -1,10 +1,5 @@
 import { MayuraContext } from "@/context/context"
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef
-} from "react"
+import { useCallback, useContext, useEffect, useRef } from "react"
 
 export const useScroll = () => {
   const { isGenerating, chatMessages } = useContext(MayuraContext)
@@ -14,18 +9,18 @@ export const useScroll = () => {
 
   const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ 
+      messagesEndRef.current.scrollIntoView({
         behavior: "smooth",
-        block: "end" 
+        block: "end"
       })
     }
   }, [])
 
   const scrollToBottomInstant = useCallback(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ 
+      messagesEndRef.current.scrollIntoView({
         behavior: "instant",
-        block: "end" 
+        block: "end"
       })
     }
   }, [])
@@ -48,7 +43,7 @@ export const useScroll = () => {
       const scrollInterval = setInterval(() => {
         scrollToBottomInstant()
       }, 100) // Scroll every 100ms during generation
-      
+
       return () => clearInterval(scrollInterval)
     }
   }, [isGenerating, scrollToBottomInstant])

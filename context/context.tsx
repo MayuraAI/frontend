@@ -43,7 +43,9 @@ export interface MayuraContextProps {
   setChatSettings: React.Dispatch<React.SetStateAction<ChatSettings>>
 
   rateLimitStatus: RateLimitStatus | null
-  setRateLimitStatus: React.Dispatch<React.SetStateAction<RateLimitStatus | null>>
+  setRateLimitStatus: React.Dispatch<
+    React.SetStateAction<RateLimitStatus | null>
+  >
 
   rateLimitRefreshTrigger: number
   refreshRateLimit: () => void
@@ -121,8 +123,10 @@ export function MayuraProvider({ children }: { children: React.ReactNode }) {
     includeProfileContext: true,
     embeddingsProvider: "openai"
   })
-  const [rateLimitStatus, setRateLimitStatus] = useState<RateLimitStatus | null>(null)
-  const [rateLimitRefreshTrigger, setRateLimitRefreshTrigger] = useState<number>(0)
+  const [rateLimitStatus, setRateLimitStatus] =
+    useState<RateLimitStatus | null>(null)
+  const [rateLimitRefreshTrigger, setRateLimitRefreshTrigger] =
+    useState<number>(0)
 
   const refreshRateLimit = () => {
     // Trigger a refresh in the RateLimitStatus component by updating a counter

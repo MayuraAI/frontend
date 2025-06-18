@@ -10,8 +10,7 @@ import { Send, Square } from "lucide-react"
 interface ChatInputProps {}
 
 export const ChatInput: FC<ChatInputProps> = () => {
-  const { chatMessages, isGenerating, profile } =
-    useContext(MayuraContext)
+  const { chatMessages, isGenerating, profile } = useContext(MayuraContext)
   const { handleSendMessage, handleStopMessage } = useChatHandler()
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -49,13 +48,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
       textareaRef.current.style.height = "auto"
     }
     textareaRef.current?.focus()
-  }, [
-    profile,
-    inputValue,
-    isGenerating,
-    handleSendMessage,
-    chatMessages
-  ])
+  }, [profile, inputValue, isGenerating, handleSendMessage, chatMessages])
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -96,16 +89,15 @@ export const ChatInput: FC<ChatInputProps> = () => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               placeholder={
-                isGenerating
-                  ? "AI is thinking..."
-                  : "TYPE YOUR MESSAGE HERE..."
+                isGenerating ? "AI is thinking..." : "TYPE YOUR MESSAGE HERE..."
               }
               disabled={isGenerating}
-              className="w-full resize-none border-0 bg-transparent p-4 font-mono text-base font-bold leading-relaxed text-black placeholder-gray-500 focus:outline-none"
+              className="w-full resize-none border-0 bg-transparent p-4 font-mono text-base font-bold leading-relaxed text-black placeholder:text-gray-500 focus:outline-none"
               rows={1}
               style={{
                 maxHeight: "200px",
-                overflowY: inputValue.split("\n").length > 6 ? "scroll" : "hidden"
+                overflowY:
+                  inputValue.split("\n").length > 6 ? "scroll" : "hidden"
               }}
             />
 

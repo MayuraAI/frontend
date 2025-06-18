@@ -163,12 +163,15 @@ export const useChatHandler = () => {
       refreshRateLimit()
       if (updatedStatus) {
         const summary = getStatusSummary()
-        
+
         // Show appropriate toasts based on rate limit status
         if (summary?.isRunningLow && !summary.isInFreeMode) {
-          toast.warning(`Only ${summary.requestsRemaining} pro requests remaining today!`, {
-            description: `${summary.timeUntilReset}`
-          })
+          toast.warning(
+            `Only ${summary.requestsRemaining} pro requests remaining today!`,
+            {
+              description: `${summary.timeUntilReset}`
+            }
+          )
         } else if (summary?.isInFreeMode) {
           toast.info("You're now in free mode - unlimited requests!", {
             description: "Pro requests will reset tomorrow"
@@ -176,7 +179,7 @@ export const useChatHandler = () => {
         }
       }
 
-            const [generatedText, modelName] = await processResponse(
+      const [generatedText, modelName] = await processResponse(
         response,
         tempAssistantChatMessage,
         newAbortController,

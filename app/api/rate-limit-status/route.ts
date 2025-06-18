@@ -52,31 +52,37 @@ export async function GET(request: Request) {
     if (!response.ok) {
       // Handle authentication failures and other errors
       if (response.status === 401) {
-        return new Response(JSON.stringify({ 
-          error: "Authentication failed. Please log in again." 
-        }), {
-          status: 401,
-          headers: {
-            "Content-Type": "application/json"
+        return new Response(
+          JSON.stringify({
+            error: "Authentication failed. Please log in again."
+          }),
+          {
+            status: 401,
+            headers: {
+              "Content-Type": "application/json"
+            }
           }
-        })
+        )
       }
 
       // Handle other backend errors
       const errorMessage = `Backend error: ${response.status} ${response.statusText}`
-      return new Response(JSON.stringify({ 
-        error: errorMessage 
-      }), {
-        status: response.status,
-        headers: {
-          "Content-Type": "application/json"
+      return new Response(
+        JSON.stringify({
+          error: errorMessage
+        }),
+        {
+          status: response.status,
+          headers: {
+            "Content-Type": "application/json"
+          }
         }
-      })
+      )
     }
 
     // Get the response data
     const data = await response.json()
-    
+
     // Return the response
     return new Response(JSON.stringify(data), {
       status: 200,
@@ -84,7 +90,6 @@ export async function GET(request: Request) {
         "Content-Type": "application/json"
       }
     })
-
   } catch (error: any) {
     // Handle abort errors gracefully
     if (error.name === "AbortError" || error.code === "ECONNRESET") {
@@ -95,13 +100,16 @@ export async function GET(request: Request) {
     const errorMessage = error.message || "An unexpected error occurred"
     const errorCode = error.status || 500
 
-    return new Response(JSON.stringify({ 
-      error: errorMessage 
-    }), {
-      status: errorCode,
-      headers: {
-        "Content-Type": "application/json"
+    return new Response(
+      JSON.stringify({
+        error: errorMessage
+      }),
+      {
+        status: errorCode,
+        headers: {
+          "Content-Type": "application/json"
+        }
       }
-    })
+    )
   }
-} 
+}

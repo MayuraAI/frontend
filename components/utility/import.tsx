@@ -15,8 +15,7 @@ import {
 } from "../ui/dialog"
 import { Input } from "../ui/input"
 
-interface ImportProps {
-}
+interface ImportProps {}
 
 export const Import: FC<ImportProps> = () => {
   const { profile } = useContext(MayuraContext)

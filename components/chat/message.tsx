@@ -37,17 +37,17 @@ export const Message: FC<MessageProps> = ({
   const [isExpanded, setIsExpanded] = useState(false)
 
   const userTextareaRef = useRef<HTMLTextAreaElement>(null)
-  
+
   // Define threshold for collapsing user messages (in characters)
   const COLLAPSE_THRESHOLD = 200
-  
+
   useEffect(() => {
     if (isEditing && message.role === "user" && userTextareaRef.current) {
-        userTextareaRef.current.focus()
-        userTextareaRef.current.setSelectionRange(
-          userTextareaRef.current.value.length,
-          userTextareaRef.current.value.length
-        )
+      userTextareaRef.current.focus()
+      userTextareaRef.current.setSelectionRange(
+        userTextareaRef.current.value.length,
+        userTextareaRef.current.value.length
+      )
     }
   }, [isEditing, message.role])
 
@@ -91,9 +91,10 @@ export const Message: FC<MessageProps> = ({
 
   const isUser = message.role === "user"
   const shouldCollapse = isUser && message.content.length > COLLAPSE_THRESHOLD
-  const displayContent = shouldCollapse && !isExpanded 
-    ? message.content.substring(0, COLLAPSE_THRESHOLD) + "..."
-    : message.content
+  const displayContent =
+    shouldCollapse && !isExpanded
+      ? message.content.substring(0, COLLAPSE_THRESHOLD) + "..."
+      : message.content
 
   const getModelName = () => {
     return message.model_name || "mayura"
@@ -116,8 +117,8 @@ export const Message: FC<MessageProps> = ({
                   placeholder="Edit your message..."
                 />
                 <div className="mt-6 flex items-center gap-3 border-t-2 border-black pt-4">
-                  <Button 
-                    onClick={handleSubmit} 
+                  <Button
+                    onClick={handleSubmit}
                     size="sm"
                     className="btn-neobrutalist bg-neobrutalist-green px-4 py-2 text-black"
                   >
@@ -136,7 +137,9 @@ export const Message: FC<MessageProps> = ({
               </div>
             ) : (
               <div className="message-block message-block--user relative">
-                <p className="whitespace-pre-wrap font-mono text-sm leading-relaxed">{displayContent}</p>
+                <p className="whitespace-pre-wrap font-mono text-sm leading-relaxed">
+                  {displayContent}
+                </p>
                 {shouldCollapse && (
                   <div className="mt-3 flex justify-end gap-2">
                     <Button
@@ -159,12 +162,20 @@ export const Message: FC<MessageProps> = ({
                     >
                       {isExpanded ? (
                         <>
-                          <IconChevronUp size={14} strokeWidth={3} className="mr-1" />
+                          <IconChevronUp
+                            size={14}
+                            strokeWidth={3}
+                            className="mr-1"
+                          />
                           COLLAPSE
                         </>
                       ) : (
                         <>
-                          <IconChevronDown size={14} strokeWidth={3} className="mr-1" />
+                          <IconChevronDown
+                            size={14}
+                            strokeWidth={3}
+                            className="mr-1"
+                          />
                           EXPAND
                         </>
                       )}
@@ -200,7 +211,7 @@ export const Message: FC<MessageProps> = ({
               <div className="absolute right-4 top-0 z-10 w-fit -translate-y-1/2 border border-black bg-[#E9ECEF] px-2 py-1 font-mono text-xs font-bold tracking-wide text-black">
                 {getModelName()}
               </div>
-              
+
               <div className="prose prose-sm dark:prose-invert max-w-none">
                 <MarkdownContent aiResponse={message.content} />
               </div>

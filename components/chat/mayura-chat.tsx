@@ -20,11 +20,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
     useContext(MayuraContext)
 
   const params = useParams()
-  const { 
-    scrollToBottom, 
-    messagesStartRef, 
-    messagesEndRef 
-  } = useScroll()
+  const { scrollToBottom, messagesStartRef, messagesEndRef } = useScroll()
   const [loading, setLoading] = useState(false)
   const [isReady, setIsReady] = useState(true)
 
@@ -76,7 +72,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
     },
     {
       icon: Code2,
-      title: "Code Analysis", 
+      title: "Code Analysis",
       description: "Review my Python code for improvements",
       category: "code"
     },
@@ -114,7 +110,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
               {/* Welcome Header */}
               <div className="mb-16">
                 <h1 className="text-foreground mb-4 text-4xl font-bold">
-                  Welcome to Mayura AI
+                  Welcome to Mayura
                 </h1>
                 <p className="text-muted-foreground max-w-md text-lg">
                   How can I help you today?

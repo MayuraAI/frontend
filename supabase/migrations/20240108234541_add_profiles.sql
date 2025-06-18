@@ -26,17 +26,26 @@ security definer set search_path = public
 AS $$
 DECLARE
     random_username TEXT;
+    user_display_name TEXT;
 BEGIN
     -- Generate a random username
     random_username := 'user' || substr(replace(gen_random_uuid()::text, '-', ''), 1, 16);
+
+    -- Get display name from user metadata or email, or use default
+    user_display_name := COALESCE(
+        NEW.raw_user_meta_data->>'full_name',
+        NEW.raw_user_meta_data->>'name',
+        split_part(NEW.email, '@', 1),
+        'New User'
+    );
 
     -- Create a profile for the new user
     INSERT INTO public.profiles(user_id, has_onboarded, display_name, profile_context, username)
     VALUES(
         NEW.id,
         FALSE,
-        '',
-        '',
+        user_display_name,
+        'New user profile',
         random_username
     );
 

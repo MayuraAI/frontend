@@ -61,13 +61,14 @@ export const DeleteChat: FC<DeleteChatProps> = ({ chat }) => {
           </DialogTitle>
 
           <DialogDescription className="text-foreground text-lg font-bold">
-            Are you sure you want to permanently delete this chat? This action cannot be undone.
+            Are you sure you want to permanently delete this chat? This action
+            cannot be undone.
           </DialogDescription>
         </DialogHeader>
 
         <DialogFooter className="gap-4">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => setShowChatDialog(false)}
             className="font-black"
           >

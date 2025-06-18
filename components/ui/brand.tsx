@@ -18,7 +18,7 @@ export const Brand: FC<BrandProps> = ({ theme = "dark" }) => {
       rel="noopener noreferrer"
       className="flex items-center gap-2"
     >
-      <div className="text-xl font-bold">Mayura AI</div>
+      <div className="text-xl font-bold">Mayura</div>
     </Link>
   )
 }

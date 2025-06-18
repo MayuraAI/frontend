@@ -2,11 +2,25 @@
 
 import { useContext, useEffect, useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { RateLimitStatus as RateLimitStatusType, RateLimitState } from "@/types/rate-limit"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from "@/components/ui/tooltip"
+import {
+  RateLimitStatus as RateLimitStatusType,
+  RateLimitState
+} from "@/types/rate-limit"
 import { RateLimitService } from "@/lib/services/rate-limit"
 import { MayuraContext } from "@/context/context"
-import { IconRefresh, IconAlertTriangle, IconBolt, IconCheck, IconClock } from "@tabler/icons-react"
+import {
+  IconRefresh,
+  IconAlertTriangle,
+  IconBolt,
+  IconCheck,
+  IconClock
+} from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
 import { useRateLimit } from "@/lib/hooks/use-rate-limit"
 
@@ -16,10 +30,10 @@ interface RateLimitStatusProps {
   onStatusUpdate?: (status: RateLimitStatusType) => void
 }
 
-export default function RateLimitStatus({ 
-  className, 
+export default function RateLimitStatus({
+  className,
   compact = false,
-  onStatusUpdate 
+  onStatusUpdate
 }: RateLimitStatusProps) {
   const { profile, rateLimitRefreshTrigger } = useContext(MayuraContext)
   const { rateLimitStatus, fetchLatestStatus } = useRateLimit()
@@ -77,7 +91,10 @@ export default function RateLimitStatus({
   // Listen for manual refresh triggers (like after sending messages)
   useEffect(() => {
     if (rateLimitRefreshTrigger > 0) {
-      console.log("Rate limit refresh triggered, count:", rateLimitRefreshTrigger)
+      console.log(
+        "Rate limit refresh triggered, count:",
+        rateLimitRefreshTrigger
+      )
       // Add a small delay to allow the backend to process the request
       const timeoutId = setTimeout(() => {
         console.log("Executing delayed rate limit fetch...")
@@ -92,11 +109,16 @@ export default function RateLimitStatus({
   const { status, loading, error, lastUpdated } = rateLimitState
   if (loading && !status) {
     return (
-      <div className={cn("border-4 border-black bg-card shadow-[4px_4px_0px_0px_black] p-4 w-64", className)}>
+      <div
+        className={cn(
+          "bg-card w-64 border-4 border-black p-4 shadow-[4px_4px_0px_0px_black]",
+          className
+        )}
+      >
         <div className="flex items-center space-x-3">
-          <div className="h-4 w-4 bg-muted border-2 border-black animate-pulse" />
-          <div className="h-4 flex-1 bg-muted border-2 border-black animate-pulse" />
-          <div className="h-4 w-12 bg-muted border-2 border-black animate-pulse" />
+          <div className="bg-muted size-4 animate-pulse border-2 border-black" />
+          <div className="bg-muted h-4 flex-1 animate-pulse border-2 border-black" />
+          <div className="bg-muted h-4 w-12 animate-pulse border-2 border-black" />
         </div>
       </div>
     )
@@ -104,7 +126,12 @@ export default function RateLimitStatus({
 
   if (error) {
     return (
-      <div className={cn("border-4 border-black bg-destructive text-destructive-foreground shadow-[4px_4px_0px_0px_black] p-4 w-64", className)}>
+      <div
+        className={cn(
+          "bg-destructive text-destructive-foreground w-64 border-4 border-black p-4 shadow-[4px_4px_0px_0px_black]",
+          className
+        )}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <IconAlertTriangle size={20} strokeWidth={3} />
@@ -114,7 +141,7 @@ export default function RateLimitStatus({
             variant="ghost"
             size="sm"
             onClick={fetchStatus}
-            className="h-8 w-8 p-0 border-2 border-black bg-white hover:bg-zinc-100 shadow-[2px_2px_0px_0px_black] hover:shadow-[3px_3px_0px_0px_black] transition-all"
+            className="size-8 border-2 border-black bg-white p-0 shadow-[2px_2px_0px_0px_black] transition-all hover:bg-zinc-100 hover:shadow-[3px_3px_0px_0px_black]"
           >
             <IconRefresh size={16} strokeWidth={3} />
           </Button>
@@ -145,7 +172,9 @@ export default function RateLimitStatus({
       return (
         <div className="flex items-center space-x-2">
           <IconCheck size={18} strokeWidth={3} className="text-green-600" />
-          <span className="ml-1">{requests_used} / {daily_limit} Pro</span>
+          <span className="ml-1">
+            {requests_used} / {daily_limit} Pro
+          </span>
         </div>
       )
     } else {
@@ -164,44 +193,59 @@ export default function RateLimitStatus({
         <TooltipTrigger asChild>
           <div
             className={cn(
-              "inline-flex items-center space-x-2 border-3 border-black px-3 py-2 text-sm font-semibold shadow-[2px_2px_0px_0px_black] transition-all duration-100",
-              isFree ? "bg-yellow-300 text-black" : "bg-primary text-primary-foreground",
+              "border-3 inline-flex items-center space-x-2 border-black px-3 py-2 text-sm font-semibold shadow-[2px_2px_0px_0px_black] transition-all duration-100",
+              isFree
+                ? "bg-yellow-300 text-black"
+                : "bg-primary text-primary-foreground",
               "cursor-default"
             )}
           >
             <span>{getTag()}</span>
-            {loading && <span className="ml-2 animate-pulse text-xs">(refreshing...)</span>}
+            {loading && (
+              <span className="ml-2 animate-pulse text-xs">
+                (refreshing...)
+              </span>
+            )}
           </div>
         </TooltipTrigger>
         <TooltipContent
           side="bottom"
-          className="border-4 border-black shadow-[4px_4px_0px_0px_black] bg-card p-4 w-72"
+          className="bg-card w-72 border-4 border-black p-4 shadow-[4px_4px_0px_0px_black]"
         >
           <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="font-semibold text-base tracking-wide">
+            <div className="flex items-center justify-between">
+              <span className="text-base font-semibold tracking-wide">
                 {isPro ? "Pro usage" : "Free mode active"}
               </span>
-              <span className="text-xs text-muted-foreground">{timeUntilReset}</span>
+              <span className="text-muted-foreground text-xs">
+                {timeUntilReset}
+              </span>
             </div>
             {isPro && (
-              <div className="relative h-3 w-full border-2 border-black bg-muted">
+              <div className="bg-muted relative h-3 w-full border-2 border-black">
                 <div
-                  className="h-full bg-black border-r-2 border-black transition-all duration-300"
+                  className="h-full border-r-2 border-black bg-black transition-all duration-300"
                   style={{ width: `${progress}%` }}
                 />
               </div>
             )}
-            <p className="text-xs font-medium text-foreground">{message}</p>
+            <p className="text-foreground text-xs font-medium">{message}</p>
             {proExhausted && (
-              <div className="mt-2 flex items-center space-x-2 bg-yellow-400 text-black text-sm border-2 border-black p-2 shadow-[2px_2px_0px_0px_black]">
+              <div className="mt-2 flex items-center space-x-2 border-2 border-black bg-yellow-400 p-2 text-sm text-black shadow-[2px_2px_0px_0px_black]">
                 <IconBolt size={16} />
-                <span><strong>Pro quota exhausted.</strong> You're now using Free tier.</span>
+                <span>
+                  <strong>Pro quota exhausted.</strong> You&apos;re now using
+                  Free tier.
+                </span>
               </div>
             )}
             {lastUpdated && (
-              <div className="text-[11px] text-right text-muted-foreground">
-                Updated at {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              <div className="text-muted-foreground text-right text-[11px]">
+                Updated at{" "}
+                {lastUpdated.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit"
+                })}
               </div>
             )}
           </div>

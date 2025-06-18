@@ -15,4 +15,4 @@ export interface RateLimitState {
   loading: boolean
   error: string | null
   lastUpdated: Date | null
-} 
+}

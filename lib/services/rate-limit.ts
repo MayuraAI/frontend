@@ -1,6 +1,7 @@
 import { RateLimitStatus } from "@/types/rate-limit"
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080"
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080"
 
 export class RateLimitService {
   static async getRateLimitStatus(token: string): Promise<RateLimitStatus> {
@@ -8,16 +9,18 @@ export class RateLimitService {
       const response = await fetch(`/api/rate-limit-status`, {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
       })
 
       if (!response.ok) {
         if (response.status === 401) {
           throw new Error("Authentication failed")
         }
-        throw new Error(`Failed to fetch rate limit status: ${response.statusText}`)
+        throw new Error(
+          `Failed to fetch rate limit status: ${response.statusText}`
+        )
       }
 
       const data = await response.json()
@@ -63,11 +66,11 @@ export class RateLimitService {
     if (mode === "free") {
       return "text-orange-600 bg-orange-50 border-orange-200"
     }
-    
+
     if (remaining <= 2) {
       return "text-yellow-600 bg-yellow-50 border-yellow-200"
     }
-    
+
     return "text-green-600 bg-green-50 border-green-200"
   }
 
@@ -75,11 +78,11 @@ export class RateLimitService {
     if (mode === "free") {
       return "⚡"
     }
-    
+
     if (remaining <= 2) {
       return "⚠️"
     }
-    
+
     return "✨"
   }
-} 
+}

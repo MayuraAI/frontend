@@ -249,7 +249,6 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                 />
               </div>
             </div>
-
           </div>
         </div>
 

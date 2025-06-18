@@ -10,10 +10,12 @@ const badgeVariants = cva(
       variant: {
         // Theme-responsive variants using CSS variables
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90", 
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline: "bg-background text-foreground hover:bg-muted",
-        
+
         // Fixed color neobrutalism variants
         electric: "bg-neo-electric hover:bg-neo-electric/90 text-black",
         neon: "bg-neo-neon hover:bg-neo-neon/90 text-white",
@@ -23,15 +25,16 @@ const badgeVariants = cva(
         danger: "bg-neo-danger hover:bg-neo-danger/90 text-white",
         info: "bg-neo-info hover:bg-neo-info/90 text-white",
         success: "bg-neo-success hover:bg-neo-success/90 text-white",
-        
+
         // Special variants
-        brutal: "bg-neo-black text-neo-white border-neo-white dark:bg-neo-white dark:text-neo-black dark:border-neo-black",
-        muted: "bg-muted text-muted-foreground hover:bg-muted/80",
-      },
+        brutal:
+          "bg-neo-black text-neo-white border-neo-white dark:bg-neo-white dark:text-neo-black dark:border-neo-black",
+        muted: "bg-muted text-muted-foreground hover:bg-muted/80"
+      }
     },
     defaultVariants: {
-      variant: "default",
-    },
+      variant: "default"
+    }
   }
 )
 

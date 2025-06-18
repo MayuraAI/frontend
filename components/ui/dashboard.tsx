@@ -87,12 +87,12 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
           >
             <IconMenu2 size={24} />
           </Button>
-          <h1 className="text-foreground text-lg font-semibold">MAYURA AI</h1>
+          <h1 className="text-foreground text-lg font-semibold">MAYURA</h1>
           <RateLimitStatus compact className="ml-2" />
         </header>
 
         {/* Desktop Rate Limit Status - Top Right Corner */}
-        <div className="hidden md:block absolute top-4 right-4 z-50">
+        <div className="absolute right-4 top-4 z-50 hidden md:block">
           <RateLimitStatus compact />
         </div>
 
@@ -104,7 +104,7 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
         {/* Clean Sidebar Toggle Button for Desktop */}
         <Button
           className={cn(
-            "bg-card hover:bg-accent border-border rounded-12 absolute left-1 top-1/2 z-100 size-8 border-2 shadow-md transition-all duration-300",
+            "bg-card hover:bg-accent border-border rounded-12 z-100 absolute left-1 top-1/2 size-8 border-2 shadow-md transition-all duration-300",
             "hidden md:flex"
           )}
           style={{
@@ -116,10 +116,7 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
           onClick={handleToggleSidebar}
           aria-label={showSidebar ? "Hide sidebar" : "Show sidebar"}
         >
-          <IconChevronCompactRight
-            size={24}
-            className="text-foreground"
-          />
+          <IconChevronCompactRight size={24} className="text-foreground" />
         </Button>
       </main>
 

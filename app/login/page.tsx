@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
+import { GoogleSVG } from "@/components/icons/google-svg"
 import { createClient } from "@/lib/supabase/server"
 import { Database } from "@/supabase/types"
 import { createServerClient } from "@supabase/ssr"
@@ -20,7 +21,7 @@ import { redirect } from "next/navigation"
 import { AlertCircle, Zap, Lock, Mail, UserPlus, KeyRound } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Login - Mayura AI" // Updated title
+  title: "Login - Mayura" // Updated title
 }
 
 export default async function Login({
@@ -135,6 +136,30 @@ export default async function Login({
     // return redirect("/login?message=Check email to continue sign in process")
   }
 
+  const signInWithGoogle = async () => {
+    "use server"
+
+    const origin = headers().get("origin")
+    const cookieStore = cookies()
+    const supabase = createClient(cookieStore)
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${origin}/auth/callback?next=/chat`
+      }
+    })
+
+    if (error) {
+      console.error("Google sign-in error:", error)
+      return redirect(`/login?message=${error.message}`)
+    }
+
+    if (data.url) {
+      return redirect(data.url)
+    }
+  }
+
   const handleResetPassword = async (formData: FormData) => {
     "use server"
 
@@ -160,12 +185,16 @@ export default async function Login({
 
       <div className="z-10 w-full max-w-md">
         <div className="mb-8 text-center">
-          <Badge variant="default" className="px-4 py-2 text-lg"> {/* Changed badge variant */}
-            Mayura AI
+          <Badge variant="default" className="px-4 py-2 text-lg">
+            {" "}
+            {/* Changed badge variant */}
+            Mayura
           </Badge>
         </div>
 
-        <Card className="shadow-lg"> {/* Adjusted shadow */}
+        <Card className="shadow-lg">
+          {" "}
+          {/* Adjusted shadow */}
           {/* <CardHeader className="space-y-3 pb-6 text-center">
             <CardContent className="flex items-center justify-center gap-3 text-3xl font-bold text-zinc-800">
               <Lock className="size-8 text-primary" />
@@ -174,8 +203,15 @@ export default async function Login({
           </CardHeader> */}
           <CardContent className="space-y-6 pt-6">
             <form className="space-y-6" action={signIn}>
-              <div className="space-y-2"> {/* Simplified form group styling */}
-                <Label htmlFor="email" className="flex items-center gap-2 text-zinc-700"> {/* Adjusted label color */}
+              <div className="space-y-2">
+                {" "}
+                {/* Simplified form group styling */}
+                <Label
+                  htmlFor="email"
+                  className="flex items-center gap-2 text-zinc-700"
+                >
+                  {" "}
+                  {/* Adjusted label color */}
                   <Mail className="size-5" />
                   Email Address
                 </Label>
@@ -185,12 +221,19 @@ export default async function Login({
                   type="email"
                   placeholder="your@email.com"
                   required
-                  className="w-full border-zinc-300 focus-visible:ring-primary" // Consistent border/focus
+                  className="focus-visible:ring-primary w-full border-zinc-300" // Consistent border/focus
                 />
               </div>
 
-              <div className="space-y-2"> {/* Simplified form group styling */}
-                <Label htmlFor="password" className="flex items-center gap-2 text-zinc-700"> {/* Adjusted label color */}
+              <div className="space-y-2">
+                {" "}
+                {/* Simplified form group styling */}
+                <Label
+                  htmlFor="password"
+                  className="flex items-center gap-2 text-zinc-700"
+                >
+                  {" "}
+                  {/* Adjusted label color */}
                   <KeyRound className="size-5" />
                   Password
                 </Label>
@@ -200,12 +243,14 @@ export default async function Login({
                   type="password"
                   placeholder="Enter your password"
                   required
-                  className="w-full border-zinc-300 focus-visible:ring-primary" // Consistent border/focus
+                  className="focus-visible:ring-primary w-full border-zinc-300" // Consistent border/focus
                 />
               </div>
 
               <div className="space-y-4">
-                <Button type="submit" className="w-full" size="lg"> {/* Default button variant */}
+                <Button type="submit" className="w-full" size="lg">
+                  {" "}
+                  {/* Default button variant */}
                   <Zap className="mr-2 size-5" />
                   Sign In
                 </Button>
@@ -226,7 +271,7 @@ export default async function Login({
                 <button
                   type="submit"
                   formAction={handleResetPassword}
-                  className="text-primary hover:text-primary-foreground hover:bg-primary py-2 px-4 rounded-md transition-colors duration-200" // Styled to match link buttons
+                  className="text-primary hover:text-primary-foreground hover:bg-primary rounded-md px-4 py-2 transition-colors duration-200" // Styled to match link buttons
                 >
                   Forgot Password?
                 </button>
@@ -235,11 +280,36 @@ export default async function Login({
               {searchParams?.message && (
                 <Alert variant="destructive" className="mt-6">
                   <AlertCircle className="size-6" />
-                  <AlertDescription className="text-base"> {/* Adjusted font size */}
+                  <AlertDescription className="text-base">
+                    {" "}
+                    {/* Adjusted font size */}
                     {searchParams.message}
                   </AlertDescription>
                 </Alert>
               )}
+            </form>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background text-muted-foreground px-2">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+
+            <form action={signInWithGoogle}>
+              <Button
+                type="submit"
+                variant="outline"
+                size="lg"
+                className="w-full"
+              >
+                <GoogleSVG width={20} height={20} className="mr-2" />
+                Sign in with Google
+              </Button>
             </form>
           </CardContent>
         </Card>

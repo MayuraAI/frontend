@@ -26,12 +26,12 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
     >
       {/* App Header with Neobrutalist Logo */}
       <header className="bg-sidebar border-b-3 shrink-0 border-black p-6">
-          <div className="flex items-center gap-3">
-            {/* <div className="border-2 border-black bg-black p-3 shadow-[3px_3px_0px_0px_black]">
+        <div className="flex items-center gap-3">
+          {/* <div className="border-2 border-black bg-black p-3 shadow-[3px_3px_0px_0px_black]">
               <span className="font-mono text-lg font-bold text-white">M</span>
             </div> */}
-            <h1 className="font-yellowtail">Mayura (beta)</h1>
-          </div>
+          <h1 className="font-yellowtail">Mayura (beta)</h1>
+        </div>
       </header>
 
       {/* Chat History Section */}
@@ -46,8 +46,13 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
           {(!chats || chats.length === 0) && (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="container-neobrutalist max-w-xs p-8">
-                <MessageCircle className="mx-auto mb-6 size-16 text-black" strokeWidth={3} />
-                <h3 className="mb-4 font-sans text-xl font-black text-black">NO CHATS YET</h3>
+                <MessageCircle
+                  className="mx-auto mb-6 size-16 text-black"
+                  strokeWidth={3}
+                />
+                <h3 className="mb-4 font-sans text-xl font-black text-black">
+                  NO CHATS YET
+                </h3>
                 <p className="font-mono text-sm font-bold leading-relaxed text-black">
                   START A CONVERSATION TO SEE YOUR CHAT HISTORY HERE
                 </p>
@@ -61,7 +66,11 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
       <footer className="border-t-3 shrink-0 border-black p-6">
         <div className="flex justify-start">
           <WithTooltip
-            display={<div className="font-sans font-bold uppercase">PROFILE SETTINGS</div>}
+            display={
+              <div className="font-sans font-bold uppercase">
+                PROFILE SETTINGS
+              </div>
+            }
             trigger={<ProfileSettings />}
           />
         </div>

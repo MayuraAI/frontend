@@ -15,11 +15,10 @@ const dmSans = DM_Sans({
   weight: ["400", "500", "700"]
 })
 
-const APP_NAME = "Mayura AI"
-const APP_DEFAULT_TITLE = "Mayura AI"
-const APP_TITLE_TEMPLATE = "%s - Mayura AI"
-const APP_DESCRIPTION =
-  "Your intelligent routing assistant."
+const APP_NAME = "Mayura"
+const APP_DEFAULT_TITLE = "Mayura"
+const APP_TITLE_TEMPLATE = "%s - Mayura"
+const APP_DESCRIPTION = "Your intelligent routing assistant."
 
 interface RootLayoutProps {
   children: ReactNode
@@ -89,11 +88,7 @@ export default async function RootLayout({
     <html lang="en" className="light">
       <body className={`${dmSans.variable} font-sans antialiased`}>
         <Providers>
-          <Toaster
-            richColors
-            position="top-center"
-            duration={3000}
-          />
+          <Toaster richColors position="top-center" duration={3000} />
           <div className="bg-background text-foreground flex h-screen w-full flex-col items-center">
             {session ? <GlobalState>{children}</GlobalState> : children}
           </div>

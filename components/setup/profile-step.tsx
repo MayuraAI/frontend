@@ -19,6 +19,7 @@ interface ProfileStepProps {
   username: string
   usernameAvailable: boolean
   displayName: string
+  currentUserId?: string
   onUsernameAvailableChange: (isAvailable: boolean) => void
   onUsernameChange: (username: string) => void
   onDisplayNameChange: (name: string) => void
@@ -28,6 +29,7 @@ export const ProfileStep: FC<ProfileStepProps> = ({
   username,
   usernameAvailable,
   displayName,
+  currentUserId,
   onUsernameAvailableChange,
   onUsernameChange,
   onDisplayNameChange
@@ -73,21 +75,28 @@ export const ProfileStep: FC<ProfileStepProps> = ({
 
       setLoading(true)
 
-      const { data: profiles, error } = await supabase
+      let query = supabase
         .from("profiles")
-        .select("username")
+        .select("username, user_id")
         .eq("username", username)
+
+      const { data: profiles, error } = await query
 
       if (error) {
         console.error(error)
         onUsernameAvailableChange(false)
+        setLoading(false)
         return
       }
 
-      onUsernameAvailableChange(profiles.length === 0)
+      const isAvailable =
+        profiles.length === 0 ||
+        (profiles.length === 1 && profiles[0].user_id === currentUserId)
+
+      onUsernameAvailableChange(isAvailable)
       setLoading(false)
     }, 500),
-    []
+    [currentUserId, onUsernameAvailableChange]
   )
 
   return (

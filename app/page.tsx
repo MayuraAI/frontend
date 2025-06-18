@@ -2,7 +2,27 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, Brain, Rocket, Zap, CheckCircle, Users, Code, Shield, BarChart3, Clock, DollarSign, Star, ChevronDown, ChevronUp, Lightbulb, TrendingUp, DollarSign as DollarSignIcon, MessageSquare, Route } from "lucide-react"
+import {
+  ArrowRight,
+  Brain,
+  Rocket,
+  Zap,
+  CheckCircle,
+  Users,
+  Code,
+  Shield,
+  BarChart3,
+  Clock,
+  DollarSign,
+  Star,
+  ChevronDown,
+  ChevronUp,
+  Lightbulb,
+  TrendingUp,
+  DollarSign as DollarSignIcon,
+  MessageSquare,
+  Route
+} from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
@@ -16,27 +36,33 @@ export default function HomePage() {
   const faqs = [
     {
       question: "How does Mayura work?",
-      answer: "Mayura uses advanced AI classification to analyze your prompt and automatically route it to the most suitable LLM from our network. This ensures you get the best possible results for each specific task type."
+      answer:
+        "Mayura uses advanced AI classification to analyze your prompt and automatically route it to the most suitable LLM from our network. This ensures you get the best possible results for each specific task type."
     },
     {
       question: "What LLMs do you support?",
-      answer: "We integrate with top-tier LLMs including OpenAI's GPT models, Anthropic's Claude, Google's Gemini, and other leading models. Our network is constantly expanding to include the latest and most capable models."
+      answer:
+        "We integrate with top-tier LLMs including OpenAI's GPT models, Anthropic's Claude, Google's Gemini, and other leading models. Our network is constantly expanding to include the latest and most capable models."
     },
     {
       question: "How accurate is the prompt classification?",
-      answer: "Our classification system achieves over 95% accuracy in routing prompts to the optimal model. The system continuously learns and improves from user interactions and feedback."
+      answer:
+        "Our classification system achieves over 95% accuracy in routing prompts to the optimal model. The system continuously learns and improves from user interactions and feedback."
     },
     {
       question: "How do you ensure privacy and security?",
-      answer: "We implement enterprise-grade security measures including end-to-end encryption, zero-data retention policies, and SOC 2 compliance. Your prompts and data are never stored or used for training."
+      answer:
+        "We implement enterprise-grade security measures including end-to-end encryption, zero-data retention policies, and SOC 2 compliance. Your prompts and data are never stored or used for training."
     },
     {
       question: "Is there a free trial?",
-      answer: "Yes! We offer a free tier with 100 prompts per month. No credit card required to get started."
+      answer:
+        "Yes! We offer a free tier with 100 prompts per month. No credit card required to get started."
     },
     {
       question: "What's the pricing model?",
-      answer: "We use a simple pay-per-prompt model with transparent pricing. You only pay for successful prompt routing, with volume discounts available for higher usage tiers."
+      answer:
+        "We use a simple pay-per-prompt model with transparent pricing. You only pay for successful prompt routing, with volume discounts available for higher usage tiers."
     }
   ]
 
@@ -48,13 +74,19 @@ export default function HomePage() {
           <div className="rounded bg-black p-2">
             <p className="font-bold text-white">M</p>
           </div>
-          <h1 className="text-xl font-bold">Mayura AI</h1>
+          <h1 className="text-xl font-bold">Mayura</h1>
         </div>
         <nav className="hidden items-center gap-6 md:flex">
-          <Link href="#how-it-works" className="text-sm font-medium hover:underline">
+          <Link
+            href="#how-it-works"
+            className="text-sm font-medium hover:underline"
+          >
             How It Works
           </Link>
-          <Link href="#features" className="text-sm font-medium hover:underline">
+          <Link
+            href="#features"
+            className="text-sm font-medium hover:underline"
+          >
             Features
           </Link>
           <Link href="#pricing" className="text-sm font-medium hover:underline">
@@ -80,10 +112,14 @@ export default function HomePage() {
             <div className="mx-auto flex max-w-4xl flex-col items-center space-y-6 text-center">
               <div className="space-y-4">
                 <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-                  One Prompt, Right Model, <span className="text-primary">Every Time</span>
+                  One Prompt, Right Model,{" "}
+                  <span className="text-primary">Every Time</span>
                 </h1>
                 <p className="mx-auto max-w-3xl text-lg text-zinc-600 md:text-xl lg:text-2xl">
-                  Get higher-quality results, faster responses, and lower costs by using the perfect AI model for every task. Our smart platform classifies your prompt and automatically routes it to the best-performing LLM.
+                  Get higher-quality results, faster responses, and lower costs
+                  by using the perfect AI model for every task. Our smart
+                  platform classifies your prompt and automatically routes it to
+                  the best-performing LLM.
                 </p>
               </div>
               <div className="flex flex-col gap-4 sm:flex-row">
@@ -113,7 +149,9 @@ export default function HomePage() {
         </section>
 
         {/* How It Works Section */}
-        <section id="how-it-works" className="w-full bg-zinc-50 py-16 md:py-12"> {/* Changed background for consistency */}
+        <section id="how-it-works" className="w-full bg-zinc-50 py-16 md:py-12">
+          {" "}
+          {/* Changed background for consistency */}
           <div className="container mx-auto px-6">
             <div className="mb-16 text-center">
               <h2 className="mb-4 text-3xl font-bold tracking-tight text-zinc-900 md:text-4xl">
@@ -123,43 +161,65 @@ export default function HomePage() {
                 Experience seamless AI power in three simple, intelligent steps.
               </p>
             </div>
-            <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3"> {/* Adjusted gap and removed absolute positioning for simpler styling */}
+            <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
+              {" "}
+              {/* Adjusted gap and removed absolute positioning for simpler styling */}
               {/* Step 1 */}
-              <Card className="flex flex-col items-center p-6 text-center"> {/* Using Card component */}
+              <Card className="flex flex-col items-center p-6 text-center">
+                {" "}
+                {/* Using Card component */}
                 <CardHeader className="flex flex-col items-center pb-4">
                   <div className="bg-primary text-primary-foreground mb-4 flex size-14 items-center justify-center rounded-full">
                     <MessageSquare className="size-7" />
                   </div>
-                  <CardTitle className="text-xl font-semibold">1. Your Brilliant Prompt</CardTitle>
+                  <CardTitle className="text-xl font-semibold">
+                    1. Your Brilliant Prompt
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="text-zinc-600">
-                  <p>Start by simply telling Mayura what you need. From complex code to creative ideas, one place for all your AI tasks.</p>
+                  <p>
+                    Start by simply telling Mayura what you need. From complex
+                    code to creative ideas, one place for all your AI tasks.
+                  </p>
                 </CardContent>
               </Card>
-
               {/* Step 2 */}
               <Card className="flex flex-col items-center p-6 text-center">
                 <CardHeader className="flex flex-col items-center pb-4">
                   <div className="bg-primary text-primary-foreground mb-4 flex size-14 items-center justify-center rounded-full">
                     <Route className="size-7" />
                   </div>
-                  <CardTitle className="text-xl font-semibold">2. Mayura's Smart Routing</CardTitle>
+                  <CardTitle
+                    className="text-xl font-semibold"
+                    dangerouslySetInnerHTML={{
+                      __html: "2. Mayura&apos;s Smart Routing"
+                    }}
+                  />
                 </CardHeader>
                 <CardContent className="text-zinc-600">
-                  <p>Our intelligent AI instantly understands your prompt's intent and magically routes it to the absolute best LLM for the job.</p>
+                  <p>
+                    Our intelligent AI instantly understands your prompt&apos;s
+                    intent and magically routes it to the absolute best LLM for
+                    the job.
+                  </p>
                 </CardContent>
               </Card>
-
               {/* Step 3 */}
               <Card className="flex flex-col items-center p-6 text-center">
                 <CardHeader className="flex flex-col items-center pb-4">
                   <div className="bg-primary text-primary-foreground mb-4 flex size-14 items-center justify-center rounded-full">
                     <Lightbulb className="size-7" />
                   </div>
-                  <CardTitle className="text-xl font-semibold">3. Superior Results, Instantly</CardTitle>
+                  <CardTitle className="text-xl font-semibold">
+                    3. Superior Results, Instantly
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="text-zinc-600">
-                  <p>Voila! Receive precise, high-quality, and cost-efficient results, tailored by the perfect AI model, every single time.</p>
+                  <p>
+                    Voila! Receive precise, high-quality, and cost-efficient
+                    results, tailored by the perfect AI model, every single
+                    time.
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -193,7 +253,8 @@ export default function HomePage() {
                 Why Choose Mayura?
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-zinc-600">
-                Stop juggling multiple AI platforms. Get better results with less effort.
+                Stop juggling multiple AI platforms. Get better results with
+                less effort.
               </p>
             </div>
             <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -203,7 +264,10 @@ export default function HomePage() {
                   <CardTitle>Higher Quality Results</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-zinc-600">Leverage the unique strengths of each top-tier LLM for unparalleled output quality.</p>
+                  <p className="text-zinc-600">
+                    Leverage the unique strengths of each top-tier LLM for
+                    unparalleled output quality.
+                  </p>
                 </CardContent>
               </Card>
               <Card>
@@ -212,7 +276,10 @@ export default function HomePage() {
                   <CardTitle>Faster Responses</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-zinc-600">Eliminate manual switching and get answers quicker with automatic routing.</p>
+                  <p className="text-zinc-600">
+                    Eliminate manual switching and get answers quicker with
+                    automatic routing.
+                  </p>
                 </CardContent>
               </Card>
               <Card>
@@ -221,7 +288,10 @@ export default function HomePage() {
                   <CardTitle>Lower Costs</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-zinc-600">Optimize spending by using the most efficient model for each specific task.</p>
+                  <p className="text-zinc-600">
+                    Optimize spending by using the most efficient model for each
+                    specific task.
+                  </p>
                 </CardContent>
               </Card>
               <Card>
@@ -230,7 +300,10 @@ export default function HomePage() {
                   <CardTitle>Simplified Workflow</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-zinc-600">One platform to manage all AI interactions. No more juggling multiple tabs and accounts.</p>
+                  <p className="text-zinc-600">
+                    One platform to manage all AI interactions. No more juggling
+                    multiple tabs and accounts.
+                  </p>
                 </CardContent>
               </Card>
               <Card>
@@ -239,7 +312,10 @@ export default function HomePage() {
                   <CardTitle>Future-Proof</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-zinc-600">Automatically adapts as new and better LLMs emerge in the market.</p>
+                  <p className="text-zinc-600">
+                    Automatically adapts as new and better LLMs emerge in the
+                    market.
+                  </p>
                 </CardContent>
               </Card>
               <Card>
@@ -248,7 +324,10 @@ export default function HomePage() {
                   <CardTitle>Focus on Your Work</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-zinc-600">Spend less time managing AI tools, more time on what matters most.</p>
+                  <p className="text-zinc-600">
+                    Spend less time managing AI tools, more time on what matters
+                    most.
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -270,7 +349,12 @@ export default function HomePage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Free</CardTitle>
-                  <div className="text-3xl font-bold">$0<span className="text-base font-normal text-zinc-500">/month</span></div>
+                  <div className="text-3xl font-bold">
+                    $0
+                    <span className="text-base font-normal text-zinc-500">
+                      /month
+                    </span>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <ul className="mb-6 space-y-2">
@@ -287,14 +371,23 @@ export default function HomePage() {
                       <span className="text-sm">Community support</span>
                     </li>
                   </ul>
-                  <Button className="w-full" variant="outline">Get Started</Button>
+                  <Button className="w-full" variant="outline">
+                    Get Started
+                  </Button>
                 </CardContent>
               </Card>
               <Card className="border-primary">
                 <CardHeader>
-                  <div className="bg-primary text-primary-foreground w-fit rounded-full px-2 py-1 text-xs">Most Popular</div>
+                  <div className="bg-primary text-primary-foreground w-fit rounded-full px-2 py-1 text-xs">
+                    Most Popular
+                  </div>
                   <CardTitle>Pro</CardTitle>
-                  <div className="text-3xl font-bold">$29<span className="text-base font-normal text-zinc-500">/month</span></div>
+                  <div className="text-3xl font-bold">
+                    $29
+                    <span className="text-base font-normal text-zinc-500">
+                      /month
+                    </span>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <ul className="mb-6 space-y-2">
@@ -342,7 +435,9 @@ export default function HomePage() {
                       <span className="text-sm">Dedicated support</span>
                     </li>
                   </ul>
-                  <Button className="w-full" variant="outline">Contact Sales</Button>
+                  <Button className="w-full" variant="outline">
+                    Contact Sales
+                  </Button>
                 </CardContent>
               </Card>
             </div>
@@ -357,10 +452,17 @@ export default function HomePage() {
                 Built by Engineers, for Everyone
               </h2>
               <p className="mb-8 text-lg text-zinc-600">
-                We experienced the frustration of constantly switching between different AI models, never knowing which one would work best for our specific needs. That's why we built Mayura - to eliminate the guesswork and deliver the right AI solution every time.
+                We experienced the frustration of constantly switching between
+                different AI models, never knowing which one would work best for
+                our specific needs. That&apos;s why we built Mayura - to
+                eliminate the guesswork and deliver the right AI solution every
+                time.
               </p>
               <p className="text-zinc-600">
-                Our mission is to democratize access to the world's best AI models through intelligent routing, making advanced AI capabilities accessible to individuals, startups, and enterprises alike.
+                Our mission is to democratize access to the world&apos;s best AI
+                models through intelligent routing, making advanced AI
+                capabilities accessible to individuals, startups, and
+                enterprises alike.
               </p>
             </div>
           </div>
@@ -376,7 +478,10 @@ export default function HomePage() {
             </div>
             <div className="mx-auto max-w-3xl">
               {faqs.map((faq, index) => (
-                <div key={index} className="border-b border-zinc-200 last:border-b-0">
+                <div
+                  key={index}
+                  className="border-b border-zinc-200 last:border-b-0"
+                >
                   <button
                     className="flex w-full items-center justify-between py-6 text-left"
                     onClick={() => toggleFaq(index)}
@@ -407,7 +512,8 @@ export default function HomePage() {
                 Ready to Transform Your AI Workflow?
               </h2>
               <p className="mb-8 text-lg text-zinc-600">
-                Join thousands of users who have already upgraded their AI experience with Mayura.
+                Join thousands of users who have already upgraded their AI
+                experience with Mayura.
               </p>
               <div className="flex flex-col justify-center gap-4 sm:flex-row">
                 <Button size="lg" asChild>
@@ -435,7 +541,7 @@ export default function HomePage() {
                 <div className="rounded bg-black p-2">
                   <p className="font-bold text-white">M</p>
                 </div>
-                <h3 className="font-bold">Mayura AI</h3>
+                <h3 className="font-bold">Mayura</h3>
               </div>
               <p className="mb-4 text-sm text-zinc-600">
                 Intelligent AI routing for superior results, every time.
@@ -444,43 +550,100 @@ export default function HomePage() {
             <div>
               <h4 className="mb-4 font-semibold">Product</h4>
               <ul className="space-y-2 text-sm text-zinc-600">
-                <li><Link href="#features" className="hover:underline">Features</Link></li>
-                <li><Link href="#pricing" className="hover:underline">Pricing</Link></li>
-                <li><Link href="/docs" className="hover:underline">API Docs</Link></li>
-                <li><Link href="/integrations" className="hover:underline">Integrations</Link></li>
+                <li>
+                  <Link href="#features" className="hover:underline">
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#pricing" className="hover:underline">
+                    Pricing
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/docs" className="hover:underline">
+                    API Docs
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/integrations" className="hover:underline">
+                    Integrations
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="mb-4 font-semibold">Company</h4>
               <ul className="space-y-2 text-sm text-zinc-600">
-                <li><Link href="/about" className="hover:underline">About Us</Link></li>
-                <li><Link href="/blog" className="hover:underline">Blog</Link></li>
-                <li><Link href="/careers" className="hover:underline">Careers</Link></li>
-                <li><Link href="/contact" className="hover:underline">Contact</Link></li>
+                <li>
+                  <Link href="/about" className="hover:underline">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/blog" className="hover:underline">
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/careers" className="hover:underline">
+                    Careers
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contact" className="hover:underline">
+                    Contact
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="mb-4 font-semibold">Support</h4>
               <ul className="space-y-2 text-sm text-zinc-600">
-                <li><Link href="/help" className="hover:underline">Help Center</Link></li>
-                <li><Link href="/support" className="hover:underline">Contact Support</Link></li>
-                <li><Link href="/status" className="hover:underline">Status</Link></li>
-                <li><Link href="/community" className="hover:underline">Community</Link></li>
+                <li>
+                  <Link href="/help" className="hover:underline">
+                    Help Center
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/support" className="hover:underline">
+                    Contact Support
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/status" className="hover:underline">
+                    Status
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/community" className="hover:underline">
+                    Community
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
           <div className="mt-8 flex flex-col items-center justify-between border-t border-zinc-200 pt-8 sm:flex-row">
             <p className="text-xs text-zinc-600">
-              © 2024 Mayura AI. All rights reserved.
+              © 2025 Mayura. All rights reserved.
             </p>
             <nav className="mt-4 flex gap-6 sm:mt-0">
-              <Link href="/privacy" className="text-xs text-zinc-600 hover:underline">
+              <Link
+                href="/privacy"
+                className="text-xs text-zinc-600 hover:underline"
+              >
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="text-xs text-zinc-600 hover:underline">
+              <Link
+                href="/terms"
+                className="text-xs text-zinc-600 hover:underline"
+              >
                 Terms of Service
               </Link>
-              <Link href="/cookies" className="text-xs text-zinc-600 hover:underline">
+              <Link
+                href="/cookies"
+                className="text-xs text-zinc-600 hover:underline"
+              >
                 Cookie Policy
               </Link>
             </nav>

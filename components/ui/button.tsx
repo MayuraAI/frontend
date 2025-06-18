@@ -14,22 +14,22 @@ const buttonVariants = cva(
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
           "border-black bg-transparent text-black hover:bg-black hover:text-white",
-        secondary:
-          "bg-card text-card-foreground hover:bg-card/80",
-        ghost: "border-transparent bg-transparent shadow-none hover:bg-zinc-200",
-        link: "border-transparent bg-transparent underline-offset-4 shadow-none hover:underline",
+        secondary: "bg-card text-card-foreground hover:bg-card/80",
+        ghost:
+          "border-transparent bg-transparent shadow-none hover:bg-zinc-200",
+        link: "border-transparent bg-transparent underline-offset-4 shadow-none hover:underline"
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
-        icon: "size-10",
-      },
+        icon: "size-10"
+      }
     },
     defaultVariants: {
       variant: "default",
-      size: "default",
-    },
+      size: "default"
+    }
   }
 )
 

@@ -19,13 +19,8 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
   const searchParams = useSearchParams()
   const chatId = searchParams.get("id")
 
-  const {
-    profile,
-    setChats,
-    chats,
-    setSelectedChat,
-    setChatSettings
-  } = useContext(MayuraContext)
+  const { profile, setChats, chats, setSelectedChat, setChatSettings } =
+    useContext(MayuraContext)
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -83,10 +78,10 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
         <Card className="w-96">
           <CardContent className="p-6">
             <div className="flex flex-col items-center space-y-4">
-              <Loader2 className="h-8 w-8 animate-spin" />
+              <Loader2 className="size-8 animate-spin" />
               <div className="text-center">
                 <h3 className="text-lg font-semibold">Loading your chats...</h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Please wait while we set everything up
                 </p>
               </div>
@@ -109,7 +104,7 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
           <CardContent className="p-6">
             <div className="text-center">
               <h3 className="text-lg font-semibold text-red-600">Error</h3>
-              <p className="text-sm text-muted-foreground">{error}</p>
+              <p className="text-muted-foreground text-sm">{error}</p>
               <button
                 onClick={() => window.location.reload()}
                 className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
@@ -130,7 +125,7 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
           <CardContent className="p-6">
             <div className="text-center">
               <h3 className="text-lg font-semibold">Profile Required</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Please complete your profile setup first.
               </p>
             </div>
@@ -141,4 +136,4 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
   }
 
   return <Dashboard>{children}</Dashboard>
-} 
+}

@@ -46,10 +46,12 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
       aria-label={`Open chat: ${chat.name}`}
     >
       <div className="min-w-0 flex-1">
-        <div className={cn(
-          "truncate font-sans text-sm font-bold leading-relaxed tracking-wide",
-          isActive ? "text-black" : "text-black"
-        )}>
+        <div
+          className={cn(
+            "truncate font-sans text-sm font-bold leading-relaxed tracking-wide",
+            isActive ? "text-black" : "text-black"
+          )}
+        >
           {chat.name}
         </div>
       </div>

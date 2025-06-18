@@ -12,7 +12,6 @@ export const SidebarCreateButtons: FC<SidebarCreateButtonsProps> = ({
   contentType,
   hasData
 }) => {
-
   const renderCreateButton = (contentType: ContentType) => {
     switch (contentType) {
       case "chats":

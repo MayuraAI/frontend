@@ -63,8 +63,8 @@ export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
           <Label className="text-foreground mb-3 block text-lg font-black">
             CHAT NAME
           </Label>
-          <Input 
-            value={name} 
+          <Input
+            value={name}
             onChange={e => setName(e.target.value)}
             className="text-lg font-bold"
             placeholder="Enter chat name..."
@@ -72,16 +72,16 @@ export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
         </div>
 
         <DialogFooter className="gap-4">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => setShowChatDialog(false)}
             className="font-black"
           >
             CANCEL
           </Button>
 
-          <Button 
-            ref={buttonRef} 
+          <Button
+            ref={buttonRef}
             onClick={handleUpdateChat}
             variant="electric"
             className="font-black"

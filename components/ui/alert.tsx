@@ -10,23 +10,26 @@ const alertVariants = cva(
       variant: {
         // Theme-responsive variants
         default: "bg-background text-foreground",
-        
+
         // Status-specific variants with proper contrast
-        success: "bg-success text-success-foreground [&>svg]:text-success-foreground",
-        destructive: "bg-destructive text-destructive-foreground [&>svg]:text-destructive-foreground",
-        warning: "bg-warning text-warning-foreground [&>svg]:text-warning-foreground",
+        success:
+          "bg-success text-success-foreground [&>svg]:text-success-foreground",
+        destructive:
+          "bg-destructive text-destructive-foreground [&>svg]:text-destructive-foreground",
+        warning:
+          "bg-warning text-warning-foreground [&>svg]:text-warning-foreground",
         info: "bg-info text-info-foreground [&>svg]:text-info-foreground",
-        
+
         // Fixed neobrutalism color variants
         electric: "bg-neo-electric text-black [&>svg]:text-black",
         neon: "bg-neo-neon text-white [&>svg]:text-white",
         cyber: "bg-neo-cyber text-black [&>svg]:text-black",
-        toxic: "bg-neo-toxic text-black [&>svg]:text-black",
-      },
+        toxic: "bg-neo-toxic text-black [&>svg]:text-black"
+      }
     },
     defaultVariants: {
-      variant: "default",
-    },
+      variant: "default"
+    }
   }
 )
 
@@ -49,7 +52,10 @@ const AlertTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h5
     ref={ref}
-    className={cn("font-brutal mb-2 text-xl font-black leading-none tracking-tight", className)}
+    className={cn(
+      "font-brutal mb-2 text-xl font-black leading-none tracking-tight",
+      className
+    )}
     {...props}
   />
 ))
@@ -61,7 +67,10 @@ const AlertDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("font-neo text-base font-bold [&_p]:leading-relaxed", className)}
+    className={cn(
+      "font-neo text-base font-bold [&_p]:leading-relaxed",
+      className
+    )}
     {...props}
   />
 ))
