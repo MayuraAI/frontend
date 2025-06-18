@@ -36,8 +36,8 @@ export const getProfileByUserId = async (userId: string) => {
         const newProfile = await createProfile({
           user_id: userId,
           username: finalUsername,
-          display_name: "New User",
-          profile_context: "Welcome to Mayura!",
+          display_name: "",
+          profile_context: "",
           has_onboarded: false
         })
 
@@ -50,8 +50,8 @@ export const getProfileByUserId = async (userId: string) => {
           const fallbackProfile = await createProfile({
             user_id: userId,
             username: `user${Date.now()}`,
-            display_name: "User",
-            profile_context: "New user",
+            display_name: "",
+            profile_context: "",
             has_onboarded: false
           })
 
