@@ -3,3 +3,4 @@
 -- Profiles will be created on-demand by the application code instead
 
 DROP TRIGGER IF EXISTS create_profile_trigger ON auth.users;
+

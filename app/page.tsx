@@ -55,14 +55,14 @@ export default function HomePage() {
         "We implement enterprise-grade security measures including end-to-end encryption, zero-data retention policies, and SOC 2 compliance. Your prompts and data are never stored or used for training."
     },
     {
-      question: "Is there a free trial?",
+      question: "Is this a limited beta?",
       answer:
-        "Yes! We offer a free tier with 100 prompts per month. No credit card required to get started."
+        "Yes, Mayura is currently in a public beta. The Free tier is available for everyone. The Pro tier and its features will be fully rolled out after the beta period."
     },
     {
-      question: "What's the pricing model?",
+      question: "What's the difference between request types?",
       answer:
-        "We use a simple pay-per-prompt model with transparent pricing. You only pay for successful prompt routing, with volume discounts available for higher usage tiers."
+        "Standard Requests use reliable models like GPT-4o and are great for everyday tasks. Pro Requests use the most powerful models available (like Claude 4 and Gemini 2.5 Pro) for complex reasoning, creative, and critical tasks."
     }
   ]
 
@@ -70,11 +70,16 @@ export default function HomePage() {
     <div className="flex w-full max-w-7xl flex-col items-center justify-center">
       {/* Header */}
       <header className="flex w-full items-center justify-between border-b p-6">
-        <div className="flex items-center gap-2">
-          <div className="rounded bg-black p-2">
-            <p className="font-bold text-white">M</p>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <div className="rounded bg-black p-2">
+              <p className="font-bold text-white">M</p>
+            </div>
+            <h1 className="text-xl font-bold">Mayura</h1>
           </div>
-          <h1 className="text-xl font-bold">Mayura</h1>
+          <div className="rounded-full border border-blue-200 bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+            Beta
+          </div>
         </div>
         <nav className="hidden items-center gap-6 md:flex">
           <Link
@@ -150,8 +155,6 @@ export default function HomePage() {
 
         {/* How It Works Section */}
         <section id="how-it-works" className="w-full bg-zinc-50 py-16 md:py-12">
-          {" "}
-          {/* Changed background for consistency */}
           <div className="container mx-auto px-6">
             <div className="mb-16 text-center">
               <h2 className="mb-4 text-3xl font-bold tracking-tight text-zinc-900 md:text-4xl">
@@ -162,12 +165,8 @@ export default function HomePage() {
               </p>
             </div>
             <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
-              {" "}
-              {/* Adjusted gap and removed absolute positioning for simpler styling */}
               {/* Step 1 */}
               <Card className="flex flex-col items-center p-6 text-center">
-                {" "}
-                {/* Using Card component */}
                 <CardHeader className="flex flex-col items-center pb-4">
                   <div className="bg-primary text-primary-foreground mb-4 flex size-14 items-center justify-center rounded-full">
                     <MessageSquare className="size-7" />
@@ -223,25 +222,6 @@ export default function HomePage() {
                 </CardContent>
               </Card>
             </div>
-
-            {/* Example Use Cases */}
-            {/* <div className="mt-20 text-center">
-              <h4 className="font-bold text-2xl mb-6 text-zinc-800">See Mayura in Action!</h4>
-              <div className="grid md:grid-cols-3 gap-6 text-base bg-white p-8 rounded-xl shadow-md max-w-4xl mx-auto">
-                <div className="p-4 bg-blue-50 rounded-lg flex items-center gap-3">
-                  <Code className="h-6 w-6 text-blue-600 flex-shrink-0" />
-                  <p className="text-zinc-700"><strong>Coding Challenge:</strong> Routed to a specialized code-generating LLM.</p>
-                </div>
-                <div className="p-4 bg-purple-50 rounded-lg flex items-center gap-3">
-                  <TrendingUp className="h-6 w-6 text-purple-600 flex-shrink-0" />
-                  <p className="text-zinc-700"><strong>Market Analysis:</strong> Directed to an analytical reasoning model.</p>
-                </div>
-                <div className="p-4 bg-green-50 rounded-lg flex items-center gap-3">
-                  <Zap className="h-6 w-6 text-green-600 flex-shrink-0" />
-                  <p className="text-zinc-700"><strong>Creative Writing:</strong> Sent to an imaginative content creation AI.</p>
-                </div>
-              </div>
-            </div> */}
           </div>
         </section>
 
@@ -334,7 +314,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Pricing Section */}
+        {/* --- START: RESTRUCTURED PRICING SECTION --- */}
         <section id="pricing" className="w-full bg-zinc-50 py-16 md:py-24">
           <div className="container mx-auto px-6">
             <div className="mb-16 text-center">
@@ -342,107 +322,140 @@ export default function HomePage() {
                 Simple, Transparent Pricing
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-zinc-600">
-                Pay only for what you use. No hidden fees, no surprises.
+                Get full access during our beta. The Pro plan will be available
+                after this period.
               </p>
             </div>
-            <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-3">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Free</CardTitle>
-                  <div className="text-3xl font-bold">
-                    $0
-                    <span className="text-base font-normal text-zinc-500">
-                      /month
-                    </span>
+            <div className="mx-auto grid max-w-4xl items-start gap-8 md:grid-cols-2">
+              {/* Free Plan */}
+              <Card className="flex h-full flex-col">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-2xl font-bold">Free</h3>
+                    <div className="w-fit rounded-full border border-green-200 bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
+                      Available Now
+                    </div>
                   </div>
+                  <p className="pt-2 text-sm text-zinc-500">
+                    Perfect for students, hobbyists, and light usage.
+                  </p>
                 </CardHeader>
-                <CardContent>
-                  <ul className="mb-6 space-y-2">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="size-4 text-green-500" />
-                      <span className="text-sm">100 prompts/month</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="size-4 text-green-500" />
-                      <span className="text-sm">Basic model routing</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="size-4 text-green-500" />
-                      <span className="text-sm">Community support</span>
-                    </li>
-                  </ul>
-                  <Button className="w-full" variant="outline">
-                    Get Started
+                <CardContent className="flex flex-1 flex-col justify-between">
+                  <div>
+                    <div className="mb-6">
+                      <span className="text-4xl font-bold">$0</span>
+                      <span className="text-lg font-medium text-zinc-500">
+                        /month
+                      </span>
+                    </div>
+                    <p className="mb-4 font-semibold text-zinc-700">
+                      Core Features:
+                    </p>
+                    <ul className="space-y-4 text-sm">
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-green-500" />
+                        <div>
+                          <strong>10 Pro Requests / day</strong>
+                          <p className="text-xs text-zinc-500">
+                            Use for premium models like Claude 4, Gemini 2.5
+                            Pro, GPT-O3
+                          </p>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-green-500" />
+                        <div>
+                          <strong>Unlimited Standard Requests</strong>
+                          <p className="text-xs text-zinc-500">
+                            Use for models like Gemini-2.5 Flash, GPT-4o,
+                            Deepseek R1
+                          </p>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-green-500" />
+                        <div>Intelligent Routing</div>
+                      </li>
+                    </ul>
+                  </div>
+                  <Button className="mt-8 w-full" asChild>
+                    <Link href="/login">Get Started Free</Link>
                   </Button>
                 </CardContent>
               </Card>
-              <Card className="border-primary">
-                <CardHeader>
-                  <div className="bg-primary text-primary-foreground w-fit rounded-full px-2 py-1 text-xs">
-                    Most Popular
+
+              {/* Pro Plan */}
+              <Card className="border-primary relative flex h-full flex-col border-2">
+                <div className="bg-primary text-primary-foreground absolute -top-4 left-1/2 w-fit -translate-x-1/2 rounded-full px-4 py-1 text-sm font-medium">
+                  Recommended
+                </div>
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-2xl font-bold">Pro</h3>
+                    <div className="w-fit rounded-full border border-orange-200 bg-orange-100 px-3 py-1 text-xs font-medium text-orange-800">
+                      Coming Soon
+                    </div>
                   </div>
-                  <CardTitle>Pro</CardTitle>
-                  <div className="text-3xl font-bold">
-                    $29
-                    <span className="text-base font-normal text-zinc-500">
-                      /month
-                    </span>
+                  <p className="pt-2 text-sm text-zinc-500">
+                    For professionals and teams who need the best AI has to
+                    offer.
+                  </p>
+                </CardHeader>
+                <CardContent className="flex flex-1 flex-col justify-between">
+                  <div>
+                    <div className="mb-6">
+                      <span className="text-4xl font-bold">$10</span>
+                      <span className="text-lg font-medium text-zinc-500">
+                        /month
+                      </span>
+                    </div>
+                    <p className="mb-4 font-semibold text-zinc-700">
+                      Everything in Free, plus:
+                    </p>
+                    <ul className="space-y-4 text-sm">
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="text-primary size-5 shrink-0" />
+                        <div>
+                          <strong>100 Pro Requests / day</strong>
+                          <p className="text-xs text-zinc-500">
+                            Use for premium models like Claude 4, Gemini 2.5
+                            Pro, GPT-O3
+                          </p>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="text-primary size-5 shrink-0" />
+                        <div>
+                          <strong>Unlimited Standard Requests</strong>
+                          <p className="text-xs text-zinc-500">
+                            Use for models like Gemini-2.5 Flash, GPT-4o,
+                            Deepseek R1
+                          </p>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="text-primary size-5 shrink-0" />
+                        <div>Advanced Intelligent Routing</div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="text-primary size-5 shrink-0" />
+                        <div>Priority Chat Support</div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="text-primary size-5 shrink-0" />
+                        <div>API Access</div>
+                      </li>
+                    </ul>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="mb-6 space-y-2">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="size-4 text-green-500" />
-                      <span className="text-sm">5,000 prompts/month</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="size-4 text-green-500" />
-                      <span className="text-sm">Advanced routing</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="size-4 text-green-500" />
-                      <span className="text-sm">Usage analytics</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="size-4 text-green-500" />
-                      <span className="text-sm">Priority support</span>
-                    </li>
-                  </ul>
-                  <Button className="w-full">Start Free Trial</Button>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Enterprise</CardTitle>
-                  <div className="text-3xl font-bold">Custom</div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="mb-6 space-y-2">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="size-4 text-green-500" />
-                      <span className="text-sm">Unlimited prompts</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="size-4 text-green-500" />
-                      <span className="text-sm">Custom model routing</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="size-4 text-green-500" />
-                      <span className="text-sm">Advanced analytics</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="size-4 text-green-500" />
-                      <span className="text-sm">Dedicated support</span>
-                    </li>
-                  </ul>
-                  <Button className="w-full" variant="outline">
-                    Contact Sales
+                  <Button className="mt-8 w-full" variant="default" disabled>
+                    Upgrade to Pro
                   </Button>
                 </CardContent>
               </Card>
             </div>
           </div>
         </section>
+        {/* --- END: RESTRUCTURED PRICING SECTION --- */}
 
         {/* About Us Section */}
         <section className="w-full py-16 md:py-24">
@@ -512,8 +525,8 @@ export default function HomePage() {
                 Ready to Transform Your AI Workflow?
               </h2>
               <p className="mb-8 text-lg text-zinc-600">
-                Join thousands of users who have already upgraded their AI
-                experience with Mayura.
+                Join our beta and start upgrading your AI experience with Mayura
+                today.
               </p>
               <div className="flex flex-col justify-center gap-4 sm:flex-row">
                 <Button size="lg" asChild>
@@ -625,7 +638,7 @@ export default function HomePage() {
           </div>
           <div className="mt-8 flex flex-col items-center justify-between border-t border-zinc-200 pt-8 sm:flex-row">
             <p className="text-xs text-zinc-600">
-              © 2025 Mayura. All rights reserved.
+              © 2025 Mayura. All rights reserved. Currently in Beta.
             </p>
             <nav className="mt-4 flex gap-6 sm:mt-0">
               <Link
