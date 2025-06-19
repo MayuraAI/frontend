@@ -36,8 +36,8 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
       className={cn(
         "group mb-3 flex w-full cursor-pointer items-center border-2 border-black p-4 font-bold shadow-[3px_3px_0px_0px_black] transition-all duration-150",
         isActive
-          ? "bg-neobrutalist-yellow translate-x-[-1px] translate-y-[-1px] text-black shadow-[4px_4px_0px_0px_black]"
-          : "hover:bg-neobrutalist-yellow bg-white text-black hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_0px_black]"
+          ? "bg-neobrutalist-yellow -translate-x-px -translate-y-px text-black shadow-[4px_4px_0px_0px_black]"
+          : "hover:bg-neobrutalist-yellow bg-white text-black hover:-translate-x-px hover:-translate-y-px hover:shadow-[4px_4px_0px_0px_black]"
       )}
       tabIndex={0}
       onKeyDown={handleKeyDown}

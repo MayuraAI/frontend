@@ -304,8 +304,9 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ aiResponse }) => {
 
       <style jsx>{`
         .github-markdown {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-            "Noto Sans", Helvetica, Arial, sans-serif;
+          font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+            Helvetica, Arial, sans-serif;
           line-height: 1.5;
           color: #1f2328;
           word-wrap: break-word;
