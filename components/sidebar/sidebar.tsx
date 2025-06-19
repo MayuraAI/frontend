@@ -30,7 +30,12 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
           {/* <div className="border-2 border-black bg-black p-3 shadow-[3px_3px_0px_0px_black]">
               <span className="font-mono text-lg font-bold text-white">M</span>
             </div> */}
-          <h1 className="font-yellowtail">Mayura (beta)</h1>
+          <h1
+            className="font-yellowtail cursor-pointer transition-opacity hover:opacity-80"
+            onClick={() => (window.location.href = "/")}
+          >
+            Mayura (beta)
+          </h1>
         </div>
       </header>
 

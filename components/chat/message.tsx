@@ -205,7 +205,7 @@ export const Message: FC<MessageProps> = ({
         </div>
       ) : (
         // AI Message Block
-        <div className="w-full max-w-[80%]">
+        <div className="mx-auto w-full max-w-4xl">
           <div className="space-y-4">
             <div className="message-block message-block--ai relative w-full pt-6">
               <div className="absolute right-4 top-0 z-10 w-fit -translate-y-1/2 border border-black bg-[#E9ECEF] px-2 py-1 font-mono text-xs font-bold tracking-wide text-black">

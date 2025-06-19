@@ -160,7 +160,7 @@
 
   /* Neobrutalist Chat Message Block */
   .message-block {
-    @apply border-2 border-black shadow-[4px_4px_0px_0px_black] bg-white p-4 max-w-2xl;
+    @apply border-2 border-black shadow-[4px_4px_0px_0px_black] bg-white p-4;
   }
 
   .message-block--user {
