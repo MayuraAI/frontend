@@ -7,7 +7,6 @@ import {
 } from "@/db/limits"
 import { updateProfile } from "@/db/profile"
 import { supabase } from "@/lib/supabase/browser-client"
-import { cn } from "@/lib/utils"
 import {
   IconCircleCheckFilled,
   IconCircleXFilled,
@@ -31,13 +30,11 @@ import {
 } from "../ui/sheet"
 import { TextareaAutosize } from "../ui/textarea-autosize"
 import { WithTooltip } from "../ui/with-tooltip"
-import { ThemeSwitcher } from "./theme-switcher"
 
 interface ProfileSettingsProps {}
 
 export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
   const { profile, setProfile } = useContext(MayuraContext)
-
   const router = useRouter()
   const buttonRef = useRef<HTMLButtonElement>(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -139,14 +136,14 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
       </SheetTrigger>
 
       <SheetContent
-        className="bg-bg-secondary border-border-color flex flex-col justify-between"
+        className="flex flex-col justify-between"
         side="left"
         onKeyDown={handleKeyDown}
       >
         <div className="grow overflow-auto">
           <SheetHeader>
             <SheetTitle className="text-text-primary flex items-center justify-between space-x-2">
-              <div>User Settings</div>
+              <div>User Profile</div>
 
               <Button
                 tabIndex={-1}
@@ -250,13 +247,6 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                   used={profileInstructions.length}
                   limit={PROFILE_CONTEXT_MAX}
                 />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-text-primary">Theme</Label>
-              <div className="flex items-center gap-2">
-                <ThemeSwitcher />
               </div>
             </div>
           </div>

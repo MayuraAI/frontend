@@ -27,7 +27,9 @@ export const SidebarContent: FC<SidebarContentProps> = ({
         />
       </div>
 
-      <SidebarDataList contentType={contentType} data={filteredData} />
+      <div className="space-y-2">
+        <SidebarDataList contentType={contentType} data={filteredData} />
+      </div>
     </div>
   )
 }

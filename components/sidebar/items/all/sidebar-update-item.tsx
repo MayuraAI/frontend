@@ -8,7 +8,6 @@ import {
   SheetTitle,
   SheetTrigger
 } from "@/components/ui/sheet"
-import { AssignWorkspaces } from "@/components/workspace/assign-workspaces"
 import { MayuraContext } from "@/context/context"
 import { updateChat } from "@/db/chats"
 import { Tables } from "@/supabase/types"
@@ -34,7 +33,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
   updateState,
   isTyping
 }) => {
-  const { workspaces, selectedWorkspace, setChats } = useContext(MayuraContext)
+  const { setChats } = useContext(MayuraContext)
 
   const buttonRef = useRef<HTMLButtonElement>(null)
   const [isOpen, setIsOpen] = useState(false)

@@ -1,96 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fleur+De+Leah:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Yellowtail:wght@400;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* --- Enhanced shadcn/ui Theme --- */
 @layer base {
   :root {
-    /* Enhanced shadcn color system */
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 262 83% 58%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 262 83% 58%;
-    --radius: 0.75rem;
-    
-    /* Custom Mayura brand colors */
-    --brand-primary: 262 83% 58%;
-    --brand-secondary: 174 100% 48%;
-    --brand-accent: 320 100% 50%;
-    --brand-gradient: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(174 100% 48%) 100%);
-    
-    /* Enhanced interactive states */
-    --hover: 240 4.8% 95.9%;
-    --active: 240 5.9% 90%;
-    --focus: 262 83% 58% / 0.2;
-    
-    /* Message styling */
-    --message-user: 262 83% 58%;
-    --message-user-foreground: 210 40% 98%;
-    --message-assistant: 0 0% 100%;
-    --message-assistant-foreground: 240 10% 3.9%;
-    
-    /* Enhanced shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    /* Neobrutalist color palette */
+    --background: 0 0% 97%; /* Off-white #F7F7F7 */
+    --foreground: 0 0% 0%; /* Pure black #000000 */
+    --card: 0 0% 100%; /* Pure white #FFFFFF */
+    --card-foreground: 0 0% 0%; /* Pure black #000000 */
+    --popover: 0 0% 100%; /* Pure white #FFFFFF */
+    --popover-foreground: 0 0% 0%; /* Pure black #000000 */
+    --primary: 45 95% 58%; /* Bright yellow #FBEA2B */
+    --primary-foreground: 0 0% 0%; /* Pure black #000000 */
+    --secondary: 140 70% 54%; /* Lime green #32D583 */
+    --secondary-foreground: 0 0% 0%; /* Pure black #000000 */
+    --muted: 0 0% 92%; /* Light grey #EBEBEB */
+    --muted-foreground: 0 0% 0%; /* Pure black #000000 */
+    --accent: 220 100% 50%; /* Bold blue #2970FF */
+    --accent-foreground: 0 0% 100%; /* Pure white #FFFFFF */
+    --destructive: 0 84.2% 60.2%; /* Bright red */
+    --destructive-foreground: 0 0% 100%; /* Pure white #FFFFFF */
+    --border: 0 0% 0%; /* Pure black #000000 */
+    --input: 0 0% 100%; /* Pure white #FFFFFF */
+    --ring: 0 0% 0%; /* Pure black #000000 */
+    --radius: 0rem; /* NO ROUNDED CORNERS */
+
+    /* Sidebar specific colors - Neobrutalist */
+    --sidebar: 0 0% 97%; /* Off-white #F7F7F7 */
+    --sidebar-foreground: 0 0% 0%; /* Pure black #000000 */
+    --sidebar-border: 0 0% 0%; /* Pure black #000000 */
+    --sidebar-accent: 45 95% 58%; /* Bright yellow #FBEA2B */
+    --sidebar-accent-foreground: 0 0% 0%; /* Pure black #000000 */
+    --sidebar-muted: 0 0% 92%; /* Light grey #EBEBEB */
+    --sidebar-muted-foreground: 0 0% 0%; /* Pure black #000000 */
   }
 
   .dark {
-    /* Enhanced dark theme */
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 262 83% 58%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 262 83% 58%;
-    
-    /* Enhanced interactive states for dark */
-    --hover: 240 3.7% 15.9%;
-    --active: 240 5.9% 20%;
-    --focus: 262 83% 58% / 0.3;
-    
-    /* Message styling for dark */
-    --message-user: 262 83% 58%;
-    --message-user-foreground: 210 40% 98%;
-    --message-assistant: 240 3.7% 15.9%;
-    --message-assistant-foreground: 0 0% 98%;
-    
-    /* Enhanced shadows for dark */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.2);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+    /* Dark mode maintains the same Neobrutalist principles */
+    --background: 0 0% 5%; /* Very dark #0D0D0D */
+    --foreground: 0 0% 100%; /* Pure white #FFFFFF */
+    --card: 0 0% 10%; /* Dark grey #1A1A1A */
+    --card-foreground: 0 0% 100%; /* Pure white #FFFFFF */
+    --popover: 0 0% 10%; /* Dark grey #1A1A1A */
+    --popover-foreground: 0 0% 100%; /* Pure white #FFFFFF */
+    --primary: 45 95% 58%; /* Bright yellow #FBEA2B */
+    --primary-foreground: 0 0% 0%; /* Pure black #000000 */
+    --secondary: 140 70% 54%; /* Lime green #32D583 */
+    --secondary-foreground: 0 0% 0%; /* Pure black #000000 */
+    --muted: 0 0% 15%; /* Dark grey #262626 */
+    --muted-foreground: 0 0% 100%; /* Pure white #FFFFFF */
+    --accent: 220 100% 50%; /* Bold blue #2970FF */
+    --accent-foreground: 0 0% 100%; /* Pure white #FFFFFF */
+    --destructive: 0 84.2% 60.2%; /* Bright red */
+    --destructive-foreground: 0 0% 100%; /* Pure white #FFFFFF */
+    --border: 0 0% 100%; /* Pure white #FFFFFF */
+    --input: 0 0% 10%; /* Dark grey #1A1A1A */
+    --ring: 0 0% 100%; /* Pure white #FFFFFF */
+
+    /* Sidebar specific colors for dark mode */
+    --sidebar: 0 0% 5%; /* Very dark #0D0D0D */
+    --sidebar-foreground: 0 0% 100%; /* Pure white #FFFFFF */
+    --sidebar-border: 0 0% 100%; /* Pure white #FFFFFF */
+    --sidebar-accent: 45 95% 58%; /* Bright yellow #FBEA2B */
+    --sidebar-accent-foreground: 0 0% 0%; /* Pure black #000000 */
+    --sidebar-muted: 0 0% 15%; /* Dark grey #262626 */
+    --sidebar-muted-foreground: 0 0% 100%; /* Pure white #FFFFFF */
   }
 }
 
@@ -98,140 +78,173 @@
   * {
     @apply border-border;
   }
-  
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Inter', 'IBM Plex Mono', monospace, system-ui, -apple-system, sans-serif;
+    font-weight: 400;
   }
-  
-  /* Enhanced scrollbar styling */
+
+  /* Neobrutalist Typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    /* text-transform: uppercase; */
+    letter-spacing: -0.025em;
+  }
+
+  .font-fleur {
+    font-family: "Fleur De Leah", cursive;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 3rem;
+  }
+
+  .font-mono {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .font-yellowtail {
+    font-family: 'Yellowtail';
+    font-weight: 500;
+    font-style: normal;
+    font-size: 3rem;
+  }
+
+  /* NO CUSTOM SCROLLBAR - Keep it standard and bold */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 12px;
+    height: 12px;
   }
-  
+
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background: hsl(var(--background));
+    border: 2px solid hsl(var(--border));
   }
-  
+
   ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/30 rounded-full;
-    border-radius: 3px;
+    background: hsl(var(--border));
+    border: none;
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/50;
+    background: hsl(var(--foreground));
   }
-  
-  ::-webkit-scrollbar-corner {
-    background-color: transparent;
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thick;
+    scrollbar-color: hsl(var(--border)) hsl(var(--background));
   }
 }
 
 @layer components {
-  /* Enhanced focus ring */
-  .focus-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  /* Neobrutalist Button Base */
+  .btn-neobrutalist {
+    @apply font-bold tracking-wide border-3 border-black shadow-[4px_4px_0px_0px_black] transition-all duration-150;
+    font-family: 'Inter', sans-serif;
   }
-  
-  /* Message animations */
-  .message-enter {
-    @apply animate-slide-in-up;
+
+  .btn-neobrutalist:hover {
+    @apply shadow-[6px_6px_0px_0px_black] translate-x-[-2px] translate-y-[-2px];
   }
-  
-  /* Typing indicator */
-  .typing-indicator {
-    @apply inline-flex items-center gap-1;
+
+  .btn-neobrutalist:active {
+    @apply shadow-[2px_2px_0px_0px_black] translate-x-[2px] translate-y-[2px];
   }
-  
-  .typing-dot {
-    @apply w-1.5 h-1.5 bg-muted-foreground rounded-full animate-typing-bounce;
+
+  /* Neobrutalist Container Base */
+  .container-neobrutalist {
+    @apply border-3 border-black shadow-[4px_4px_0px_0px_black] bg-white;
   }
-  
-  .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-  .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-  .typing-dot:nth-child(3) { animation-delay: 0s; }
-  
-  /* Enhanced markdown content styling */
+
+  /* Neobrutalist Chat Message Block */
+  .message-block {
+    @apply border-2 border-black shadow-[4px_4px_0px_0px_black] bg-white p-4;
+  }
+
+  .message-block--user {
+    @apply bg-white border-black;
+  }
+
+  .message-block--ai {
+    @apply bg-muted border-black;
+  }
+
   .markdown-content {
-    @apply text-foreground leading-relaxed;
+    @apply text-foreground;
+    font-family: 'IBM Plex Mono', monospace;
   }
   
   .markdown-content h1 {
-    @apply text-2xl font-bold mb-4 mt-6 first:mt-0 text-foreground;
+    @apply text-2xl font-bold mb-4 mt-6 first:mt-0 uppercase;
+    font-family: 'Inter', sans-serif;
   }
   
   .markdown-content h2 {
-    @apply text-xl font-semibold mb-3 mt-5 text-foreground;
+    @apply text-xl font-bold mb-3 mt-5 first:mt-0 uppercase;
+    font-family: 'Inter', sans-serif;
   }
   
   .markdown-content h3 {
-    @apply text-lg font-medium mb-2 mt-4 text-foreground;
+    @apply text-lg font-semibold mb-2 mt-4 first:mt-0 uppercase;
+    font-family: 'Inter', sans-serif;
   }
   
   .markdown-content p {
-    @apply mb-4 last:mb-0;
+    @apply mb-4 leading-relaxed;
   }
   
   .markdown-content ul {
-    @apply list-disc pl-6 mb-4 space-y-1;
+    @apply list-disc space-y-1 pl-6 mb-4;
   }
   
   .markdown-content ol {
-    @apply list-decimal pl-6 mb-4 space-y-1;
+    @apply list-decimal space-y-1 pl-6 mb-4;
   }
   
   .markdown-content li {
-    @apply text-foreground;
+    @apply leading-relaxed;
   }
   
   .markdown-content pre {
-    @apply bg-muted p-4 rounded-lg mb-4 overflow-x-auto border;
+    @apply relative my-6 overflow-x-auto bg-black text-sm border-2 border-black shadow-[4px_4px_0px_0px_black];
+    padding: 1.5rem; /* 24px consistent padding on all sides */
   }
   
   .markdown-content code {
-    @apply bg-muted px-2 py-1 rounded text-sm font-mono;
+    @apply relative bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold border border-black;
   }
   
   .markdown-content pre code {
-    @apply bg-transparent p-0;
+    @apply bg-transparent p-0 text-white border-none;
   }
   
   .markdown-content blockquote {
-    @apply border-l-4 border-primary pl-4 italic text-muted-foreground mb-4;
+    @apply border-l-4 border-black pl-4 font-bold text-foreground bg-muted p-4 shadow-[4px_4px_0px_0px_black];
   }
   
   .markdown-content table {
-    @apply w-full border-collapse border border-border mb-4;
+    @apply my-4 w-full border-collapse border-2 border-black shadow-[4px_4px_0px_0px_black];
+  }
+  
+  .markdown-content th,
+  .markdown-content td {
+    @apply border-2 border-black p-2 text-left;
   }
   
   .markdown-content th {
-    @apply border border-border px-4 py-2 bg-muted font-semibold text-left;
-  }
-  
-  .markdown-content td {
-    @apply border border-border px-4 py-2;
+    @apply bg-primary font-bold text-primary-foreground uppercase;
   }
   
   .markdown-content a {
-    @apply text-primary hover:underline;
+    @apply text-accent underline underline-offset-4 hover:underline-offset-2 font-bold;
   }
-  
-  .markdown-content img {
-    @apply max-w-full h-auto rounded-lg mb-4;
-  }
-  
-  .markdown-content hr {
-    @apply border-t border-border my-6;
-  }
-  
+
   .markdown-content strong {
-    @apply font-semibold;
+    @apply font-bold;
   }
-  
+
   .markdown-content em {
     @apply italic;
   }

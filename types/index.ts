@@ -18,14 +18,12 @@ export interface ChatSettings {
   temperature: number
   contextLength: number
   includeProfileContext: boolean
-  includeWorkspaceInstructions: boolean
   embeddingsProvider: "openai" | "local"
 }
 
 export interface ChatRequest {
   messages: ChatMessage[]
   profile_context?: string
-  workspace_instructions?: string
 }
 
 export interface LLM {
@@ -61,3 +59,4 @@ export * from "./chat"
 export * from "./chat-message"
 export * from "./llms"
 export * from "./sharing"
+export * from "./rate-limit"

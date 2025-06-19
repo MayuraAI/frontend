@@ -42,7 +42,6 @@ export type Database = {
           sharing: string
           updated_at: string | null
           user_id: string
-          workspace_id: string
         }
         Insert: {
           created_at?: string
@@ -51,7 +50,6 @@ export type Database = {
           sharing?: string
           updated_at?: string | null
           user_id: string
-          workspace_id: string
         }
         Update: {
           created_at?: string
@@ -60,17 +58,8 @@ export type Database = {
           sharing?: string
           updated_at?: string | null
           user_id?: string
-          workspace_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "chats_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       messages: {
         Row: {
@@ -173,7 +162,6 @@ export type Database = {
           sharing: string
           updated_at: string | null
           user_id: string
-          workspace_id: string
         }
         Insert: {
           content: string
@@ -183,63 +171,11 @@ export type Database = {
           sharing?: string
           updated_at?: string | null
           user_id: string
-          workspace_id: string
         }
         Update: {
           content?: string
           created_at?: string
           id?: string
-          name?: string
-          sharing?: string
-          updated_at?: string | null
-          user_id?: string
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "prompts_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      workspaces: {
-        Row: {
-          created_at: string
-          default_prompt: string
-          id: string
-          include_profile_context: boolean
-          include_workspace_instructions: boolean
-          instructions: string
-          is_home: boolean
-          name: string
-          sharing: string
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          default_prompt: string
-          id?: string
-          include_profile_context: boolean
-          include_workspace_instructions: boolean
-          instructions: string
-          is_home?: boolean
-          name: string
-          sharing?: string
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          default_prompt?: string
-          id?: string
-          include_profile_context?: boolean
-          include_workspace_instructions?: boolean
-          instructions?: string
-          is_home?: boolean
           name?: string
           sharing?: string
           updated_at?: string | null

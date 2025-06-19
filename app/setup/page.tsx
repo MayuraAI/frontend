@@ -2,7 +2,6 @@
 
 import { MayuraContext } from "@/context/context"
 import { getProfileByUserId, updateProfile } from "@/db/profile"
-import { getHomeWorkspaceByUserId } from "@/db/workspaces"
 import { supabase } from "@/lib/supabase/browser-client"
 import { useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
@@ -20,6 +19,7 @@ export default function SetupPage() {
 
   const [loading, setLoading] = useState(true)
   const [currentStep, setCurrentStep] = useState(1)
+  const [currentUserId, setCurrentUserId] = useState<string>("")
 
   const [username, setUsername] = useState("")
   const [usernameAvailable, setUsernameAvailable] = useState(false)
@@ -35,6 +35,8 @@ export default function SetupPage() {
         }
 
         const user = session.user
+        setCurrentUserId(user.id)
+
         const profile = await getProfileByUserId(user.id)
 
         if (!profile) {
@@ -47,11 +49,12 @@ export default function SetupPage() {
         setUsername(profile.username || "")
         setDisplayName(profile.display_name || "")
 
+        if (profile.username) {
+          setUsernameAvailable(true)
+        }
+
         if (profile.has_onboarded) {
-          const homeWorkspaceId = await getHomeWorkspaceByUserId(user.id)
-          if (homeWorkspaceId) {
-            return router.push(`/${homeWorkspaceId}/chat`)
-          }
+          return router.push("/chat")
         }
 
         setLoading(false)
@@ -86,8 +89,7 @@ export default function SetupPage() {
 
     setProfile(updatedProfile)
 
-    const homeWorkspaceId = await getHomeWorkspaceByUserId(profile.id)
-    router.push(`/${homeWorkspaceId}/chat`)
+    router.push("/chat")
   }
 
   const renderStep = (stepNum: number) => {
@@ -107,6 +109,7 @@ export default function SetupPage() {
               username={username}
               usernameAvailable={usernameAvailable}
               displayName={displayName}
+              currentUserId={currentUserId}
               onUsernameAvailableChange={setUsernameAvailable}
               onUsernameChange={setUsername}
               onDisplayNameChange={setDisplayName}

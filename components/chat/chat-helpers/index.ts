@@ -13,7 +13,6 @@ export const validateChatSettings = (
   chatSettings: ChatSettings | null,
   modelData: LLM | undefined,
   profile: Tables<"profiles"> | null,
-  selectedWorkspace: Tables<"workspaces"> | null,
   messageContent: string
 ) => {
   if (!chatSettings) {
@@ -26,10 +25,6 @@ export const validateChatSettings = (
 
   if (!profile) {
     throw new Error("Profile not found")
-  }
-
-  if (!selectedWorkspace) {
-    throw new Error("Workspace not found")
   }
 
   if (!messageContent) {
@@ -71,14 +66,12 @@ export const fetchChatResponse = async (
 
 export const handleCreateChat = async (
   profile: Tables<"profiles">,
-  selectedWorkspace: Tables<"workspaces">,
   messageContent: string,
   setSelectedChat: React.Dispatch<React.SetStateAction<Tables<"chats"> | null>>,
   setChats: React.Dispatch<React.SetStateAction<Tables<"chats">[]>>
 ) => {
   const newChat: TablesInsert<"chats"> = {
     user_id: profile.user_id,
-    workspace_id: selectedWorkspace.id,
     name: messageContent.slice(0, 100),
     sharing: "private"
   }
@@ -147,31 +140,67 @@ export const processResponse = async (
 
       const text = new TextDecoder().decode(value)
       const lines = text.split("\n").filter(line => line.trim() !== "")
-      const data = JSON.parse(lines[0].slice(6))
 
-      if (data.type == "end") {
-        break
-      }
+      if (lines.length === 0) continue
 
-      if (data.model) {
-        modelName = data.model
-        continue
-      }
-
-      if (data.message) {
-        fullText += data.message
-        setFirstTokenReceived(true)
-        setChatMessages(prev =>
-          prev.map(chatMessage =>
-            chatMessage.id === tempAssistantChatMessage.id
-              ? {
-                  ...chatMessage,
-                  content: fullText,
-                  model_name: modelName
-                }
-              : chatMessage
+      for (const line of lines) {
+        let data
+        try {
+          // Handle both SSE format "data: {...}" and raw JSON
+          const lineContent = line.startsWith("data: ") ? line.slice(6) : line
+          data = JSON.parse(lineContent)
+        } catch (parseError) {
+          console.error(
+            "Error parsing response data:",
+            parseError,
+            "Raw text:",
+            text
           )
-        )
+          continue
+        }
+
+        // Handle error responses
+        if (data.error) {
+          const errorMessage = `Error: ${data.error}`
+          fullText = errorMessage
+          setChatMessages(prev =>
+            prev.map(chatMessage =>
+              chatMessage.id === tempAssistantChatMessage.id
+                ? {
+                    ...chatMessage,
+                    content: errorMessage,
+                    model_name: "error"
+                  }
+                : chatMessage
+            )
+          )
+          throw new Error(data.error)
+        }
+
+        if (data.type == "end") {
+          break
+        }
+
+        if (data.model) {
+          modelName = data.model
+          continue
+        }
+
+        if (data.message) {
+          fullText += data.message
+          setFirstTokenReceived(true)
+          setChatMessages(prev =>
+            prev.map(chatMessage =>
+              chatMessage.id === tempAssistantChatMessage.id
+                ? {
+                    ...chatMessage,
+                    content: fullText,
+                    model_name: modelName
+                  }
+                : chatMessage
+            )
+          )
+        }
       }
     }
   } catch (error) {

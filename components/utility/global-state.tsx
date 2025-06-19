@@ -3,7 +3,6 @@
 import { FC, ReactNode, useContext, useEffect } from "react"
 import { MayuraContext } from "@/context/context"
 import { getProfileByUserId } from "@/db/profile"
-import { getWorkspacesByUserId } from "@/db/workspaces"
 import { supabase } from "@/lib/supabase/browser-client"
 import { useRouter } from "next/navigation"
 
@@ -16,10 +15,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const {
     profile,
     setProfile,
-    selectedWorkspace,
-    setSelectedWorkspace,
-    workspaces,
-    setWorkspaces,
     chats,
     setChats,
     selectedChat,
@@ -47,16 +42,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         const profile = await getProfileByUserId(session.user.id)
         if (profile) {
           setProfile(profile)
-
-          // Load workspaces
-          const workspaces = await getWorkspacesByUserId(session.user.id)
-          if (workspaces) {
-            setWorkspaces(workspaces)
-            const homeWorkspace = workspaces.find(w => w.is_home)
-            if (homeWorkspace) {
-              setSelectedWorkspace(homeWorkspace)
-            }
-          }
         }
       } catch (error) {
         console.error("Error loading initial data:", error)
@@ -64,14 +49,12 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
     }
 
     loadInitialData()
-  }, [router, setProfile, setWorkspaces, setSelectedWorkspace])
+  }, [router, setProfile])
 
   // Clear state on page unload
   useEffect(() => {
     const handleBeforeUnload = () => {
       setProfile(null)
-      setSelectedWorkspace(null)
-      setWorkspaces([])
       setChats([])
       setSelectedChat(null)
       setChatMessages([])
@@ -83,7 +66,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         temperature: 0.5,
         contextLength: 4096,
         includeProfileContext: true,
-        includeWorkspaceInstructions: true,
         embeddingsProvider: "openai"
       })
     }
@@ -95,8 +77,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
     }
   }, [
     setProfile,
-    setSelectedWorkspace,
-    setWorkspaces,
     setChats,
     setSelectedChat,
     setChatMessages,

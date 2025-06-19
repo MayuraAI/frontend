@@ -4,11 +4,6 @@ export const PROFILE_CONTEXT_MAX = 500
 export const PROFILE_USERNAME_MIN = 3
 export const PROFILE_USERNAME_MAX = 20
 
-// Workspaces
-export const WORKSPACE_NAME_MAX = 20
-export const WORKSPACE_DESCRIPTION_MAX = 300
-export const WORKSPACE_INSTRUCTIONS_MAX = 500
-
 // Chats
 export const CHAT_NAME_MAX = 20
 export const CHAT_PROMPT_MAX = 300

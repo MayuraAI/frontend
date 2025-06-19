@@ -11,11 +11,11 @@ export const getChatById = async (chatId: string) => {
   return chat
 }
 
-export const getChatsByWorkspaceId = async (workspaceId: string) => {
+export const getChatsByUserId = async (userId: string) => {
   const { data: chats, error } = await supabase
     .from("chats")
     .select("*")
-    .eq("workspace_id", workspaceId)
+    .eq("user_id", userId)
     .order("created_at", { ascending: false })
 
   if (!chats) {

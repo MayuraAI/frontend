@@ -29,14 +29,13 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
   renderInputs,
   createState
 }) => {
-  const { profile, selectedWorkspace, setChats } = useContext(MayuraContext)
+  const { profile, setChats } = useContext(MayuraContext)
 
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   const [loading, setLoading] = useState(false)
 
   if (!profile) return null
-  if (!selectedWorkspace) return null
 
   const createFunctions = {
     chats: createChat

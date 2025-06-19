@@ -12,10 +12,6 @@ export const SidebarCreateButtons: FC<SidebarCreateButtonsProps> = ({
   contentType,
   hasData
 }) => {
-  const { selectedWorkspace } = useContext(MayuraContext)
-
-  if (!selectedWorkspace) return null
-
   const renderCreateButton = (contentType: ContentType) => {
     switch (contentType) {
       case "chats":

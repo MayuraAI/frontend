@@ -1,7 +1,6 @@
 import { MayuraContext } from "@/context/context"
 import { cn } from "@/lib/utils"
 import { Tables } from "@/supabase/types"
-import { IconMessage } from "@tabler/icons-react"
 import { useParams, useRouter } from "next/navigation"
 import { FC, useContext, useRef } from "react"
 import { DeleteChat } from "./delete-chat"
@@ -12,7 +11,7 @@ interface ChatItemProps {
 }
 
 export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
-  const { selectedWorkspace, selectedChat } = useContext(MayuraContext)
+  const { selectedChat } = useContext(MayuraContext)
 
   const router = useRouter()
   const params = useParams()
@@ -21,8 +20,7 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
   const itemRef = useRef<HTMLDivElement>(null)
 
   const handleClick = () => {
-    if (!selectedWorkspace) return
-    return router.push(`/${selectedWorkspace.id}/chat/${chat.id}`)
+    return router.push(`/chat/${chat.id}`)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -36,10 +34,10 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
     <div
       ref={itemRef}
       className={cn(
-        "focus-ring group flex w-full cursor-pointer items-center rounded-lg px-3 py-2 text-left transition-all duration-200",
+        "group mb-3 flex w-full cursor-pointer items-center border-2 border-black p-4 font-bold shadow-[3px_3px_0px_0px_black] transition-all duration-150",
         isActive
-          ? "bg-primary/10 border-primary/20 border font-medium shadow-sm"
-          : "hover:bg-muted/50 text-muted-foreground hover:text-foreground"
+          ? "bg-neobrutalist-yellow translate-x-[-1px] translate-y-[-1px] text-black shadow-[4px_4px_0px_0px_black]"
+          : "hover:bg-neobrutalist-yellow bg-white text-black hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_0px_black]"
       )}
       tabIndex={0}
       onKeyDown={handleKeyDown}
@@ -48,7 +46,14 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
       aria-label={`Open chat: ${chat.name}`}
     >
       <div className="min-w-0 flex-1">
-        <div className="truncate text-sm">{chat.name}</div>
+        <div
+          className={cn(
+            "truncate font-sans text-sm font-bold leading-relaxed tracking-wide",
+            isActive ? "text-black" : "text-black"
+          )}
+        >
+          {chat.name}
+        </div>
       </div>
 
       <div
@@ -57,7 +62,7 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
           e.preventDefault()
         }}
         className={cn(
-          "transition-smooth ml-2 flex items-center space-x-1",
+          "ml-3 flex items-center space-x-2 transition-all duration-150",
           isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
         )}
       >

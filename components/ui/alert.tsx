@@ -4,13 +4,27 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const alertVariants = cva(
-  "[&>svg]:text-foreground relative w-full rounded-lg border p-4 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg~*]:pl-7",
+  "shadow-neo [&>svg]:text-foreground relative w-full border-4 border-black p-6 text-lg font-bold [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-6 [&>svg]:top-6 [&>svg]:size-5 [&>svg~*]:pl-8",
   {
     variants: {
       variant: {
+        // Theme-responsive variants
         default: "bg-background text-foreground",
+
+        // Status-specific variants with proper contrast
+        success:
+          "bg-success text-success-foreground [&>svg]:text-success-foreground",
         destructive:
-          "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive"
+          "bg-destructive text-destructive-foreground [&>svg]:text-destructive-foreground",
+        warning:
+          "bg-warning text-warning-foreground [&>svg]:text-warning-foreground",
+        info: "bg-info text-info-foreground [&>svg]:text-info-foreground",
+
+        // Fixed neobrutalism color variants
+        electric: "bg-neo-electric text-black [&>svg]:text-black",
+        neon: "bg-neo-neon text-white [&>svg]:text-white",
+        cyber: "bg-neo-cyber text-black [&>svg]:text-black",
+        toxic: "bg-neo-toxic text-black [&>svg]:text-black"
       }
     },
     defaultVariants: {
@@ -38,7 +52,10 @@ const AlertTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h5
     ref={ref}
-    className={cn("mb-1 font-medium leading-none tracking-tight", className)}
+    className={cn(
+      "font-brutal mb-2 text-xl font-black leading-none tracking-tight",
+      className
+    )}
     {...props}
   />
 ))
@@ -50,7 +67,10 @@ const AlertDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-sm [&_p]:leading-relaxed", className)}
+    className={cn(
+      "font-neo text-base font-bold [&_p]:leading-relaxed",
+      className
+    )}
     {...props}
   />
 ))

@@ -18,8 +18,6 @@ export const QuickSettings: FC<QuickSettingsProps> = ({}) => {
 
   useHotkey("p", () => setIsOpen(prevState => !prevState))
 
-  const { selectedWorkspace } = useContext(MayuraContext)
-
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [isOpen, setIsOpen] = useState(false)

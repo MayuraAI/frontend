@@ -1,30 +1,21 @@
 INSERT INTO auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, invited_at, confirmation_token, confirmation_sent_at, recovery_token, recovery_sent_at, email_change_token_new, email_change, email_change_sent_at, last_sign_in_at, raw_app_meta_data, raw_user_meta_data, is_super_admin, created_at, updated_at, phone, phone_confirmed_at, phone_change, phone_change_token, phone_change_sent_at, email_change_token_current, email_change_confirm_status, banned_until, reauthentication_token, reauthentication_sent_at, is_sso_user) VALUES
 ('00000000-0000-0000-0000-000000000000', 'e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa', 'authenticated', 'authenticated', 'test@test.com', crypt('password', gen_salt('bf')), '2023-02-18 23:31:13.017218+00', NULL, '', '2023-02-18 23:31:12.757017+00', '', NULL, '', '', NULL, '2023-02-18 23:31:13.01781+00', '{"provider": "email", "providers": ["email"]}', '{}', NULL, '2023-02-18 23:31:12.752281+00', '2023-02-18 23:31:13.019418+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, 'f');
 
--- Get workspace ids
+-- Start data for chats 
+INSERT INTO chats (user_id, name) VALUES 
+('e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa', 'Chat 1');
+
+-- Start data for messages 
 DO $$
 DECLARE
-  workspace1_id UUID;
+  chat1_id UUID;
 BEGIN
-  -- Get the automatically created home workspace
-  SELECT id INTO workspace1_id FROM workspaces WHERE user_id = 'e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa' AND is_home = true;
+  SELECT id INTO chat1_id FROM chats WHERE name='Chat 1';
 
-  -- Start data for chats 
-  INSERT INTO chats (user_id, workspace_id, name) VALUES 
-  ('e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa', workspace1_id, 'Chat 1');
-
-  -- Start data for messages 
-  -- Get chat ids
-  DECLARE
-    chat1_id UUID;
-  BEGIN
-    SELECT id INTO chat1_id FROM chats WHERE name='Chat 1';
-
-    INSERT INTO messages (user_id, chat_id, content, role, model_name, sequence_number) VALUES
-    -- Chat 1
-    ('e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa', chat1_id, 'Hello! This is a long message with **markdown**.', 'user', NULL, 0),
-    ('e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa', chat1_id, 'How are you? This is another long message with *italic markdown*.', 'assistant', 'gpt-4-turbo-preview', 1),
-    ('e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa', chat1_id, 'I am fine, thank you!', 'user', NULL, 2),
-    ('e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa', chat1_id, 'Great to hear that!', 'assistant', 'gpt-4-turbo-preview', 3);
-  END;
+  INSERT INTO messages (user_id, chat_id, content, role, model_name, sequence_number) VALUES
+  -- Chat 1
+  ('e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa', chat1_id, 'Hello! This is a long message with **markdown**.', 'user', NULL, 0),
+  ('e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa', chat1_id, 'How are you? This is another long message with *italic markdown*.', 'assistant', 'gpt-4-turbo-preview', 1),
+  ('e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa', chat1_id, 'I am fine, thank you!', 'user', NULL, 2),
+  ('e9fc7e46-a8a5-4fd4-8ba7-af485013e6fa', chat1_id, 'Great to hear that!', 'assistant', 'gpt-4-turbo-preview', 3);
 END $$; 

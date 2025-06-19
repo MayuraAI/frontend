@@ -5,14 +5,12 @@ interface BuildPromptPayload {
   chatSettings: ChatSettings
   messages: ChatMessage[]
   prompt: string
-  workspace_instructions: string | null
   profile_context: string | undefined
   embeddings_provider: string
 }
 
 export const buildPrompt = (
   prompt: string,
-  workspaceInstructions: string | null,
   profileContext: string,
   embeddingsProvider: string
 ) => {
@@ -20,10 +18,6 @@ export const buildPrompt = (
 
   if (profileContext) {
     fullPrompt += `User Info:\n${profileContext}\n\n`
-  }
-
-  if (workspaceInstructions) {
-    fullPrompt += `Workspace Instructions:\n${workspaceInstructions}\n\n`
   }
 
   fullPrompt += `Instructions:\n${prompt}`
@@ -40,7 +34,6 @@ export const buildFinalMessages = async (
     role: "system",
     content: buildPrompt(
       payload.prompt,
-      payload.workspace_instructions,
       payload.profile_context || "",
       payload.embeddings_provider
     )

@@ -1,6 +1,5 @@
 import { MayuraContext } from "@/context/context"
 import { createChats } from "@/db/chats"
-import { Tables } from "@/supabase/types"
 import { IconUpload, IconX } from "@tabler/icons-react"
 import { FC, useContext, useRef, useState } from "react"
 import { toast } from "sonner"
@@ -16,11 +15,9 @@ import {
 } from "../ui/dialog"
 import { Input } from "../ui/input"
 
-interface ImportProps {
-  selectedWorkspace: Tables<"workspaces">
-}
+interface ImportProps {}
 
-export const Import: FC<ImportProps> = ({ selectedWorkspace }) => {
+export const Import: FC<ImportProps> = () => {
   const { profile } = useContext(MayuraContext)
 
   const [isOpen, setIsOpen] = useState(false)
@@ -30,7 +27,7 @@ export const Import: FC<ImportProps> = ({ selectedWorkspace }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleImport = async () => {
-    if (!file || !profile || !selectedWorkspace) return
+    if (!file || !profile) return
 
     setIsLoading(true)
 
@@ -41,11 +38,10 @@ export const Import: FC<ImportProps> = ({ selectedWorkspace }) => {
         const data = JSON.parse(event.target?.result as string)
 
         if (data.chats) {
-          const chatsWithWorkspace = data.chats.map((chat: any) => ({
-            ...chat,
-            workspace_id: selectedWorkspace.id
+          const chats = data.chats.map((chat: any) => ({
+            ...chat
           }))
-          await createChats(chatsWithWorkspace)
+          await createChats(chats)
         }
 
         toast.success("Import successful!")

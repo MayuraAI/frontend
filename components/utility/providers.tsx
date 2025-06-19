@@ -2,16 +2,16 @@
 
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { MayuraProvider } from "@/context/context"
-import { ThemeProvider as NextThemesProvider } from "next-themes"
-import { ThemeProviderProps } from "next-themes/dist/types"
-import { FC } from "react"
+import { FC, ReactNode } from "react"
 
-export const Providers: FC<ThemeProviderProps> = ({ children, ...props }) => {
+interface ProvidersProps {
+  children: ReactNode
+}
+
+export const Providers: FC<ProvidersProps> = ({ children }) => {
   return (
-    <NextThemesProvider {...props}>
-      <MayuraProvider>
-        <TooltipProvider>{children}</TooltipProvider>
-      </MayuraProvider>
-    </NextThemesProvider>
+    <MayuraProvider>
+      <TooltipProvider>{children}</TooltipProvider>
+    </MayuraProvider>
   )
 }

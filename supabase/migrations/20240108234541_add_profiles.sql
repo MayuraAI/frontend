@@ -20,36 +20,33 @@ CREATE TABLE IF NOT EXISTS profiles (
     username TEXT NOT NULL UNIQUE CHECK (char_length(username) >= 3 AND char_length(username) <= 25)
 );
 
-CREATE OR REPLACE FUNCTION create_profile_and_workspace() 
+CREATE OR REPLACE FUNCTION create_profile() 
 RETURNS TRIGGER
 security definer set search_path = public
 AS $$
 DECLARE
     random_username TEXT;
+    user_display_name TEXT;
 BEGIN
     -- Generate a random username
     random_username := 'user' || substr(replace(gen_random_uuid()::text, '-', ''), 1, 16);
+
+    -- Get display name from user metadata or email, or use default
+    user_display_name := COALESCE(
+        NEW.raw_user_meta_data->>'full_name',
+        NEW.raw_user_meta_data->>'name',
+        split_part(NEW.email, '@', 1),
+        'New User'
+    );
 
     -- Create a profile for the new user
     INSERT INTO public.profiles(user_id, has_onboarded, display_name, profile_context, username)
     VALUES(
         NEW.id,
         FALSE,
-        '',
-        '',
+        user_display_name,
+        'New user profile',
         random_username
-    );
-
-    -- Create the home workspace for the new user
-    INSERT INTO public.workspaces(user_id, is_home, name, default_prompt, include_profile_context, include_workspace_instructions, instructions)
-    VALUES(
-        NEW.id,
-        TRUE,
-        'Home',
-        'You are a helpful AI assistant.',
-        TRUE,
-        TRUE,
-        ''
     );
 
     RETURN NEW;
@@ -76,7 +73,7 @@ BEFORE UPDATE ON profiles
 FOR EACH ROW
 EXECUTE PROCEDURE update_updated_at_column();
 
-CREATE TRIGGER create_profile_and_workspace_trigger
+CREATE TRIGGER create_profile_trigger
 AFTER INSERT ON auth.users
 FOR EACH ROW
-EXECUTE PROCEDURE public.create_profile_and_workspace();
+EXECUTE PROCEDURE public.create_profile();
