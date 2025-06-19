@@ -143,64 +143,64 @@ export const processResponse = async (
 
       if (lines.length === 0) continue
 
-      let data
-      try {
-        // Handle both SSE format "data: {...}" and raw JSON
-        const lineContent = lines[0].startsWith("data: ")
-          ? lines[0].slice(6)
-          : lines[0]
-        data = JSON.parse(lineContent)
-      } catch (parseError) {
-        console.error(
-          "Error parsing response data:",
-          parseError,
-          "Raw text:",
-          text
-        )
-        continue
-      }
-
-      // Handle error responses
-      if (data.error) {
-        const errorMessage = `Error: ${data.error}`
-        fullText = errorMessage
-        setChatMessages(prev =>
-          prev.map(chatMessage =>
-            chatMessage.id === tempAssistantChatMessage.id
-              ? {
-                  ...chatMessage,
-                  content: errorMessage,
-                  model_name: "error"
-                }
-              : chatMessage
+      for (const line of lines) {
+        let data
+        try {
+          // Handle both SSE format "data: {...}" and raw JSON
+          const lineContent = line.startsWith("data: ") ? line.slice(6) : line
+          data = JSON.parse(lineContent)
+        } catch (parseError) {
+          console.error(
+            "Error parsing response data:",
+            parseError,
+            "Raw text:",
+            text
           )
-        )
-        throw new Error(data.error)
-      }
+          continue
+        }
 
-      if (data.type == "end") {
-        break
-      }
-
-      if (data.model) {
-        modelName = data.model
-        continue
-      }
-
-      if (data.message) {
-        fullText += data.message
-        setFirstTokenReceived(true)
-        setChatMessages(prev =>
-          prev.map(chatMessage =>
-            chatMessage.id === tempAssistantChatMessage.id
-              ? {
-                  ...chatMessage,
-                  content: fullText,
-                  model_name: modelName
-                }
-              : chatMessage
+        // Handle error responses
+        if (data.error) {
+          const errorMessage = `Error: ${data.error}`
+          fullText = errorMessage
+          setChatMessages(prev =>
+            prev.map(chatMessage =>
+              chatMessage.id === tempAssistantChatMessage.id
+                ? {
+                    ...chatMessage,
+                    content: errorMessage,
+                    model_name: "error"
+                  }
+                : chatMessage
+            )
           )
-        )
+          throw new Error(data.error)
+        }
+
+        if (data.type == "end") {
+          break
+        }
+
+        if (data.model) {
+          modelName = data.model
+          continue
+        }
+
+        if (data.message) {
+          fullText += data.message
+          setFirstTokenReceived(true)
+          setChatMessages(prev =>
+            prev.map(chatMessage =>
+              chatMessage.id === tempAssistantChatMessage.id
+                ? {
+                    ...chatMessage,
+                    content: fullText,
+                    model_name: modelName
+                  }
+                : chatMessage
+            )
+          )
+        }
       }
     }
   } catch (error) {
