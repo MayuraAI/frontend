@@ -83,7 +83,7 @@ export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
           <Button
             ref={buttonRef}
             onClick={handleUpdateChat}
-            variant="electric"
+            variant="default"
             className="font-black"
             disabled={!name.trim()}
           >
