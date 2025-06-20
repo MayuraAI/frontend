@@ -74,13 +74,13 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-background">
         <Card className="w-96">
           <CardContent className="p-6">
             <div className="flex flex-col items-center space-y-4">
-              <Loader2 className="size-8 animate-spin" />
+              <Loader2 className="size-8 animate-spin text-primary" />
               <div className="text-center">
-                <h3 className="text-lg font-semibold">Loading your chats...</h3>
+                <h3 className="text-lg font-semibold text-foreground">Loading your chats...</h3>
                 <p className="text-muted-foreground text-sm">
                   Please wait while we set everything up
                 </p>
@@ -99,15 +99,15 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
 
   if (error) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-background">
         <Card className="w-96">
           <CardContent className="p-6">
             <div className="text-center">
-              <h3 className="text-lg font-semibold text-red-600">Error</h3>
+              <h3 className="text-lg font-semibold text-red-400">Error</h3>
               <p className="text-muted-foreground text-sm">{error}</p>
               <button
                 onClick={() => window.location.reload()}
-                className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                className="mt-4 rounded bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90"
               >
                 Try Again
               </button>
@@ -120,11 +120,11 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
 
   if (!profile) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-background">
         <Card className="w-96">
           <CardContent className="p-6">
             <div className="text-center">
-              <h3 className="text-lg font-semibold">Profile Required</h3>
+              <h3 className="text-lg font-semibold text-foreground">Profile Required</h3>
               <p className="text-muted-foreground text-sm">
                 Please complete your profile setup first.
               </p>

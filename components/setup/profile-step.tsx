@@ -108,7 +108,7 @@ export const ProfileStep: FC<ProfileStepProps> = ({
           <div className="text-xs">
             {username &&
               (usernameAvailable ? (
-                <div className="text-green-500">AVAILABLE</div>
+                <div className="text-purple-500">AVAILABLE</div>
               ) : (
                 <div className="text-red-500">UNAVAILABLE</div>
               ))}
@@ -133,7 +133,7 @@ export const ProfileStep: FC<ProfileStepProps> = ({
               {loading ? (
                 <IconLoader2 className="animate-spin" />
               ) : usernameAvailable ? (
-                <IconCircleCheckFilled className="text-green-500" />
+                <IconCircleCheckFilled className="text-purple-500" />
               ) : (
                 <IconCircleXFilled className="text-red-500" />
               )}

@@ -107,37 +107,38 @@ export const Message: FC<MessageProps> = ({
         <div className="flex justify-end">
           <div className="w-full max-w-2xl">
             {isEditing ? (
-              <div className="container-neobrutalist w-full p-6">
+              <div className="modern-container w-full p-6">
                 <Textarea
                   ref={userTextareaRef}
                   value={editedContent}
                   onChange={e => setEditedContent(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="min-h-[120px] w-full resize-none border-0 bg-transparent p-0 font-mono focus-visible:ring-0"
+                  className="min-h-[120px] w-full resize-none border-0 bg-transparent p-0 text-sm focus-visible:ring-0"
                   placeholder="Edit your message..."
                 />
-                <div className="mt-6 flex items-center gap-3 border-t-2 border-black pt-4">
+                <div className="mt-6 flex items-center gap-3 border-t border-border pt-4">
                   <Button
                     onClick={handleSubmit}
                     size="sm"
-                    className="btn-neobrutalist bg-neobrutalist-green px-4 py-2 text-black"
+                    className="flex items-center gap-2"
                   >
-                    <IconCheck size={16} className="mr-2" strokeWidth={3} />
-                    SAVE
+                    <IconCheck size={16} />
+                    Save
                   </Button>
                   <Button
                     onClick={onCancelEdit}
                     size="sm"
-                    className="btn-neobrutalist bg-white px-4 py-2 text-black"
+                    variant="outline"
+                    className="flex items-center gap-2"
                   >
-                    <IconX size={16} className="mr-2" strokeWidth={3} />
-                    CANCEL
+                    <IconX size={16} />
+                    Cancel
                   </Button>
                 </div>
               </div>
             ) : (
               <div className="message-block message-block--user relative">
-                <p className="whitespace-pre-wrap font-mono text-sm leading-relaxed">
+                <p className="whitespace-pre-wrap text-sm leading-relaxed">
                   {displayContent}
                 </p>
                 {shouldCollapse && (
@@ -146,37 +147,29 @@ export const Message: FC<MessageProps> = ({
                       variant="ghost"
                       size="sm"
                       onClick={handleCopy}
-                      className="btn-neobrutalist hover:bg-neobrutalist-blue h-8 bg-white px-3 text-xs text-black hover:text-white"
+                      className="h-8 px-3 text-xs"
                     >
                       {isCopied ? (
-                        <IconCheck size={14} strokeWidth={3} />
+                        <IconCheck size={14} />
                       ) : (
-                        <IconCopy size={14} strokeWidth={3} />
+                        <IconCopy size={14} />
                       )}
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={toggleExpanded}
-                      className="btn-neobrutalist hover:bg-neobrutalist-blue h-8 bg-white px-3 text-xs text-black hover:text-white"
+                      className="h-8 px-3 text-xs"
                     >
                       {isExpanded ? (
                         <>
-                          <IconChevronUp
-                            size={14}
-                            strokeWidth={3}
-                            className="mr-1"
-                          />
-                          COLLAPSE
+                          <IconChevronUp size={14} className="mr-1" />
+                          Collapse
                         </>
                       ) : (
                         <>
-                          <IconChevronDown
-                            size={14}
-                            strokeWidth={3}
-                            className="mr-1"
-                          />
-                          EXPAND
+                          <IconChevronDown size={14} className="mr-1" />
+                          Expand
                         </>
                       )}
                     </Button>
@@ -189,12 +182,12 @@ export const Message: FC<MessageProps> = ({
                       variant="ghost"
                       size="sm"
                       onClick={handleCopy}
-                      className="btn-neobrutalist hover:bg-neobrutalist-blue h-8 bg-white px-3 text-xs text-black hover:text-white"
+                      className="h-8 px-3 text-xs opacity-0 transition-opacity group-hover:opacity-100"
                     >
                       {isCopied ? (
-                        <IconCheck size={14} strokeWidth={3} />
+                        <IconCheck size={14} />
                       ) : (
-                        <IconCopy size={14} strokeWidth={3} />
+                        <IconCopy size={14} />
                       )}
                     </Button>
                   </div>
@@ -208,7 +201,7 @@ export const Message: FC<MessageProps> = ({
         <div className="mx-auto w-full max-w-4xl">
           <div className="space-y-4">
             <div className="message-block message-block--ai relative w-full pt-6">
-              <div className="absolute right-4 top-0 z-10 w-fit -translate-y-1/2 border border-black bg-[#E9ECEF] px-2 py-1 font-mono text-xs font-bold tracking-wide text-black">
+              <div className="absolute right-4 top-0 z-10 w-fit -translate-y-1/2 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
                 {getModelName()}
               </div>
 
@@ -224,12 +217,12 @@ export const Message: FC<MessageProps> = ({
                   variant="ghost"
                   size="sm"
                   onClick={handleCopy}
-                  className="btn-neobrutalist hover:bg-neobrutalist-blue h-10 bg-white px-3 text-black hover:text-white"
+                  className="h-10 px-3"
                 >
                   {isCopied ? (
-                    <IconCheck size={16} strokeWidth={3} />
+                    <IconCheck size={16} />
                   ) : (
-                    <IconCopy size={16} strokeWidth={3} />
+                    <IconCopy size={16} />
                   )}
                 </Button>
               </div>

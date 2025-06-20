@@ -57,7 +57,7 @@ export const DeleteChat: FC<DeleteChatProps> = ({ chat }) => {
       <DialogContent onKeyDown={handleKeyDown}>
         <DialogHeader>
           <DialogTitle className="font-brutal text-foreground text-2xl font-black">
-            DELETE &quot;{chat.name.toUpperCase()}&quot;
+            Delete &quot;{chat.name}&quot;?
           </DialogTitle>
 
           <DialogDescription className="text-foreground text-lg font-bold">

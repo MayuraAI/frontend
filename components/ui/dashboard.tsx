@@ -49,7 +49,7 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
 
   return (
     <div className="bg-background flex h-screen w-full overflow-hidden">
-      {/* Clean Modern Sidebar */}
+      {/* Dark Sidebar */}
       <aside
         className={cn(
           "bg-sidebar border-sidebar-border absolute z-20 h-full border-r shadow-lg transition-all duration-300 ease-in-out md:relative",
@@ -74,20 +74,20 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
         )}
       </aside>
 
-      {/* Clean Main Content Area */}
+      {/* Dark Main Content Area */}
       <main className="bg-background flex min-w-0 flex-1 flex-col">
-        {/* Clean Mobile Header */}
-        <header className="bg-card border-border flex items-center justify-between border-b p-4 shadow-sm md:hidden">
+        {/* Dark Mobile Header */}
+        <header className="bg-sidebar border-sidebar-border flex items-center justify-between border-b p-4 shadow-sm md:hidden">
           <Button
             variant="outline"
             size="icon"
-            className="rounded-12 border-2 shadow-sm"
+            className="rounded-lg border shadow-sm"
             onClick={handleToggleSidebar}
             aria-label="Toggle navigation menu"
           >
             <IconMenu2 size={24} />
           </Button>
-          <h1 className="text-foreground text-lg font-semibold">MAYURA</h1>
+          <h1 className="text-sidebar-foreground text-lg font-semibold">MAYURA</h1>
           <RateLimitStatus compact className="ml-2" />
         </header>
 
@@ -97,14 +97,14 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
         </div>
 
         {/* Chat Content Area */}
-        <section className="bg-background rounded-12 relative m-2 flex-1 overflow-hidden shadow-sm">
+        <section className="bg-background rounded-lg relative m-2 flex-1 overflow-hidden shadow-sm">
           {children}
         </section>
 
-        {/* Clean Sidebar Toggle Button for Desktop */}
+        {/* Dark Sidebar Toggle Button for Desktop */}
         <Button
           className={cn(
-            "bg-card hover:bg-accent border-border rounded-12 z-100 absolute left-1 top-1/2 size-8 border-2 shadow-md transition-all duration-300",
+            "bg-sidebar hover:bg-sidebar-muted border-sidebar-border rounded-lg z-50 absolute left-1 top-1/2 size-8 border shadow-md transition-all duration-300",
             "hidden md:flex"
           )}
           style={{
@@ -116,11 +116,11 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
           onClick={handleToggleSidebar}
           aria-label={showSidebar ? "Hide sidebar" : "Show sidebar"}
         >
-          <IconChevronCompactRight size={24} className="text-foreground" />
+          <IconChevronCompactRight size={24} className="text-sidebar-foreground" />
         </Button>
       </main>
 
-      {/* Clean Mobile Sidebar Overlay */}
+      {/* Dark Mobile Sidebar Overlay */}
       {showSidebar && (
         <div
           className="fixed inset-0 z-10 bg-black/50 backdrop-blur-sm md:hidden"

@@ -71,7 +71,7 @@ export class RateLimitService {
       return "text-yellow-600 bg-yellow-50 border-yellow-200"
     }
 
-    return "text-green-600 bg-green-50 border-green-200"
+    return "text-purple-600 bg-purple-50 border-purple-200"
   }
 
   static getStatusIcon(mode: "pro" | "free", remaining: number): string {
