@@ -58,7 +58,7 @@ const PreWithCopy: React.FC<React.HTMLAttributes<HTMLPreElement>> = ({
 const MarkdownContent: React.FC<MarkdownContentProps> = ({ aiResponse }) => {
   if (!aiResponse) {
     return (
-      <div className="text-slate-400 flex items-center space-x-2 py-4 italic">
+      <div className="flex items-center space-x-2 py-4 italic text-slate-400">
         <span className="loading-wave">Mayura is thinking</span>
         <span className="loading-dots">...</span>
         <style jsx>{`

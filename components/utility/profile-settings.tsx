@@ -142,13 +142,13 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
       >
         <div className="grow overflow-auto">
           <SheetHeader>
-            <SheetTitle className="text-white flex items-center justify-between space-x-2">
+            <SheetTitle className="flex items-center justify-between space-x-2 text-white">
               <div>User Profile</div>
 
               <Button
                 tabIndex={-1}
                 variant="outline"
-                className="bg-red-600 hover:bg-red-700 border-red-600 text-xs text-white"
+                className="border-red-600 bg-red-600 text-xs text-white hover:bg-red-700"
                 size="sm"
                 onClick={handleSignOut}
               >
@@ -194,7 +194,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                     <div className="absolute inset-y-0 right-2 flex items-center">
                       {loadingUsername ? (
                         <IconLoader2
-                          className="text-slate-400 animate-spin"
+                          className="animate-spin text-slate-400"
                           size={20}
                         />
                       ) : usernameAvailable ? (
@@ -253,7 +253,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
         <div className="mt-6">
           <Button
             ref={buttonRef}
-            className="bg-violet-600 hover:bg-violet-700 w-full text-white"
+            className="w-full bg-violet-600 text-white hover:bg-violet-700"
             disabled={
               !usernameAvailable ||
               username.length < PROFILE_USERNAME_MIN ||

@@ -97,14 +97,14 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
         </div>
 
         {/* Chat Content Area */}
-        <section className="bg-background rounded-lg relative m-2 flex-1 overflow-hidden shadow-sm">
+        <section className="bg-background relative m-2 flex-1 overflow-hidden rounded-lg shadow-sm">
           {children}
         </section>
 
         {/* Dark Sidebar Toggle Button for Desktop */}
         <Button
           className={cn(
-            "bg-sidebar hover:bg-sidebar-muted border-sidebar-border rounded-lg z-50 absolute left-1 top-1/2 size-8 border shadow-md transition-all duration-300",
+            "bg-sidebar hover:bg-sidebar-muted border-sidebar-border absolute left-1 top-1/2 z-50 size-8 rounded-lg border shadow-md transition-all duration-300",
             "hidden md:flex"
           )}
           style={{

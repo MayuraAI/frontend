@@ -68,9 +68,9 @@ export default function HomePage() {
   ]
 
   return (
-    <div className="w-full bg-gradient-to-br from-black via-slate-900 to-black min-h-screen">
+    <div className="min-h-screen w-full bg-gradient-to-br from-black via-slate-900 to-black">
       {/* Header */}
-      <header className="flex w-full items-center justify-between bg-black/20 backdrop-blur-sm border-b border-slate-700 p-6 shadow-sm">
+      <header className="flex w-full items-center justify-between border-b border-slate-700 bg-black/20 p-6 shadow-sm backdrop-blur-sm">
         <a href="/">
           <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
@@ -105,7 +105,7 @@ export default function HomePage() {
           </Link>
         </nav>
         <div className="flex items-center gap-4">
-          <Button asChild className="bg-violet-600 hover:bg-violet-700 text-white">
+          <Button asChild className="bg-violet-600 text-white hover:bg-violet-700">
             <Link href="/login">
               Get Started Free <ArrowRight className="ml-2 size-4" />
             </Link>
@@ -117,16 +117,16 @@ export default function HomePage() {
         {/* Hero Section */}
         <section className="w-full px-6 py-16 md:py-24 lg:py-32">
           <div className="container mx-auto py-12">
-            <div className="mx-auto flex flex-col md:flex-row items-center md:items-stretch gap-12 md:gap-20">
+            <div className="mx-auto flex flex-col items-center gap-12 md:flex-row md:items-stretch md:gap-20">
               {/* Left: Hero Text */}
-              <div className="flex-1 flex flex-col justify-center space-y-6 text-center md:text-left md:justify-center md:items-start">
+              <div className="flex flex-1 flex-col justify-center space-y-6 text-center md:items-start md:justify-center md:text-left">
                 <div className="space-y-4">
                   <h1
-                    className="text-4xl font-bold bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text text-transparent sm:text-5xl md:text-6xl lg:text-7xl select-text relative"
+                    className="relative select-text bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl md:text-6xl lg:text-7xl"
                   >
                     <span className="hero-select-hide">One Prompt</span>{" "}<br />
                     <span
-                      className="bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-500 bg-clip-text text-transparent drop-shadow-lg hero-select-show"
+                      className="hero-select-show bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-500 bg-clip-text text-transparent drop-shadow-lg"
                     >
                       {"{ "}Right Model{" }"}
                     </span><br />
@@ -143,12 +143,12 @@ export default function HomePage() {
                       }
                     `}</style>
                   </h1>
-                  <p className="mx-auto md:mx-0 max-w-2xl text-xs text-slate-300 md:text-sm lg:text-base">
+                  <p className="mx-auto max-w-2xl text-xs text-slate-300 md:mx-0 md:text-sm lg:text-base">
                     Smart AI routing for better results, lower costs.
                   </p>
                 </div>
-                <div className="flex flex-col gap-4 sm:flex-row md:justify-start justify-center">
-                  <Button size="lg" asChild className="bg-violet-600 hover:bg-violet-700 text-white">
+                <div className="flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
+                  <Button size="lg" asChild className="bg-violet-600 text-white hover:bg-violet-700">
                     <Link href="/login">
                       <Zap className="mr-2 size-5" /> Try Mayura Now
                     </Link>
@@ -161,7 +161,7 @@ export default function HomePage() {
                 </div>
               </div>
               {/* Right: Animation */}
-              <div className="flex-1 flex items-center justify-center min-w-[340px]">
+              <div className="flex min-w-[340px] flex-1 items-center justify-center">
                 <AIRoutingAnimation />
               </div>
             </div>
@@ -181,9 +181,9 @@ export default function HomePage() {
             </div>
             <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
               {/* Step 1 */}
-              <Card className="flex flex-col items-center p-6 text-center bg-black/30 border-slate-700 shadow-sm backdrop-blur-sm">
+              <Card className="flex flex-col items-center border-slate-700 bg-black/30 p-6 text-center shadow-sm backdrop-blur-sm">
                 <CardHeader className="flex flex-col items-center pb-4">
-                  <div className="bg-violet-600 text-white mb-4 flex size-14 items-center justify-center rounded-full">
+                  <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-violet-600 text-white">
                     <MessageSquare className="size-7" />
                   </div>
                   <CardTitle className="text-xl font-semibold text-white">
@@ -198,9 +198,9 @@ export default function HomePage() {
                 </CardContent>
               </Card>
               {/* Step 2 */}
-              <Card className="flex flex-col items-center p-6 text-center bg-black/30 border-slate-700 shadow-sm backdrop-blur-sm">
+              <Card className="flex flex-col items-center border-slate-700 bg-black/30 p-6 text-center shadow-sm backdrop-blur-sm">
                 <CardHeader className="flex flex-col items-center pb-4">
-                  <div className="bg-violet-600 text-white mb-4 flex size-14 items-center justify-center rounded-full">
+                  <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-violet-600 text-white">
                     <Route className="size-7" />
                   </div>
                   <CardTitle
@@ -219,9 +219,9 @@ export default function HomePage() {
                 </CardContent>
               </Card>
               {/* Step 3 */}
-              <Card className="flex flex-col items-center p-6 text-center bg-black/30 border-slate-700 shadow-sm backdrop-blur-sm">
+              <Card className="flex flex-col items-center border-slate-700 bg-black/30 p-6 text-center shadow-sm backdrop-blur-sm">
                 <CardHeader className="flex flex-col items-center pb-4">
-                  <div className="bg-violet-600 text-white mb-4 flex size-14 items-center justify-center rounded-full">
+                  <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-violet-600 text-white">
                     <Lightbulb className="size-7" />
                   </div>
                   <CardTitle className="text-xl font-semibold text-white">
@@ -253,9 +253,9 @@ export default function HomePage() {
               </p>
             </div>
             <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2 lg:grid-cols-3">
-              <Card className="bg-black/30 border-slate-700 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
                 <CardHeader>
-                  <Star className="text-violet-400 mb-2 size-8" />
+                  <Star className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Higher Quality Results</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -265,9 +265,9 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-black/30 border-slate-700 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
                 <CardHeader>
-                  <Clock className="text-violet-400 mb-2 size-8" />
+                  <Clock className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Faster Responses</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -277,9 +277,9 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-black/30 border-slate-700 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
                 <CardHeader>
-                  <DollarSignIcon className="text-violet-400 mb-2 size-8" />
+                  <DollarSignIcon className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Lower Costs</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -289,9 +289,9 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-black/30 border-slate-700 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
                 <CardHeader>
-                  <Zap className="text-violet-400 mb-2 size-8" />
+                  <Zap className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Simplified Workflow</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -301,9 +301,9 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-black/30 border-slate-700 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
                 <CardHeader>
-                  <Rocket className="text-violet-400 mb-2 size-8" />
+                  <Rocket className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Future-Proof</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -313,9 +313,9 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-black/30 border-slate-700 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
                 <CardHeader>
-                  <Brain className="text-violet-400 mb-2 size-8" />
+                  <Brain className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Focus on Your Work</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -343,7 +343,7 @@ export default function HomePage() {
             </div>
             <div className="mx-auto grid max-w-4xl items-start gap-8 md:grid-cols-2">
               {/* Free Plan */}
-              <Card className="flex h-full flex-col bg-black/30 border-slate-700 shadow-sm backdrop-blur-sm">
+              <Card className="flex h-full flex-col border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-2xl font-bold text-white">Free</h3>
@@ -393,15 +393,15 @@ export default function HomePage() {
                       </li>
                     </ul>
                   </div>
-                  <Button className="mt-8 w-full bg-violet-600 hover:bg-violet-700 text-white" asChild>
+                  <Button className="mt-8 w-full bg-violet-600 text-white hover:bg-violet-700" asChild>
                     <Link href="/chat">Get Started Free</Link>
                   </Button>
                 </CardContent>
               </Card>
 
               {/* Pro Plan */}
-              <Card className="border-violet-600 relative flex h-full flex-col border-2 bg-black/30 shadow-sm backdrop-blur-sm">
-                <div className="bg-violet-600 text-white absolute -top-4 left-1/2 w-fit -translate-x-1/2 rounded-full px-4 py-1 text-sm font-medium">
+              <Card className="relative flex h-full flex-col border-2 border-violet-600 bg-black/30 shadow-sm backdrop-blur-sm">
+                <div className="absolute -top-4 left-1/2 w-fit -translate-x-1/2 rounded-full bg-violet-600 px-4 py-1 text-sm font-medium text-white">
                   Recommended
                 </div>
                 <CardHeader className="pb-4">
@@ -429,7 +429,7 @@ export default function HomePage() {
                     </p>
                     <ul className="space-y-4 text-sm">
                       <li className="flex items-start gap-3">
-                        <CheckCircle className="text-violet-400 size-5 shrink-0" />
+                        <CheckCircle className="size-5 shrink-0 text-violet-400" />
                         <div>
                           <strong className="text-white">100 Pro Requests / day</strong>
                           <p className="text-xs text-slate-400">
@@ -439,7 +439,7 @@ export default function HomePage() {
                         </div>
                       </li>
                       <li className="flex items-start gap-3">
-                        <CheckCircle className="text-violet-400 size-5 shrink-0" />
+                        <CheckCircle className="size-5 shrink-0 text-violet-400" />
                         <div>
                           <strong className="text-white">Unlimited Standard Requests</strong>
                           <p className="text-xs text-slate-400">
@@ -449,15 +449,15 @@ export default function HomePage() {
                         </div>
                       </li>
                       <li className="flex items-start gap-3">
-                        <CheckCircle className="text-violet-400 size-5 shrink-0" />
+                        <CheckCircle className="size-5 shrink-0 text-violet-400" />
                         <div className="text-white">Advanced Intelligent Routing</div>
                       </li>
                       <li className="flex items-start gap-3">
-                        <CheckCircle className="text-violet-400 size-5 shrink-0" />
+                        <CheckCircle className="size-5 shrink-0 text-violet-400" />
                         <div className="text-white">Priority Chat Support</div>
                       </li>
                       <li className="flex items-start gap-3">
-                        <CheckCircle className="text-violet-400 size-5 shrink-0" />
+                        <CheckCircle className="size-5 shrink-0 text-violet-400" />
                         <div className="text-white">API Access</div>
                       </li>
                     </ul>
@@ -544,7 +544,7 @@ export default function HomePage() {
                 today.
               </p>
               <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                <Button size="lg" asChild className="bg-violet-600 hover:bg-violet-700 text-white">
+                <Button size="lg" asChild className="bg-violet-600 text-white hover:bg-violet-700">
                   <Link href="/login">
                     <Zap className="mr-2 size-5" /> Get Started Free
                   </Link>
@@ -561,7 +561,7 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-slate-700 bg-black/30 backdrop-blur-sm py-12">
+      <footer className="w-full border-t border-slate-700 bg-black/30 py-12 backdrop-blur-sm">
         <div className="container mx-auto px-6">
           <div className="grid gap-8 md:grid-cols-4">
             <div>

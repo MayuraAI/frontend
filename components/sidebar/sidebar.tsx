@@ -25,13 +25,13 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
       value={contentType}
     >
       {/* Dark Modern Header */}
-      <header className="bg-sidebar border-b border-sidebar-border shrink-0 p-6">
+      <header className="bg-sidebar border-sidebar-border shrink-0 border-b p-6">
         <div className="flex items-center gap-3">
           <div className="rounded bg-violet-600 p-2">
             <span className="text-sm font-bold text-white">M</span>
           </div>
           <h1
-            className="text-lg font-semibold text-sidebar-foreground cursor-pointer transition-opacity hover:opacity-80"
+            className="text-sidebar-foreground cursor-pointer text-lg font-semibold transition-opacity hover:opacity-80"
             onClick={() => (window.location.href = "/")}
           >
             Mayura (beta)
@@ -50,15 +50,15 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
           {/* Dark Empty State */}
           {(!chats || chats.length === 0) && (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="bg-muted border border-border rounded-lg max-w-xs p-8">
+              <div className="bg-muted border-border max-w-xs rounded-lg border p-8">
                 <MessageCircle
-                  className="mx-auto mb-6 size-16 text-muted-foreground"
+                  className="text-muted-foreground mx-auto mb-6 size-16"
                   strokeWidth={1.5}
                 />
-                <h3 className="mb-4 text-lg font-semibold text-foreground">
+                <h3 className="text-foreground mb-4 text-lg font-semibold">
                   No chats yet
                 </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
+                <p className="text-muted-foreground text-sm leading-relaxed">
                   Start a conversation to see your chat history here
                 </p>
               </div>
@@ -68,7 +68,7 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
       </section>
 
       {/* Dark Settings Footer */}
-      <footer className="border-t border-sidebar-border shrink-0 p-6">
+      <footer className="border-sidebar-border shrink-0 border-t p-6">
         <div className="flex justify-start">
           <WithTooltip
             display={

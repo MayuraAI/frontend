@@ -116,7 +116,7 @@ export const Message: FC<MessageProps> = ({
                   className="min-h-[120px] w-full resize-none border-0 bg-transparent p-0 text-sm focus-visible:ring-0"
                   placeholder="Edit your message..."
                 />
-                <div className="mt-6 flex items-center gap-3 border-t border-border pt-4">
+                <div className="border-border mt-6 flex items-center gap-3 border-t pt-4">
                   <Button
                     onClick={handleSubmit}
                     size="sm"
@@ -201,7 +201,7 @@ export const Message: FC<MessageProps> = ({
         <div className="mx-auto w-full max-w-4xl">
           <div className="space-y-4">
             <div className="message-block message-block--ai relative w-full pt-6">
-              <div className="absolute right-4 top-0 z-10 w-fit -translate-y-1/2 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+              <div className="bg-muted text-muted-foreground absolute right-4 top-0 z-10 w-fit -translate-y-1/2 rounded-full px-3 py-1 text-xs font-medium">
                 {getModelName()}
               </div>
 

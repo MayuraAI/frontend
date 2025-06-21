@@ -17,7 +17,7 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({ thinking }) => {
       <Button
         variant="ghost"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="h-auto w-full justify-between p-4 hover:bg-slate-800 text-white"
+        className="h-auto w-full justify-between p-4 text-white hover:bg-slate-800"
       >
         <div className="flex items-center gap-2 text-sm font-medium text-white">
           <IconBrain size={16} />

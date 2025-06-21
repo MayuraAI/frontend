@@ -180,19 +180,19 @@ export default async function Login({
   }
 
   return (
-    <div className="bg-slate-50 relative flex min-h-screen w-full items-center justify-center overflow-hidden p-4">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-slate-50 p-4">
       {/* Removed Decorative Background Elements for consistency with Mayura homepage */}
 
       <div className="z-10 w-full max-w-md">
         <div className="mb-8 text-center">
-          <Badge variant="default" className="px-4 py-2 text-lg bg-violet-600 text-white">
+          <Badge variant="default" className="bg-violet-600 px-4 py-2 text-lg text-white">
             {" "}
             {/* Changed badge variant */}
             Mayura
           </Badge>
         </div>
 
-        <Card className="shadow-lg bg-white border-slate-200">
+        <Card className="border-slate-200 bg-white shadow-lg">
           {" "}
           {/* Adjusted shadow */}
           {/* <CardHeader className="space-y-3 pb-6 text-center">
@@ -221,7 +221,7 @@ export default async function Login({
                   type="email"
                   placeholder="your@email.com"
                   required
-                  className="focus-visible:ring-violet-500 w-full border-slate-200 bg-white text-slate-800" // Consistent border/focus
+                  className="w-full border-slate-200 bg-white text-slate-800 focus-visible:ring-violet-500" // Consistent border/focus
                 />
               </div>
 
@@ -243,12 +243,12 @@ export default async function Login({
                   type="password"
                   placeholder="Enter your password"
                   required
-                  className="focus-visible:ring-violet-500 w-full border-slate-200 bg-white text-slate-800" // Consistent border/focus
+                  className="w-full border-slate-200 bg-white text-slate-800 focus-visible:ring-violet-500" // Consistent border/focus
                 />
               </div>
 
               <div className="space-y-4">
-                <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700 text-white" size="lg">
+                <Button type="submit" className="w-full bg-violet-600 text-white hover:bg-violet-700" size="lg">
                   {" "}
                   {/* Default button variant */}
                   <Zap className="mr-2 size-5" />
@@ -271,14 +271,14 @@ export default async function Login({
                 <button
                   type="submit"
                   formAction={handleResetPassword}
-                  className="text-violet-600 hover:text-white hover:bg-violet-600 rounded-md px-4 py-2 transition-colors duration-200" // Styled to match link buttons
+                  className="rounded-md px-4 py-2 text-violet-600 transition-colors duration-200 hover:bg-violet-600 hover:text-white" // Styled to match link buttons
                 >
                   Forgot Password?
                 </button>
               </div>
 
               {searchParams?.message && (
-                <Alert variant="destructive" className="mt-6 bg-red-50 border-red-200 text-red-800">
+                <Alert variant="destructive" className="mt-6 border-red-200 bg-red-50 text-red-800">
                   <AlertCircle className="size-6" />
                   <AlertDescription className="text-base">
                     {" "}
@@ -294,7 +294,7 @@ export default async function Login({
                 <span className="w-full border-t border-slate-200" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white text-slate-600 px-2">
+                <span className="bg-white px-2 text-slate-600">
                   Or continue with
                 </span>
               </div>

@@ -77,7 +77,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
         <form onSubmit={handleFormSubmit} className="relative">
           <div
             className={cn(
-              "bg-black border border-slate-700 rounded-lg flex items-start transition-all duration-200",
+              "flex items-start rounded-lg border border-slate-700 bg-black transition-all duration-200",
               isFocused && "border-violet-500 shadow-lg shadow-violet-500/20"
             )}
           >
@@ -92,7 +92,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
                 isGenerating ? "AI is thinking..." : "Type your message here..."
               }
               disabled={isGenerating}
-              className="w-full border-0 resize-none bg-transparent p-6 text-base leading-relaxed text-white placeholder:text-slate-400 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-0 focus-visible:border-0"
+              className="w-full resize-none border-0 bg-transparent p-6 text-base leading-relaxed text-white outline-none ring-0 placeholder:text-slate-400 focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0"
               rows={1}
               style={{
                 // maxHeight: "200px",
@@ -101,7 +101,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
               }}
             />
 
-            <div className="flex shrink-0 items-start py-4 px-2">
+            <div className="flex shrink-0 items-start px-2 py-4">
               {isGenerating ? (
                 <Button
                   type="button"
@@ -111,17 +111,17 @@ export const ChatInput: FC<ChatInputProps> = () => {
                   className="flex items-center gap-2"
                 >
                   <Square size={16} />
-                  <span className="font-bold py-4">Stop</span>
+                  <span className="py-4 font-bold">Stop</span>
                 </Button>
               ) : (
                 <Button
                   type="submit"
                   disabled={!canSend}
                   size="sm"
-                  className="flex items-center gap-3 bg-violet-600 hover:bg-violet-700 text-white"
+                  className="flex items-center gap-3 bg-violet-600 text-white hover:bg-violet-700"
                 >
                   <Send size={16} />
-                  <span className="font-bold py-4">Send</span>
+                  <span className="py-4 font-bold">Send</span>
                 </Button>
               )}
             </div>

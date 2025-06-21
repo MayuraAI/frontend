@@ -36,7 +36,7 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
       className={cn(
         "group mb-3 flex w-full cursor-pointer items-center rounded-lg border p-4 transition-all duration-200",
         isActive
-          ? "bg-violet-900/20 border-violet-700 shadow-sm"
+          ? "border-violet-700 bg-violet-900/20 shadow-sm"
           : "border-slate-700 bg-black hover:bg-slate-900/50 hover:shadow-sm"
       )}
       tabIndex={0}

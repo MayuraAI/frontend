@@ -111,14 +111,14 @@ export default function RateLimitStatus({
     return (
       <div
         className={cn(
-          "bg-black rounded-lg border border-slate-700 p-4 shadow-sm w-64",
+          "w-64 rounded-lg border border-slate-700 bg-black p-4 shadow-sm",
           className
         )}
       >
         <div className="flex items-center space-x-3">
-          <div className="bg-slate-700 animate-pulse rounded h-4 w-4" />
-          <div className="bg-slate-700 animate-pulse rounded h-4 flex-1" />
-          <div className="bg-slate-700 animate-pulse rounded h-4 w-12" />
+          <div className="size-4 animate-pulse rounded bg-slate-700" />
+          <div className="h-4 flex-1 animate-pulse rounded bg-slate-700" />
+          <div className="h-4 w-12 animate-pulse rounded bg-slate-700" />
         </div>
       </div>
     )
@@ -128,7 +128,7 @@ export default function RateLimitStatus({
     return (
       <div
         className={cn(
-          "bg-red-900/20 border-red-700 text-red-400 rounded-lg border p-4 w-64",
+          "w-64 rounded-lg border border-red-700 bg-red-900/20 p-4 text-red-400",
           className
         )}
       >
@@ -141,7 +141,7 @@ export default function RateLimitStatus({
             variant="ghost"
             size="sm"
             onClick={fetchStatus}
-            className="h-8 w-8 p-0"
+            className="size-8 p-0"
           >
             <IconRefresh size={16} />
           </Button>
@@ -195,8 +195,8 @@ export default function RateLimitStatus({
             className={cn(
               "inline-flex items-center space-x-2 rounded-lg border px-3 py-2 text-sm font-medium shadow-sm transition-all duration-200",
               isFree
-                ? "bg-yellow-900/20 border-yellow-700 text-yellow-400"
-                : "bg-violet-900/20 border-violet-700 text-violet-400",
+                ? "border-yellow-700 bg-yellow-900/20 text-yellow-400"
+                : "border-violet-700 bg-violet-900/20 text-violet-400",
               "cursor-default",
               className
             )}
@@ -224,7 +224,7 @@ export default function RateLimitStatus({
             )}
           </div>
         </TooltipTrigger>
-        <TooltipContent side="bottom" className="bg-black border border-slate-700 text-white shadow-lg">
+        <TooltipContent side="bottom" className="border border-slate-700 bg-black text-white shadow-lg">
           <div className="space-y-3 p-2">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Daily Usage</span>
@@ -233,9 +233,9 @@ export default function RateLimitStatus({
               </span>
             </div>
             
-            <div className="w-full bg-slate-700 rounded-full h-2">
+            <div className="h-2 w-full rounded-full bg-slate-700">
               <div
-                className="h-2 rounded-full transition-all duration-300 bg-white"
+                className="h-2 rounded-full bg-white transition-all duration-300"
                 style={{ width: `${Math.min(progress, 100)}%` }}
               />
             </div>
@@ -251,7 +251,7 @@ export default function RateLimitStatus({
             </div>
 
             {message && (
-              <div className="text-xs text-slate-400 border-t border-slate-700 pt-2">
+              <div className="border-t border-slate-700 pt-2 text-xs text-slate-400">
                 {message}
               </div>
             )}
