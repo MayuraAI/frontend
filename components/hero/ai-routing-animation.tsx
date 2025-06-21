@@ -133,7 +133,7 @@ export function AIRoutingAnimation() {
     <div className="relative mx-auto flex min-h-[420px] w-full max-w-sm flex-col items-center justify-center">
       {/* Prompt */}
       <div className="z-20 mb-6 w-full">
-        <Card className="relative overflow-hidden border-0 bg-gradient-to-r from-violet-700/80 to-purple-900/80 shadow-2xl shadow-violet-900/30 w-[350px] h-[72px] flex items-center justify-center">
+        <Card className="relative overflow-hidden border-0 bg-gradient-to-r from-violet-700/80 to-purple-900/80 shadow-2xl shadow-violet-900/30 w-[380px] h-[72px] flex items-center justify-center">
           <CardContent className="flex items-center gap-2 p-4 w-full h-full">
             <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-400 to-violet-600 shadow-lg">
               <UserIcon className="size-4 text-white" />

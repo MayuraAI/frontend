@@ -54,14 +54,14 @@ export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
 
       <DialogContent onKeyDown={handleKeyDown}>
         <DialogHeader>
-          <DialogTitle className="font-brutal text-foreground text-2xl font-black">
-            EDIT CHAT NAME
-          </DialogTitle>
+          {/* <DialogTitle className="font-brutal text-foreground text-2xl font-black">
+            Edit Chat Name
+          </DialogTitle> */}
         </DialogHeader>
 
         <div className="neo-form-group">
           <Label className="text-foreground mb-3 block text-lg font-black">
-            CHAT NAME
+            Edit Chat Name
           </Label>
           <Input
             value={name}
@@ -77,7 +77,7 @@ export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
             onClick={() => setShowChatDialog(false)}
             className="font-black"
           >
-            CANCEL
+            Cancel
           </Button>
 
           <Button
@@ -88,7 +88,7 @@ export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
             disabled={!name.trim()}
           >
             <IconDeviceFloppy className="mr-2 size-4" />
-            SAVE CHANGES
+            Save changes
           </Button>
         </DialogFooter>
       </DialogContent>

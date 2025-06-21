@@ -94,28 +94,6 @@ export default async function Login({
     const cookieStore = cookies()
     const supabase = createClient(cookieStore)
 
-    const emailDomainWhitelistPatternsString = await getEnvVarOrEdgeConfigValue(
-      "EMAIL_DOMAIN_WHITELIST"
-    )
-    const emailDomainWhitelist = emailDomainWhitelistPatternsString?.trim()
-      ? emailDomainWhitelistPatternsString?.split(",")
-      : []
-    const emailWhitelistPatternsString =
-      await getEnvVarOrEdgeConfigValue("EMAIL_WHITELIST")
-    const emailWhitelist = emailWhitelistPatternsString?.trim()
-      ? emailWhitelistPatternsString?.split(",")
-      : []
-
-    if (emailDomainWhitelist.length > 0 || emailWhitelist.length > 0) {
-      const domainMatch = emailDomainWhitelist?.includes(email.split("@")[1])
-      const emailMatch = emailWhitelist?.includes(email)
-      if (!domainMatch && !emailMatch) {
-        return redirect(
-          `/login?message=Email ${email} is not allowed to sign up.`
-        )
-      }
-    }
-
     // Check if email verification is enabled
     const enableEmailConfirmation = true
     const origin = headers().get("origin")
@@ -128,6 +106,11 @@ export default async function Login({
       // } : {}
       options: {}
     })
+
+    // Supabase workaround: if data.user exists and identities is empty, email is taken
+    if (data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+      return redirect(`/login?message=An account with this email already exists. Please sign in instead.&type=existing`)
+    }
 
     if (error) {
       if (error.message.includes("User already registered")) {
@@ -226,10 +209,11 @@ export default async function Login({
   const getAlertVariant = (type?: string) => {
     switch (type) {
       case 'success':
+        return 'success' as const
       case 'info':
-        return 'default' as const
-      case 'existing':
-        return 'default' as const
+        return 'info' as const
+      case 'warning':
+        return 'warning' as const
       default:
         return 'destructive' as const
     }
@@ -238,12 +222,41 @@ export default async function Login({
   const getAlertIcon = (type?: string) => {
     switch (type) {
       case 'success':
+        return <CheckCircle className="h-4 w-4 text-green-600" />
       case 'info':
-        return <CheckCircle className="h-4 w-4" />
-      case 'existing':
-        return <AlertCircle className="h-4 w-4" />
+        return <AlertCircle className="h-4 w-4 text-blue-600" />
+      case 'warning':
+        return <AlertCircle className="h-4 w-4 text-yellow-600" />
       default:
-        return <AlertCircle className="h-4 w-4" />
+        return <AlertCircle className="h-4 w-4 text-red-600" />
+    }
+  }
+
+  // Helper to get custom background class for each alert type (dark mode)
+  const getAlertBgClass = (type?: string) => {
+    switch (type) {
+      case 'success':
+        return 'bg-green-900/40 border-green-700'
+      case 'info':
+        return 'bg-blue-900/40 border-blue-700'
+      case 'warning':
+        return 'bg-yellow-900/40 border-yellow-700'
+      default:
+        return 'bg-red-900/40 border-red-700'
+    }
+  }
+
+  // Helper to get custom text color for each alert type (dark mode)
+  const getAlertTextClass = (type?: string) => {
+    switch (type) {
+      case 'success':
+        return 'text-green-200'
+      case 'info':
+        return 'text-blue-200'
+      case 'warning':
+        return 'text-yellow-200'
+      default:
+        return 'text-red-200'
     }
   }
 
@@ -263,9 +276,9 @@ export default async function Login({
           <CardContent className="grid gap-6 px-8 py-6">
             {/* Display messages */}
             {searchParams?.message && (
-              <Alert variant={getAlertVariant(searchParams.type)} className="mb-4">
+              <Alert variant={getAlertVariant(searchParams.type)} className={`mb-4 ${getAlertBgClass(searchParams.type)} ${getAlertTextClass(searchParams.type)} border`}>
                 {getAlertIcon(searchParams.type)}
-                <AlertDescription className="text-sm">
+                <AlertDescription className={`text-sm ${getAlertTextClass(searchParams.type)}`}>
                   {searchParams.message}
                   {/* Show resend verification button for email confirmation messages */}
                   {searchParams.type === 'info' && searchParams.message.includes('verification') && (
@@ -275,7 +288,7 @@ export default async function Login({
                         type="submit" 
                         variant="outline" 
                         size="sm"
-                        className="w-full"
+                        className="w-full border-blue-700 text-blue-200 hover:bg-blue-800/40"
                       >
                         <RotateCcw className="mr-2 h-3 w-3" />
                         Resend Verification Email

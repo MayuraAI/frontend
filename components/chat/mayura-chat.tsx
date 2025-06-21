@@ -125,7 +125,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
                     return (
                       <Card
                         key={index}
-                        className="cursor-pointer rounded-lg transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+                        className="cursor-no-effect rounded-lg"
                       >
                         <CardContent className="p-6">
                           <div className="flex items-start space-x-4">
