@@ -49,7 +49,7 @@ export const DeleteChat: FC<DeleteChatProps> = ({ chat }) => {
   return (
     <Dialog open={showChatDialog} onOpenChange={setShowChatDialog}>
       <DialogTrigger asChild>
-        <button className="hover:border-destructive hover:bg-destructive hover:text-destructive-foreground hover:shadow-neo-sm bg-background border-2 border-transparent p-1 transition-all duration-100">
+        <button className="border-2 border-transparent p-1 transition-all duration-100 hover:border-slate-600">
           <IconTrash className="size-4 font-black" />
         </button>
       </DialogTrigger>

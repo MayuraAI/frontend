@@ -47,7 +47,7 @@ export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
   return (
     <Dialog open={showChatDialog} onOpenChange={setShowChatDialog}>
       <DialogTrigger asChild>
-        <button className="hover:border-accent hover:bg-accent hover:text-accent-foreground hover:shadow-neo-sm bg-background border-2 border-transparent p-1 transition-all duration-100">
+        <button className="border-2 border-transparent p-1 transition-all duration-100 hover:border-slate-600">
           <IconEdit className="size-4 font-black" />
         </button>
       </DialogTrigger>

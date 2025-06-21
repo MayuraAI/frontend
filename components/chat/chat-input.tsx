@@ -95,7 +95,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
               className="w-full resize-none border-0 bg-transparent p-6 text-base leading-relaxed text-white outline-none ring-0 placeholder:text-slate-400 focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0"
               rows={1}
               style={{
-                // maxHeight: "200px",
+                maxHeight: "200px",
                 overflowY:
                   inputValue.split("\n").length > 6 ? "scroll" : "hidden"
               }}
