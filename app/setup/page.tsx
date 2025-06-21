@@ -148,7 +148,7 @@ export default function SetupPage() {
   }
 
   return (
-    <div className="flex h-full items-center justify-center">
+    <div className="center-setup-step">
       {renderStep(currentStep)}
     </div>
   )

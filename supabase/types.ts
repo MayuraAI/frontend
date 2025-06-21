@@ -200,6 +200,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      check_username_available: {
+        Args: { username_to_check: string; user_id_to_check: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

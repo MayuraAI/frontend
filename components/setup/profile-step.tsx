@@ -75,12 +75,11 @@ export const ProfileStep: FC<ProfileStepProps> = ({
 
       setLoading(true)
 
-      let query = supabase
-        .from("profiles")
-        .select("username, user_id")
-        .eq("username", username)
-
-      const { data: profiles, error } = await query
+      // Use the Supabase function to check username availability
+      const { data, error } = await supabase.rpc('check_username_available', {
+        username_to_check: username,
+        user_id_to_check: currentUserId || ''
+      })
 
       if (error) {
         console.error(error)
@@ -89,11 +88,7 @@ export const ProfileStep: FC<ProfileStepProps> = ({
         return
       }
 
-      const isAvailable =
-        profiles.length === 0 ||
-        (profiles.length === 1 && profiles[0].user_id === currentUserId)
-
-      onUsernameAvailableChange(isAvailable)
+      onUsernameAvailableChange(!!data)
       setLoading(false)
     }, 500),
     [currentUserId, onUsernameAvailableChange]
