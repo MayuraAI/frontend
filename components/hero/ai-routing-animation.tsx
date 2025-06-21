@@ -157,7 +157,7 @@ export function AIRoutingAnimation() {
         style={{ filter: 'drop-shadow(0 0 8px #a78bfa66)' }}
       >
         <path
-          d="M 20 5 C 20 20, 20 40, 20 47"
+          d="M 20 37 C 20 20, 20 40, 20 47"
           stroke="#a78bfa"
           strokeWidth={3}
           strokeLinecap="round"
