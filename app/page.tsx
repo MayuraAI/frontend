@@ -106,8 +106,8 @@ export default function HomePage() {
         </nav>
         <div className="flex items-center gap-4">
           <Button asChild className="bg-violet-600 text-white hover:bg-violet-700">
-            <Link href="/login">
-              Get Started Free <ArrowRight className="ml-2 size-4" />
+            <Link href="/chat">
+            Try Mayura Now <ArrowRight className="ml-2 size-4" />
             </Link>
           </Button>
         </div>
@@ -149,7 +149,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
                   <Button size="lg" asChild className="bg-violet-600 text-white hover:bg-violet-700">
-                    <Link href="/login">
+                    <Link href="/chat">
                       <Zap className="mr-2 size-5" /> Try Mayura Now
                     </Link>
                   </Button>
@@ -394,7 +394,7 @@ export default function HomePage() {
                     </ul>
                   </div>
                   <Button className="mt-8 w-full bg-violet-600 text-white hover:bg-violet-700" asChild>
-                    <Link href="/chat">Get Started Free</Link>
+                    <Link href="/chat">Try Mayura Now</Link>
                   </Button>
                 </CardContent>
               </Card>
