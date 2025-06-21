@@ -26,7 +26,7 @@ const aiModels: AIModel[] = [
     id: "gpt4",
     name: "GPT-4",
     color: "from-green-400 to-green-600",
-    specialty: "General Intelligence",
+    specialty: "Analysis & Writing",
     icon: Brain,
     arrowColor: "#34d399"
   },
@@ -34,7 +34,7 @@ const aiModels: AIModel[] = [
     id: "claude",
     name: "Claude",
     color: "from-orange-400 to-orange-600",
-    specialty: "Analysis & Writing",
+    specialty: "Code Generation",
     icon: FileText,
     arrowColor: "#fb923c"
   },
@@ -47,10 +47,10 @@ const aiModels: AIModel[] = [
     arrowColor: "#60a5fa"
   },
   {
-    id: "codellama",
-    name: "CodeLlama",
+    id: "llama",
+    name: "Llama",
     color: "from-purple-400 to-purple-600",
-    specialty: "Code Generation",
+    specialty: "General Intelligence",
     icon: Code,
     arrowColor: "#a78bfa"
   }
@@ -59,26 +59,26 @@ const aiModels: AIModel[] = [
 const promptExamples: PromptExample[] = [
   {
     text: "Write a Python function to sort a list",
-    targetModel: "codellama",
+    targetModel: "claude",
     description: "Code Generation",
     icon: Code
   },
   {
     text: "Analyze this proposal for key insights",
-    targetModel: "claude",
+    targetModel: "gpt4",
     description: "Analysis",
     icon: FileText
   },
   {
     text: "What is the weather in Tokyo?",
-    targetModel: "gemini",
+    targetModel: "llama",
     description: "Conversation",
-    icon: Image
+    icon: Brain
   },
   {
-    text: "Help me plan a 2-week vacation to Japan",
-    targetModel: "gpt4",
-    description: "Complex Planning",
+    text: "Help me plan a 2-week vacation",
+    targetModel: "gemini",
+    description: "General Intelligence",
     icon: Brain
   }
 ]
@@ -90,24 +90,40 @@ export function AIRoutingAnimation() {
   const [showArrows, setShowArrows] = useState(false)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIsRouting(false)
-      setSelectedModel(null)
-      setShowArrows(false)
-      setTimeout(() => {
-        setIsRouting(true)
-        setShowArrows(true)
-        setTimeout(() => {
-          const currentPrompt = promptExamples[currentPromptIndex]
-          setSelectedModel(currentPrompt.targetModel)
-          setTimeout(() => {
-            setCurrentPromptIndex((prev) => (prev + 1) % promptExamples.length)
-          }, 2000)
-        }, 1000)
-      }, 500)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [currentPromptIndex])
+    // Change prompt first, then after a short delay, start routing/model selection
+    let routingTimeout: NodeJS.Timeout;
+    let selectModelTimeout: NodeJS.Timeout;
+    let nextPromptTimeout: NodeJS.Timeout;
+    let resetTimeout: NodeJS.Timeout;
+
+    setIsRouting(false);
+    setSelectedModel(null);
+    setShowArrows(false);
+
+    routingTimeout = setTimeout(() => {
+      setIsRouting(true);
+      setShowArrows(true);
+      selectModelTimeout = setTimeout(() => {
+        const currentPrompt = promptExamples[currentPromptIndex];
+        setSelectedModel(currentPrompt.targetModel);
+        nextPromptTimeout = setTimeout(() => {
+          setIsRouting(false);
+          setSelectedModel(null);
+          setShowArrows(false);
+          resetTimeout = setTimeout(() => {
+            setCurrentPromptIndex((prev) => (prev + 1) % promptExamples.length);
+          }, 500);
+        }, 2000);
+      }, 300); // Delay before model selection
+    }, 300); // Delay before routing starts
+
+    return () => {
+      clearTimeout(routingTimeout);
+      clearTimeout(selectModelTimeout);
+      clearTimeout(nextPromptTimeout);
+      clearTimeout(resetTimeout);
+    };
+  }, [currentPromptIndex]);
 
   const currentPrompt = promptExamples[currentPromptIndex]
   const selectedModelData = aiModels.find(m => m.id === selectedModel)
@@ -116,19 +132,38 @@ export function AIRoutingAnimation() {
   return (
     <div className="relative mx-auto flex min-h-[420px] w-full max-w-sm flex-col items-center justify-center">
       {/* Prompt */}
-      <div className="z-20 mb-6">
-        <Card className="relative overflow-hidden border-0 bg-gradient-to-r from-violet-700/80 to-purple-900/80 shadow-2xl shadow-violet-900/30">
-          <CardContent className="flex items-center gap-2 p-4">
+      <div className="z-20 mb-6 w-full">
+        <Card className="relative overflow-hidden border-0 bg-gradient-to-r from-violet-700/80 to-purple-900/80 shadow-2xl shadow-violet-900/30 w-[350px] h-[72px] flex items-center justify-center">
+          <CardContent className="flex items-center gap-2 p-4 w-full h-full">
             <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-400 to-violet-600 shadow-lg">
               <UserIcon className="size-4 text-white" />
             </div>
-            <div className="flex-1">
-              <p className="mb-1 text-base font-medium leading-relaxed text-white">"{currentPrompt.text}"</p>
+            <div className="flex-1 min-w-0">
+              <p className="mb-1 text-base font-medium leading-relaxed text-white truncate" title={currentPrompt.text}>
+                "{currentPrompt.text}"
+              </p>
               {/* <Badge variant="secondary" className="border-violet-600 bg-violet-900/30 px-2 py-1 text-xs text-violet-300">{currentPrompt.description}</Badge> */}
             </div>
           </CardContent>
         </Card>
       </div>
+      {/* Arrow from prompt to router */}
+      <svg
+        className="pointer-events-none absolute left-1/2 top-[90px] z-10 -translate-x-1/2"
+        width={40}
+        height={50}
+        viewBox="0 0 40 50"
+        fill="none"
+        style={{ filter: 'drop-shadow(0 0 8px #a78bfa66)' }}
+      >
+        <path
+          d="M 20 5 C 20 20, 20 30, 20 45"
+          stroke="#a78bfa"
+          strokeWidth={3}
+          strokeLinecap="round"
+        />
+        <polygon points="16,42 20,48 24,42" fill="#a78bfa" />
+      </svg>
       {/* SVG Arrows */}
       <svg
         className="pointer-events-none absolute left-1/2 top-[200px] z-10 -translate-x-1/2"
@@ -171,18 +206,18 @@ export function AIRoutingAnimation() {
         })}
       </svg>
       {/* Router */}
-      <div className="relative z-20 mb-8">
-        <div className="flex flex-col items-center gap-3 rounded-2xl border-0 bg-gradient-to-r from-violet-600 to-purple-700 px-6 py-4 shadow-2xl">
+      <div className="relative z-20 mb-8 h-full">
+        <div className="flex flex-col items-center gap-3 rounded-2xl border-0 bg-gradient-to-r from-violet-600 to-purple-700 px-6 py-4 shadow-2xl w-[260px] justify-center h-full">
           <div
             className={cn(
-              "flex items-center gap-3",
+              "flex items-center gap-3 w-full justify-center",
               isRouting ? "scale-105 shadow-violet-500/40" : "shadow-violet-900/20"
             )}
           >
-            <span className="text-base font-semibold tracking-wide text-white">{"Mayura AI Router"}</span>
+            <span className="text-base font-semibold tracking-wide text-white whitespace-nowrap overflow-hidden text-ellipsis">{"Mayura AI Router"}</span>
             <Zap className={cn("size-5 text-white transition-all duration-300", isRouting && "animate-pulse")} />
           </div>
-            <Badge variant="secondary" className="border-violet-600 bg-violet-900/30 px-2 py-1 text-xs text-violet-300">{currentPrompt.description}</Badge>
+          {/* {isRouting ? <Badge variant="secondary" className="border-violet-600 bg-violet-900/30 px-2 py-1 text-xs text-violet-300 max-w-[200px] truncate">{currentPrompt.description}</Badge> : <div className="h-[50px] w-full"></div>} */}
         </div>
         {/* Glow effect */}
         {isRouting && (
@@ -190,7 +225,7 @@ export function AIRoutingAnimation() {
         )}
       </div>
       {/* Models Row */}
-      <div className="relative z-20 mt-4 flex w-full max-w-[320px] flex-row items-end justify-between gap-2">
+      <div className="relative z-20 mt-4 flex w-full max-w-[320px] flex-row items-end justify-between gap-2 h-full">
         {aiModels.map((model, i) => {
           const ModelIcon = model.icon
           const isSelected = selectedModel === model.id
@@ -201,7 +236,7 @@ export function AIRoutingAnimation() {
               className={cn(
                 "relative w-[70px] overflow-hidden border-0 transition-all duration-700",
                 isSelected
-                  ? `bg-gradient-to-br ${model.color} z-10 scale-105 shadow-2xl` // Glow and scale
+                  ? `bg-gradient-to-br ${model.color} z-10 scale-102 shadow-2xl` // Glow and scale
                   : isRouting_Local
                   ? "scale-95 bg-slate-800/60 opacity-70"
                   : "bg-slate-800/90 hover:scale-105"
