@@ -9,9 +9,10 @@ import { FC, useContext, useEffect, useState } from "react"
 import { useScroll } from "./chat-hooks/use-scroll"
 import { ChatInput } from "./chat-input"
 import { ChatMessages } from "./chat-messages"
+import { Button } from "../ui/button"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { Sparkles, Code2, Brain, BarChart3 } from "lucide-react"
+import { Sparkles, Code2, Brain, BarChart3, ChevronDown } from "lucide-react"
 
 interface MayuraChatProps {}
 
@@ -20,7 +21,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
     useContext(MayuraContext)
 
   const params = useParams()
-  const { scrollToBottom, messagesStartRef, messagesEndRef } = useScroll()
+  const { scrollToBottom, messagesStartRef, messagesEndRef, isUserScrolledUp, shouldAutoScroll } = useScroll()
   const [loading, setLoading] = useState(false)
   const [isReady, setIsReady] = useState(true)
 
@@ -150,6 +151,21 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
             </div>
           )}
         </div>
+
+        {/* Floating Scroll to Bottom Button */}
+        {isUserScrolledUp && chatMessages.length > 0 && (
+          <div className="fixed bottom-20 right-6 z-50">
+            <Button
+              onClick={scrollToBottom}
+              size="sm"
+              className="flex items-center gap-2 rounded-full bg-violet-600 text-white shadow-lg hover:bg-violet-700"
+            >
+              <ChevronDown size={16} />
+              {isGenerating && "New message"}
+              {!isGenerating && "Scroll to bottom"}
+            </Button>
+          </div>
+        )}
       </section>
 
       {/* Chat Input Area */}
