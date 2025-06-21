@@ -128,60 +128,36 @@ export const processResponse = async (
   setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>
 ) => {
   let fullText = ""
-  let displayedText = ""
   let modelName = ""
-  let textBuffer = ""
-  let isDisplaying = false
 
-  // Function to display text gradually character by character or in small chunks
-  const displayTextGradually = () => {
-    if (isDisplaying || textBuffer.length === 0) return
-    
-    isDisplaying = true
-    
-    const displayNextChunk = () => {
-      if (textBuffer.length === 0 || controller.signal.aborted) {
-        isDisplaying = false
-        return
-      }
+  // Function to process and display content with thinking block handling
+  const updateDisplayContent = (content: string, isStreaming: boolean = true) => {
+    let displayContent = content
 
-      // Display 1-3 characters at a time for smooth streaming
-      const chunkSize = Math.min(textBuffer.length, Math.random() > 0.7 ? 7 : Math.random() > 0.4 ? 5 : 3)
-      const nextChunk = textBuffer.substring(0, chunkSize)
-      textBuffer = textBuffer.substring(chunkSize)
-      displayedText += nextChunk
-      
-      setChatMessages(prev =>
-        prev.map(chatMessage =>
-          chatMessage.id === tempAssistantChatMessage.id
-            ? {
-                ...chatMessage,
-                content: displayedText,
-                model_name: modelName
-              }
-            : chatMessage
-        )
+    // Check if we have thinking block patterns
+    const hasThinkingStart = content.includes('◁think▷')
+    const hasThinkingEnd = content.includes('◁/think▷')
+    
+    // During streaming, always show the raw content to allow live thinking updates
+    if (isStreaming) {
+      displayContent = content
+    }
+    // Only when streaming is complete, replace with placeholder for collapsed view
+    else if (hasThinkingStart && hasThinkingEnd) {
+      displayContent = content.replace(/◁think▷(.*?)◁\/think▷/s, '◁think▷PLACEHOLDER◁/think▷')
+    }
+
+    setChatMessages(prev =>
+      prev.map(chatMessage =>
+        chatMessage.id === tempAssistantChatMessage.id
+          ? {
+              ...chatMessage,
+              content: displayContent,
+              model_name: modelName
+            }
+          : chatMessage
       )
-
-      // Faster display for better reading experience
-      const delay = 1 // 30ms between chunks for smooth but readable streaming
-
-      setTimeout(() => {
-        displayNextChunk()
-      }, delay)
-    }
-
-    displayNextChunk()
-  }
-
-  // Function to add new text to buffer and trigger display
-  const addTextToBuffer = (newText: string) => {
-    textBuffer += newText
-    
-    // Start displaying if not already doing so
-    if (!isDisplaying) {
-      displayTextGradually()
-    }
+    )
   }
 
   try {
@@ -217,7 +193,6 @@ export const processResponse = async (
         if (data.error) {
           const errorMessage = `Error: ${data.error}`
           fullText = errorMessage
-          displayedText = errorMessage
           setChatMessages(prev =>
             prev.map(chatMessage =>
               chatMessage.id === tempAssistantChatMessage.id
@@ -245,32 +220,14 @@ export const processResponse = async (
           fullText += data.message
           setFirstTokenReceived(true)
           
-          // Add new text to buffer for gradual display
-          addTextToBuffer(data.message)
+          // Update display with current content (streaming)
+          updateDisplayContent(fullText, true)
         }
       }
     }
 
-    // Wait for all buffered text to be displayed
-    while (textBuffer.length > 0 && !controller.signal.aborted) {
-      await new Promise(resolve => setTimeout(resolve, 50))
-    }
-
-    // Ensure final text matches the full received text
-    if (displayedText !== fullText && !controller.signal.aborted) {
-      displayedText = fullText
-      setChatMessages(prev =>
-        prev.map(chatMessage =>
-          chatMessage.id === tempAssistantChatMessage.id
-            ? {
-                ...chatMessage,
-                content: fullText,
-                model_name: modelName
-              }
-            : chatMessage
-        )
-      )
-    }
+    // Final update to ensure all content is displayed (done streaming)
+    updateDisplayContent(fullText, false)
 
   } catch (error) {
     if (error instanceof Error && error.name === "AbortError") {
@@ -283,3 +240,6 @@ export const processResponse = async (
 
   return [fullText, modelName]
 }
+
+
+
