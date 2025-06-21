@@ -70,7 +70,7 @@ const promptExamples: PromptExample[] = [
     icon: FileText
   },
   {
-    text: "What is the weather in Tokyo?",
+    text: "How is the weather in Hyderabad?",
     targetModel: "llama",
     description: "Conversation",
     icon: Brain
