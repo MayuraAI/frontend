@@ -157,12 +157,12 @@ export function AIRoutingAnimation() {
         style={{ filter: 'drop-shadow(0 0 8px #a78bfa66)' }}
       >
         <path
-          d="M 20 5 C 20 20, 20 30, 20 45"
+          d="M 20 5 C 20 20, 20 40, 20 47"
           stroke="#a78bfa"
           strokeWidth={3}
           strokeLinecap="round"
         />
-        <polygon points="16,42 20,48 24,42" fill="#a78bfa" />
+        <polygon points="16,42 20,53 24,42" fill="#a78bfa" />
       </svg>
       {/* SVG Arrows */}
       <svg
@@ -211,7 +211,7 @@ export function AIRoutingAnimation() {
           <div
             className={cn(
               "flex items-center gap-3 w-full justify-center",
-              isRouting ? "scale-105 shadow-violet-500/40" : "shadow-violet-900/20"
+              isRouting ? "shadow-violet-500/40" : "shadow-violet-900/20"
             )}
           >
             <span className="text-base font-semibold tracking-wide text-white whitespace-nowrap overflow-hidden text-ellipsis">{"Mayura AI Router"}</span>
@@ -236,10 +236,10 @@ export function AIRoutingAnimation() {
               className={cn(
                 "relative w-[70px] overflow-hidden border-0 transition-all duration-700",
                 isSelected
-                  ? `bg-gradient-to-br ${model.color} z-10 scale-102 shadow-2xl` // Glow and scale
+                  ? `bg-gradient-to-br ${model.color} z-10` // Glow 
                   : isRouting_Local
-                  ? "scale-95 bg-slate-800/60 opacity-70"
-                  : "bg-slate-800/90 hover:scale-105"
+                  ? "bg-slate-800/60"
+                  : "bg-slate-800/90"
               )}
               style={{ transitionDelay: `${i * 100}ms`, minWidth: 70 }}
             >
@@ -254,14 +254,7 @@ export function AIRoutingAnimation() {
                 </div>
                 <h3 className={cn("text-center text-xs font-bold transition-colors duration-500", isSelected ? "text-white" : "text-slate-200")}>{model.name}</h3>
                 <p className={cn("text-center text-[10px] transition-colors duration-500", isSelected ? "text-white/80" : "text-slate-400")}>{model.specialty}</p>
-                {isSelected && (
-                  <div className="size-2 animate-pulse rounded-full bg-white shadow-lg" />
-                )}
               </CardContent>
-              {/* Selected model glow effect */}
-              {isSelected && (
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-              )}
             </Card>
           )
         })}
