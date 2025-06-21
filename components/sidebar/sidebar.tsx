@@ -21,11 +21,11 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
 
   return (
     <TabsContent
-      className="bg-sidebar m-0 flex size-full flex-col"
+      className="bg-sidebar m-0 flex size-full flex-col border-r border-slate-700"
       value={contentType}
     >
       {/* Dark Modern Header */}
-      <header className="bg-sidebar border-sidebar-border shrink-0 border-b p-6">
+      <header className="bg-sidebar shrink-0 border-b border-slate-700 p-6">
         <div className="flex items-center gap-3">
           <div className="rounded bg-violet-600 p-2">
             <span className="text-sm font-bold text-white">M</span>
@@ -68,7 +68,7 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
       </section>
 
       {/* Dark Settings Footer */}
-      <footer className="border-sidebar-border shrink-0 border-t p-6">
+      <footer className="shrink-0 border-t border-slate-700 p-6">
         <div className="flex justify-start">
           <WithTooltip
             display={

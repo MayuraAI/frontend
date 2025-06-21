@@ -8,11 +8,11 @@
 @layer base {
   :root {
     /* Pure Black Theme */
-    --background: 0 0 0; /* Pure black #000000 */
+    --background: 6 6 6; /* Pure black #000000 */
     --foreground: 255 255 255; /* Pure white text */
-    --card: 10 10 10; /* Very dark gray cards #0A0A0A */
+    --card: 6 6 6; /* Very dark gray cards #0A0A0A */
     --card-foreground: 255 255 255; /* Pure white text */
-    --popover: 10 10 10; /* Very dark gray */
+    --popover: 6 6 6; /* Very dark gray */
     --popover-foreground: 255 255 255; /* Pure white text */
     --primary: 139 92 246; /* violet-500 */
     --primary-foreground: 255 255 255; /* white */
@@ -24,15 +24,15 @@
     --accent-foreground: 255 255 255; /* white */
     --destructive: 239 68 68; /* red-500 */
     --destructive-foreground: 255 255 255; /* white */
-    --border: 30 30 30; /* Dark border #1E1E1E */
-    --input: 0 0 0; /* Pure black input background */
+    --border: 6 6 6; /* Dark border #1E1E1E */
+    --input: 6 6 6; /* Very dark gray cards #0A0A0A */
     --ring: 139 92 246; /* violet-500 */
     --radius: 0.5rem;
 
     /* Sidebar specific colors */
-    --sidebar: 0 0 0; /* Pure black #000000 */
+    --sidebar: 6 6 6; /* Very dark gray cards #0A0A0A */
     --sidebar-foreground: 255 255 255; /* Pure white text */
-    --sidebar-border: 30 30 30; /* Dark border */
+    --sidebar-border: 255 255 255; /* Dark border */
     --sidebar-accent: 139 92 246; /* violet-500 */
     --sidebar-accent-foreground: 255 255 255; /* white */
     --sidebar-muted: 15 15 15; /* Very dark gray */
@@ -41,11 +41,11 @@
 
   .dark {
     /* Pure Black Theme - Same as light mode for consistency */
-    --background: 0 0 0; /* Pure black #000000 */
+    --background: 6 6 6; /* Pure black #000000 */
     --foreground: 255 255 255; /* Pure white text */
-    --card: 10 10 10; /* Very dark gray cards #0A0A0A */
+    --card: 6 6 6; /* Very dark gray cards #0A0A0A */
     --card-foreground: 255 255 255; /* Pure white text */
-    --popover: 10 10 10; /* Very dark gray */
+    --popover: 6 6 6; /* Very dark gray */
     --popover-foreground: 255 255 255; /* Pure white text */
     --primary: 139 92 246; /* violet-500 */
     --primary-foreground: 255 255 255; /* white */
@@ -57,14 +57,14 @@
     --accent-foreground: 255 255 255; /* white */
     --destructive: 239 68 68; /* red-500 */
     --destructive-foreground: 255 255 255; /* white */
-    --border: 30 30 30; /* Dark border #1E1E1E */
-    --input: 0 0 0; /* Pure black input background */
+    --border: 6 6 6; /* Dark border #1E1E1E */
+    --input: 6 6 6; /* Pure black input background */
     --ring: 139 92 246; /* violet-500 */
 
     /* Sidebar specific colors for dark mode */
-    --sidebar: 0 0 0; /* Pure black #000000 */
+    --sidebar: 6 6 6; /* Pure black #000000 */
     --sidebar-foreground: 255 255 255; /* Pure white text */
-    --sidebar-border: 30 30 30; /* Dark border */
+    --sidebar-border: 6 6 6; /* Dark border */
     --sidebar-accent: 139 92 246; /* violet-500 */
     --sidebar-accent-foreground: 255 255 255; /* white */
     --sidebar-muted: 15 15 15; /* Very dark gray */

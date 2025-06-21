@@ -94,22 +94,22 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
     <div className="bg-background relative flex h-full flex-col">
       {/* Chat Messages Area */}
       <section
-        className="flex-1 overflow-y-auto px-4 py-6 md:px-6 lg:px-8"
+        className="flex-1 overflow-y-auto px-4 py-6 md:px-6 lg:px-8 bg-background"
         role="log"
         aria-live="polite"
         aria-label="Chat messages"
       >
-        <div className="mx-auto max-w-4xl space-y-4">
+        <div className="mx-auto max-w-4xl space-y-4 bg-background">
           <div ref={messagesStartRef} />
           <ChatMessages />
           <div ref={messagesEndRef} />
 
           {/* Welcome Message for New Chats */}
           {(!chatMessages || chatMessages.length === 0) && !isGenerating && (
-            <div className="flex h-full min-h-[500px] flex-col items-center justify-center text-center">
+            <div className="flex h-full min-h-[500px] flex-col items-center justify-center text-center bg-background">
               {/* Welcome Header */}
               <div className="mb-16">
-                <h1 className="text-foreground mb-4 text-4xl font-bold">
+                <h1 className="text-foreground mb-4 text-4xl font-bold bg-background">
                   Welcome to Mayura
                 </h1>
                 <p className="text-muted-foreground max-w-md text-lg">
