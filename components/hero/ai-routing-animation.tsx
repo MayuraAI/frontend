@@ -199,7 +199,7 @@ export function AIRoutingAnimation() {
             <Card
               key={model.id}
               className={cn(
-                "relative overflow-hidden border-0 transition-all duration-700 w-[70px]",
+                "relative w-[70px] overflow-hidden border-0 transition-all duration-700",
                 isSelected
                   ? `bg-gradient-to-br ${model.color} z-10 scale-105 shadow-2xl` // Glow and scale
                   : isRouting_Local
@@ -217,8 +217,8 @@ export function AIRoutingAnimation() {
                 >
                   <ModelIcon className={cn("size-5 transition-colors duration-500", isSelected ? "text-white" : "text-slate-300")}/>
                 </div>
-                <h3 className={cn("text-xs font-bold transition-colors duration-500 text-center", isSelected ? "text-white" : "text-slate-200")}>{model.name}</h3>
-                <p className={cn("text-[10px] transition-colors duration-500 text-center", isSelected ? "text-white/80" : "text-slate-400")}>{model.specialty}</p>
+                <h3 className={cn("text-center text-xs font-bold transition-colors duration-500", isSelected ? "text-white" : "text-slate-200")}>{model.name}</h3>
+                <p className={cn("text-center text-[10px] transition-colors duration-500", isSelected ? "text-white/80" : "text-slate-400")}>{model.specialty}</p>
                 {isSelected && (
                   <div className="size-2 animate-pulse rounded-full bg-white shadow-lg" />
                 )}
