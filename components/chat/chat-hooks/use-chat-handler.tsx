@@ -143,24 +143,52 @@ export const useChatHandler = () => {
         signal: newAbortController.signal
       })
 
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error("Authentication failed. Please log in again.")
-        }
-        if (response.status === 429) {
-          throw new Error(
-            "Rate limit exceeded. Please wait before sending another message."
-          )
-        }
-        throw new Error(
-          `Failed to send message: ${response.status} ${response.statusText}`
-        )
-      }
-
-      // Update rate limit status from response headers
+      // Update rate limit status from response headers (for both success and error responses)
       const updatedStatus = updateFromHeaders(response.headers)
       // Always trigger UI refresh after sending a message
       refreshRateLimit()
+
+      if (!response.ok) {
+        // Parse error response
+        let errorData: any = {}
+        try {
+          errorData = await response.json()
+        } catch {
+          // If response is not JSON, use default error message
+          errorData = { message: `Request failed with status ${response.status}` }
+        }
+
+        const errorMessage = errorData.message || errorData.error || `Request failed with status ${response.status}`
+
+        if (response.status === 401) {
+          toast.error("Authentication failed", {
+            description: "Please log in again."
+          })
+          throw new Error("Authentication failed. Please log in again.")
+        }
+        
+        if (response.status === 429) {
+          // Show rate limit specific toast
+          const summary = getStatusSummary()
+          if (summary?.timeUntilReset) {
+            toast.error("Too many requests", {
+              description: `We know our platform is good, but please wait a little bit before sending another message.`
+            })
+          } else {
+            toast.error("Rate limit exceeded", {
+              description: "Please wait before sending another message."
+            })
+          }
+          throw new Error("Rate limit exceeded. Please wait before sending another message.")
+        }
+
+        // Handle other errors
+        toast.error("Failed to send message", {
+          description: errorMessage
+        })
+        throw new Error(errorMessage)
+      }
+
       if (updatedStatus) {
         const summary = getStatusSummary()
 
@@ -226,9 +254,23 @@ export const useChatHandler = () => {
       if (error instanceof Error && error.name === "AbortError") {
         console.log("Request aborted by user")
       } else {
-        toast.error("Error sending message")
-        setChatMessages(prev => prev.slice(0, -1))
+        // Only show generic error toast if we haven't already shown a specific one
+        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
+        
+        // Don't show duplicate toast for errors we've already handled above
+        if (!errorMessage.includes("Authentication failed") && 
+            !errorMessage.includes("Rate limit exceeded") && 
+            !errorMessage.includes("Failed to send message")) {
+          toast.error("Error sending message", {
+            description: errorMessage
+          })
+        }
+        
+        console.error("Error sending message:", error)
       }
+      
+      // Remove the temporary assistant message on error
+      setChatMessages(prev => prev.slice(0, -1))
       setIsGenerating(false)
       setFirstTokenReceived(false)
     }

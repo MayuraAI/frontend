@@ -214,7 +214,7 @@ export function AIRoutingAnimation() {
               isRouting ? "shadow-violet-500/40" : "shadow-violet-900/20"
             )}
           >
-            <span className="text-base font-semibold tracking-wide text-white whitespace-nowrap overflow-hidden text-ellipsis">{"Mayura AI Router"}</span>
+            <span className="text-base font-semibold tracking-wide text-white whitespace-nowrap overflow-hidden text-ellipsis">{"Mayura Router"}</span>
             <Zap className={cn("size-5 text-white transition-all duration-300", isRouting && "animate-pulse")} />
           </div>
           {/* {isRouting ? <Badge variant="secondary" className="border-violet-600 bg-violet-900/30 px-2 py-1 text-xs text-violet-300 max-w-[200px] truncate">{currentPrompt.description}</Badge> : <div className="h-[50px] w-full"></div>} */}
