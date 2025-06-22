@@ -151,7 +151,7 @@ export default function HomePage() {
                     `}</style>
                   </h1>
                   <p className="mx-auto max-w-2xl text-lg text-slate-300 md:mx-0 md:text-lg lg:text-lg">
-                    Shoot your prompt, we'll route your prompt.
+                    Shoot your prompt, we&apos;ll route your prompt.
                   </p>
                 </div>
                 <div className="flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
@@ -199,7 +199,7 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent className="text-slate-300">
                   <p>
-                    Just give us your prompt. <br /> We'll handle the rest.
+                    Just give us your prompt. <br /> We&apos;ll handle the rest.
                   </p>
                 </CardContent>
               </Card>
@@ -476,7 +476,7 @@ export default function HomePage() {
                 Built by Engineers, for Everyone
               </h2>
               <p className="mb-2 text-lg text-slate-300">
-                We know your problem bro, we faced it too, that's why we built Mayura.
+                We know your problem bro, we faced it too, that&apos;s why we built Mayura.
               </p>
               <p className="text-slate-300">
                 We just want to make your life easier and some money :P.

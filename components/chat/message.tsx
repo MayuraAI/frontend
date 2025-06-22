@@ -38,6 +38,7 @@ export const Message: FC<MessageProps> = ({
   const [isExpanded, setIsExpanded] = useState(false)
 
   const userTextareaRef = useRef<HTMLTextAreaElement>(null)
+  const { copyToClipboard } = useCopyToClipboard({ timeout: 2000, setIsCopied })
 
   // Define threshold for collapsing user messages (in characters)
   const COLLAPSE_THRESHOLD = 200
@@ -55,7 +56,7 @@ export const Message: FC<MessageProps> = ({
   const handleCopy = () => {
     if (!message.content) return
 
-    useCopyToClipboard({ timeout: 2000, setIsCopied }).copyToClipboard(message.content)
+    copyToClipboard(message.content)
   }
 
   const handleStartEdit = () => {

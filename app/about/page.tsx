@@ -40,7 +40,7 @@ export default function AboutPage() {
                 Built by Engineers, for Everyone
               </h1>
               <p className="mb-8 text-xl text-slate-300">
-                We know your problem bro, we faced it too, that's why we built Mayura.
+                We know your problem bro, we faced it too, that&apos;s why we built Mayura.
               </p>
               <p className="text-lg text-slate-400">
                 We just want to make your life easier and some money :P
@@ -107,7 +107,7 @@ export default function AboutPage() {
                   </p>
                   <p className="text-slate-400">
                     Built with love, caffeine, and a genuine desire to solve a problem we all face. 
-                    Currently in beta, constantly improving, and yes - we're trying to make some money while making your life easier.
+                    Currently in beta, constantly improving, and yes - we&apos;re trying to make some money while making your life easier.
                   </p>
                 </div>
               </div>

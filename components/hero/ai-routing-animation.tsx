@@ -140,7 +140,7 @@ export function AIRoutingAnimation() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="mb-1 text-base font-medium leading-relaxed text-white truncate" title={currentPrompt.text}>
-                "{currentPrompt.text}"
+                &quot;{currentPrompt.text}&quot;
               </p>
               {/* <Badge variant="secondary" className="border-violet-600 bg-violet-900/30 px-2 py-1 text-xs text-violet-300">{currentPrompt.description}</Badge> */}
             </div>

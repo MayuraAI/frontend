@@ -86,7 +86,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
                     Hey <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent font-bold">{profile?.display_name.split(" ")[0] || "there"}</span>,
                   </p>
                   <p className="text-muted-foreground/80 text-xl pt-6">
-                    Let's see which AI model I pick for you today!
+                    Let&apos;s see which AI model I pick for you today!
                   </p>
                 </div>
               </div>

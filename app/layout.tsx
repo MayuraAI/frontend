@@ -22,9 +22,6 @@ const APP_DESCRIPTION = "Your intelligent routing assistant."
 
 interface RootLayoutProps {
   children: ReactNode
-  params: {
-    locale: string
-  }
 }
 
 export const metadata: Metadata = {
@@ -67,8 +64,7 @@ export const viewport: Viewport = {
 }
 
 export default async function RootLayout({
-  children,
-  params: { locale }
+  children
 }: RootLayoutProps) {
   const cookieStore = cookies()
   const supabase = createServerClient<Database>(
