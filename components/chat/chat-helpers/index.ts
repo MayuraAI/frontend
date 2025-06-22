@@ -129,6 +129,57 @@ export const processResponse = async (
 ) => {
   let fullText = ""
   let modelName = ""
+  let displayedText = ""
+  let buffer = ""
+  let isStreamingComplete = false
+  let displayInterval: NodeJS.Timeout | null = null
+
+  // Configuration for smooth display
+  const MIN_WORDS_PER_BATCH = 3 // Minimum words to display at once
+  const MAX_WORDS_PER_BATCH = 7 // Maximum words to display at once
+  const BASE_INTERVAL_MS = 150 // Base interval in milliseconds
+  const MIN_INTERVAL_MS = 80 // Minimum interval for large buffers
+  const MAX_INTERVAL_MS = 250 // Maximum interval for small buffers
+
+  // Function to calculate adaptive interval based on buffer size
+  const getAdaptiveInterval = (bufferLength: number) => {
+    if (bufferLength > 500) {
+      // Large buffer: faster display
+      return MIN_INTERVAL_MS
+    } else if (bufferLength > 200) {
+      // Medium buffer: normal speed
+      return BASE_INTERVAL_MS
+    } else if (bufferLength > 50) {
+      // Small buffer: slower speed
+      return BASE_INTERVAL_MS + 50
+    } else {
+      // Very small buffer: slowest speed
+      return MAX_INTERVAL_MS
+    }
+  }
+
+  // Function to get random number of words to display
+  const getRandomWordsCount = (bufferLength: number) => {
+    let minWords = MIN_WORDS_PER_BATCH
+    let maxWords = MAX_WORDS_PER_BATCH
+
+    // Adjust word count based on buffer size
+    if (bufferLength > 500) {
+      // Large buffer: display more words
+      minWords = 5
+      maxWords = 9
+    } else if (bufferLength > 200) {
+      // Medium buffer: normal range
+      minWords = 3
+      maxWords = 7
+    } else if (bufferLength < 50) {
+      // Small buffer: fewer words
+      minWords = 1
+      maxWords = 3
+    }
+
+    return Math.floor(Math.random() * (maxWords - minWords + 1)) + minWords
+  }
 
   // Function to process and display content with thinking block handling
   const updateDisplayContent = (content: string, isStreaming: boolean = true) => {
@@ -151,6 +202,49 @@ export const processResponse = async (
       )
     )
   }
+
+  // Function to smoothly display buffered text
+  const displayBufferedText = () => {
+    if (displayedText.length >= fullText.length && isStreamingComplete) {
+      // All text has been displayed and streaming is complete
+      if (displayInterval) {
+        clearInterval(displayInterval)
+        displayInterval = null
+      }
+      updateDisplayContent(fullText, false)
+      return
+    }
+
+    // Get remaining text to display
+    const remainingText = fullText.slice(displayedText.length)
+    
+    if (remainingText.length > 0) {
+      // Split remaining text into words
+      const words = remainingText.split(/(\s+)/)
+      
+      // Calculate buffer length and get adaptive word count
+      const bufferLength = remainingText.length
+      const wordsToDisplay = getRandomWordsCount(bufferLength)
+      
+      // Take the calculated number of words (accounting for spaces)
+      const wordsAndSpaces = words.slice(0, wordsToDisplay * 2 - 1)
+      const textToAdd = wordsAndSpaces.join('')
+      
+      displayedText += textToAdd
+      setFirstTokenReceived(true)
+      updateDisplayContent(displayedText, true)
+      
+      // Schedule next update with adaptive interval
+      if (displayInterval) {
+        clearInterval(displayInterval)
+      }
+      const nextInterval = getAdaptiveInterval(bufferLength)
+      displayInterval = setTimeout(displayBufferedText, nextInterval)
+    }
+  }
+
+  // Start the display interval
+  displayInterval = setInterval(displayBufferedText, getAdaptiveInterval(0))
 
   try {
     const reader = response.body?.getReader()
@@ -185,6 +279,11 @@ export const processResponse = async (
         if (data.error) {
           const errorMessage = `Error: ${data.error}`
           fullText = errorMessage
+          displayedText = errorMessage
+          if (displayInterval) {
+            clearInterval(displayInterval)
+            displayInterval = null
+          }
           setChatMessages(prev =>
             prev.map(chatMessage =>
               chatMessage.id === tempAssistantChatMessage.id
@@ -209,19 +308,42 @@ export const processResponse = async (
         }
 
         if (data.message) {
+          // Add to buffer instead of displaying immediately
           fullText += data.message
-          setFirstTokenReceived(true)
-          
-          // Update display with current content (streaming)
-          updateDisplayContent(fullText, true)
         }
       }
     }
 
-    // Final update to ensure all content is displayed (done streaming)
-    updateDisplayContent(fullText, false)
+    // Mark streaming as complete
+    isStreamingComplete = true
+
+    // Ensure all remaining text gets displayed
+    const finalDisplayLoop = () => {
+      if (displayedText.length < fullText.length) {
+        displayBufferedText()
+        setTimeout(finalDisplayLoop, getAdaptiveInterval(0))
+      } else {
+        // Final update to ensure all content is displayed
+        updateDisplayContent(fullText, false)
+        if (displayInterval) {
+          clearInterval(displayInterval)
+          displayInterval = null
+        }
+      }
+    }
+    
+    // Start the final display loop if needed
+    if (displayedText.length < fullText.length) {
+      setTimeout(finalDisplayLoop, getAdaptiveInterval(0))
+    }
 
   } catch (error) {
+    // Clean up interval on error
+    if (displayInterval) {
+      clearInterval(displayInterval)
+      displayInterval = null
+    }
+    
     if (error instanceof Error && error.name === "AbortError") {
       console.log("Stream aborted by user")
     } else {

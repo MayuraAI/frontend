@@ -12,6 +12,7 @@ import {
 } from "@tabler/icons-react"
 import { toast } from "sonner"
 import MarkdownContent from "../ui/markdown-content"
+import { useCopyToClipboard } from "@/lib/hooks/use-copy-to-clipboard"
 
 interface MessageProps {
   message: Tables<"messages">
@@ -54,13 +55,7 @@ export const Message: FC<MessageProps> = ({
   const handleCopy = () => {
     if (!message.content) return
 
-    navigator.clipboard.writeText(message.content)
-    setIsCopied(true)
-    toast.success("Copied to clipboard")
-
-    setTimeout(() => {
-      setIsCopied(false)
-    }, 2000)
+    useCopyToClipboard({ timeout: 2000, setIsCopied }).copyToClipboard(message.content)
   }
 
   const handleStartEdit = () => {
