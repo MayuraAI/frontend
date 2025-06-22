@@ -74,14 +74,13 @@ export default function HomePage() {
         <a href="/">
           <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <div className="rounded bg-violet-600 p-2">
-                  <p className="font-bold text-white">M</p>
-                </div>
-                  <h1 className="text-xl font-bold text-white">Mayura</h1>
+                <h1
+            className="flex-1 text-sidebar-foreground cursor-pointer text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight transition-opacity hover:opacity-80"
+            onClick={() => (window.location.href = "/")}
+          >
+            Mayura <span className="text-base font-semibold opacity-60 align-top ml-1">(beta)</span>
+          </h1>
               </div>
-            <div className="rounded-full border border-violet-600 bg-violet-900/20 px-3 py-1 text-xs font-medium text-violet-300">
-              Beta
-            </div>
           </div>
         </a>
         <nav className="hidden items-center gap-6 md:flex">
