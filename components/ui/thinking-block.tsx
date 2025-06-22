@@ -36,7 +36,7 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
   }
 
   // Check if this is live thinking content (no thinkingFlow means it's still streaming)
-  const isLiveThinking = !thinkingFlow && thinking && thinking.trim().length > 0
+  const isLiveThinking = !thinkingFlow && thinking && thinking.trim().length > 0 && isPlaceholder === false && thinking.trim() === thinking
 
   // Show live thinking preview (2 rows) while streaming
   if (isLiveThinking) {
@@ -79,7 +79,9 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
     )
   }
 
-  // Show thinking flow in a single row with dropdown option (when complete)
+  // If thinkingFlow is missing but thinking is present and not a placeholder, still show the dropdown using the full thinking as content
+  const displayThinkingFlow = thinkingFlow || (thinking && !isPlaceholder ? thinking.substring(0, 100) + (thinking.length > 100 ? '...' : '') : undefined)
+
   return (
     <div className="mb-4 rounded-lg border border-slate-600 bg-slate-900/20">
       <Button
@@ -91,9 +93,9 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
           <IconBrain size={16} className="text-slate-500" />
           <div className="flex-1 text-left">
             <div className="font-medium text-slate-400">AI Reasoning</div>
-            {thinkingFlow && (
+            {displayThinkingFlow && (
               <div className="mt-1 truncate text-xs text-slate-500">
-                {thinkingFlow}...
+                {displayThinkingFlow}...
               </div>
             )}
           </div>

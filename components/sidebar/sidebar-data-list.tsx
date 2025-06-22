@@ -21,12 +21,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     contentType: ContentType,
     item: DataItemType
   ) => {
-    switch (contentType) {
-      case "chats":
-        return <ChatItem key={item.id} chat={item as Tables<"chats">} />
-      default:
-        return null
-    }
+    return <ChatItem key={item.id} chat={item as Tables<"chats">} />
   }
 
   const getSortedData = (
@@ -77,8 +72,8 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
   const olderData = getSortedData(data, "Older")
 
   const SectionHeader = ({ title }: { title: string }) => (
-    <div className="mb-6 px-3">
-      <h3 className="font-sans text-sm font-black tracking-widest text-black">
+    <div className="px-2 py-2">
+      <h3 className="font-sans text-lg font-bold tracking-widest text-slate-400 opacity-80">
         {title}
       </h3>
     </div>
@@ -88,16 +83,16 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     <div
       ref={divRef}
       className={cn(
-        "scrollbar-hide flex-1 space-y-2 overflow-auto",
+        "scrollbar-hide flex-1 overflow-auto flex flex-col gap-1 md:gap-1.5 lg:gap-2 xl:gap-2.5",
         isOverflowing && "pr-2"
       )}
       role="list"
       aria-label="Chat history"
     >
       {todayData.length > 0 && (
-        <div className="mb-8">
+        <div className="mb-2">
           <SectionHeader title="TODAY" />
-          <div className="space-y-2">
+          <div className="flex flex-col">
             {todayData.map(item => (
               <div key={item.id} role="listitem" className="group">
                 {getDataListComponent(contentType, item)}
@@ -108,9 +103,9 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
       )}
 
       {yesterdayData.length > 0 && (
-        <div className="mb-8">
+        <div className="mb-2">
           <SectionHeader title="YESTERDAY" />
-          <div className="space-y-2">
+          <div className="flex flex-col">
             {yesterdayData.map(item => (
               <div key={item.id} role="listitem" className="group">
                 {getDataListComponent(contentType, item)}
@@ -121,9 +116,9 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
       )}
 
       {previousWeekData.length > 0 && (
-        <div className="mb-8">
+        <div className="mb-2">
           <SectionHeader title="PREVIOUS WEEK" />
-          <div className="space-y-2">
+          <div className="flex flex-col">
             {previousWeekData.map(item => (
               <div key={item.id} role="listitem" className="group">
                 {getDataListComponent(contentType, item)}
@@ -134,9 +129,9 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
       )}
 
       {olderData.length > 0 && (
-        <div className="mb-8">
+        <div className="mb-2">
           <SectionHeader title="OLDER" />
-          <div className="space-y-2">
+          <div className="flex flex-col">
             {olderData.map(item => (
               <div key={item.id} role="listitem" className="group">
                 {getDataListComponent(contentType, item)}

@@ -34,12 +34,12 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
     <div
       ref={itemRef}
       className={cn(
-        "group mb-3 flex w-full cursor-pointer items-center rounded-lg border p-4 transition-all duration-200",
+        "group flex w-full cursor-pointer items-center rounded-lg transition-all duration-200 mb-1",
         isActive
-          ? "border-violet-700 bg-violet-900/20 shadow-sm"
-          : "border-slate-700 bg-black hover:bg-slate-900/50 hover:shadow-sm"
-      )}
-      tabIndex={0}
+          ? "bg-slate-800"
+          : "hover:bg-slate-800/50"
+        )}
+        tabIndex={0}
       onKeyDown={handleKeyDown}
       onClick={handleClick}
       role="button"
@@ -48,8 +48,8 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
       <div className="min-w-0 flex-1">
         <div
           className={cn(
-            "truncate text-sm font-medium leading-relaxed",
-            isActive ? "text-violet-300" : "text-white"
+            "truncate font-medium leading-relaxed p-2",
+            isActive ? "opacity-100" : "opacity-50 hover:opacity-100"
           )}
         >
           {chat.name}
@@ -62,7 +62,7 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
           e.preventDefault()
         }}
         className={cn(
-          "ml-3 flex items-center space-x-2 transition-all duration-200",
+          "ml-2 flex items-center gap-1 transition-all duration-200",
           isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
         )}
       >

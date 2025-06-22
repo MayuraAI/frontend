@@ -52,7 +52,7 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
       {/* Dark Sidebar */}
       <aside
         className={cn(
-          "bg-sidebar border-sidebar-border absolute z-20 h-full border-r shadow-lg transition-all duration-300 ease-in-out md:relative",
+          "bg-sidebar absolute z-20 h-full border-r shadow-lg transition-all duration-300 ease-in-out md:relative",
           showSidebar
             ? "translate-x-0"
             : "-translate-x-full md:-translate-x-full"

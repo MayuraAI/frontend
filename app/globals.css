@@ -30,7 +30,7 @@
     --radius: 0.5rem;
 
     /* Sidebar specific colors */
-    --sidebar: 6 6 6; /* Very dark gray cards #0A0A0A */
+    --sidebar: 6 6 6; /* Even darker gray, almost black */
     --sidebar-foreground: 255 255 255; /* Pure white text */
     --sidebar-border: 255 255 255; /* Dark border */
     --sidebar-accent: 139 92 246; /* violet-500 */
@@ -62,9 +62,9 @@
     --ring: 139 92 246; /* violet-500 */
 
     /* Sidebar specific colors for dark mode */
-    --sidebar: 6 6 6; /* Pure black #000000 */
+    --sidebar: 4 4 4; /* Even darker gray, almost black */
     --sidebar-foreground: 255 255 255; /* Pure white text */
-    --sidebar-border: 6 6 6; /* Dark border */
+    --sidebar-border: 4 4 4; /* Dark border */
     --sidebar-accent: 139 92 246; /* violet-500 */
     --sidebar-accent-foreground: 255 255 255; /* white */
     --sidebar-muted: 15 15 15; /* Very dark gray */
@@ -220,7 +220,7 @@
   }
 
   .message-block--ai {
-    @apply bg-slate-900/50 border-slate-700;
+    @apply border-none;
   }
 
   .markdown-content {
@@ -358,6 +358,10 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+}
+
+.bg-sidebar {
+  background-color: hsl(var(--sidebar)) !important;
 }
 
 

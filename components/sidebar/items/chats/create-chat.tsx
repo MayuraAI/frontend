@@ -10,7 +10,7 @@ export const CreateChat: FC = () => {
     <div className="mb-4 w-full">
       <Button
         onClick={handleNewChat}
-        className="h-auto w-full justify-start gap-3 bg-violet-600 p-4 text-white hover:bg-violet-700"
+        className="h-auto w-full justify-start gap-3 bg-violet-600 p-3 text-white"
         aria-label="Start new chat"
       >
         <Plus size={20} />

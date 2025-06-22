@@ -21,27 +21,27 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
 
   return (
     <TabsContent
-      className="bg-sidebar m-0 flex size-full flex-col border-r border-slate-700"
+      className="bg-sidebar m-0 flex w-full max-w-[22vw] min-w-[16vw] flex-col md:max-w-[28vw] md:min-w-[18vw] lg:max-w-[340px] lg:min-w-[260px] xl:max-w-[400px] xl:min-w-[300px] size-full"
       value={contentType}
     >
       {/* Dark Modern Header */}
-      <header className="bg-sidebar shrink-0 border-b border-slate-700 p-6">
-        <div className="flex items-center gap-3">
-          <div className="rounded bg-violet-600 p-2">
-            <span className="text-sm font-bold text-white">M</span>
-          </div>
+      <header className="bg-sidebar shrink-0 p-6 flex justify-center">
+        {/* <div className="flex w-full items-center gap-4"> */}
+          {/* <div className="rounded-lg bg-violet-600 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16">
+            <span className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white">M</span>
+          </div> */}
           <h1
-            className="text-sidebar-foreground cursor-pointer text-lg font-semibold transition-opacity hover:opacity-80"
+            className="flex-1 text-sidebar-foreground cursor-pointer text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight transition-opacity hover:opacity-80"
             onClick={() => (window.location.href = "/")}
           >
-            Mayura (beta)
+            Mayura <span className="text-base font-semibold opacity-60 align-top ml-1">(beta)</span>
           </h1>
-        </div>
+        {/* </div> */}
       </header>
 
       {/* Chat History Section */}
       <section className="flex-1 overflow-hidden">
-        <div className="h-full overflow-y-auto p-6">
+        <div className="h-full overflow-y-auto p-4 md:p-6">
           <SidebarContent
             contentType={contentType}
             data={getContentData(contentType)}
@@ -68,7 +68,7 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
       </section>
 
       {/* Dark Settings Footer */}
-      <footer className="shrink-0 border-t border-slate-700 p-6">
+      <footer className="shrink-0 p-6">
         <div className="flex justify-start">
           <WithTooltip
             display={
