@@ -216,7 +216,7 @@
   }
 
   .message-block--user {
-    @apply bg-violet-900/20 border-violet-700;
+    @apply bg-slate-900;
   }
 
   .message-block--ai {

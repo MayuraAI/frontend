@@ -36,7 +36,16 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
   }
 
   // Check if this is live thinking content (no thinkingFlow means it's still streaming)
-  const isLiveThinking = !thinkingFlow && thinking && thinking.trim().length > 0 && isPlaceholder === false && thinking.trim() === thinking
+  // But if thinkingFlow exists, it means thinking is complete and should show as dropdown
+  // Also, if thinking content looks complete (contains full sentences or is very long), treat as completed
+  const looksLikeCompletedThinking = thinking && (
+    thinking.includes('.') || 
+    thinking.includes('!') || 
+    thinking.includes('?') || 
+    thinking.length > 200
+  )
+  
+  const isLiveThinking = !thinkingFlow && thinking && thinking.trim().length > 0 && isPlaceholder === false && !looksLikeCompletedThinking
 
   // Show live thinking preview (2 rows) while streaming
   if (isLiveThinking) {

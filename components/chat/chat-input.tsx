@@ -77,11 +77,11 @@ export const ChatInput: FC<ChatInputProps> = () => {
         <form onSubmit={handleFormSubmit} className="relative">
           <div
             className={cn(
-              "flex items-start rounded-lg border border-slate-700 bg-black transition-all duration-200",
-              isFocused && "border-violet-500 shadow-lg shadow-violet-500/20"
+              "flex items-start rounded-lg border border-slate-600 bg-black transition-all duration-200",
+              isFocused && "border-violet-500"
             )}
           >
-            <Textarea
+            <textarea
               ref={textareaRef}
               value={inputValue}
               onChange={handleInputChange}
@@ -92,7 +92,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
                 isGenerating ? "AI is thinking..." : "Type your message here..."
               }
               disabled={isGenerating}
-              className="w-full resize-none border-0 bg-transparent p-6 text-base leading-relaxed text-white outline-none ring-0 placeholder:text-slate-400 focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0"
+              className="w-full resize-none p-6 text-base leading-relaxed text-white"
               rows={1}
               style={{
                 maxHeight: "200px",

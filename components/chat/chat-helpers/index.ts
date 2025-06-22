@@ -134,18 +134,10 @@ export const processResponse = async (
   const updateDisplayContent = (content: string, isStreaming: boolean = true) => {
     let displayContent = content
 
-    // Check if we have thinking block patterns
-    const hasThinkingStart = content.includes('◁think▷')
-    const hasThinkingEnd = content.includes('◁/think▷')
-    
     // During streaming, always show the raw content to allow live thinking updates
-    if (isStreaming) {
-      displayContent = content
-    }
-    // Only when streaming is complete, replace with placeholder for collapsed view
-    else if (hasThinkingStart && hasThinkingEnd) {
-      displayContent = content.replace(/◁think▷(.*?)◁\/think▷/s, '◁think▷PLACEHOLDER◁/think▷')
-    }
+    // When streaming is complete, keep the full content including thinking blocks
+    // so they can be properly parsed and displayed as clickable dropdowns
+    displayContent = content
 
     setChatMessages(prev =>
       prev.map(chatMessage =>
