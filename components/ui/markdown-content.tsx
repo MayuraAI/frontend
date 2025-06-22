@@ -47,7 +47,7 @@ const PreWithCopy: React.FC<React.HTMLAttributes<HTMLPreElement>> = ({
       <pre
         ref={preRef}
         {...props}
-        className="overflow-x-auto rounded-md border border-slate-700 bg-slate-900 p-4 font-mono text-sm leading-relaxed text-slate-100"
+        className="overflow-x-auto rounded-md hljs p-4 font-mono text-sm leading-relaxed text-slate-100 border border-slate-600"
       >
         {children}
       </pre>
@@ -270,7 +270,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ aiResponse }) => {
             if (!match) {
               return (
                 <code
-                  className="rounded border border-slate-600 bg-slate-800 px-1.5 py-0.5 font-mono text-sm text-slate-200"
+                  className="rounded hljs px-1.5 py-0.5 font-mono text-sm text-slate-200"
                   {...props}
                 >
                   {children}
@@ -328,8 +328,6 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ aiResponse }) => {
 
         /* Dark code blocks with proper highlighting */
         .github-markdown pre {
-          background-color: #0f172a;
-          border: 1px solid #475569;
           border-radius: 6px;
           font-size: 85%;
           line-height: 1.45;
@@ -338,7 +336,6 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ aiResponse }) => {
         }
 
         .github-markdown pre code {
-          background-color: transparent;
           border: 0;
           display: inline;
           line-height: inherit;

@@ -41,9 +41,19 @@ export default function HomePage() {
         "Mayura uses advanced AI classification to analyze your prompt and automatically route it to the most suitable LLM from our network. This ensures you get the best possible results for each specific task type."
     },
     {
-      question: "What LLMs do you support?",
+      question: "What models are available in the Free tier?",
       answer:
-        "We integrate with top-tier LLMs including OpenAI's GPT models, Anthropic's Claude, Google's Gemini, and other leading models. Our network is constantly expanding to include the latest and most capable models."
+        "The Free tier includes access to 25+ high-quality models including Llama 3.3 70B, DeepSeek R1, Qwen 3 235B, Phi-4 Reasoning, and many more. You get unlimited access to these standard models plus 10 Pro requests daily for premium models."
+    },
+    {
+      question: "What premium models are available with Pro requests?",
+      answer:
+        "Pro requests give you access to the most powerful models like Gemini 2.5 Pro, Gemini 2.5 Flash Preview, Gemini 2.0 Flash, and other cutting-edge models. These are perfect for complex reasoning, advanced coding, and critical tasks."
+    },
+    {
+      question: "Can I choose which model to use?",
+      answer:
+        "In the Free tier, Mayura automatically routes your prompts to the best model. With the Pro plan (coming soon), you'll have the option to manually select specific models while still benefiting from intelligent auto-routing when preferred."
     },
     {
       question: "How accurate is the prompt classification?",
@@ -56,14 +66,14 @@ export default function HomePage() {
         "We implement enterprise-grade security measures including end-to-end encryption, zero-data retention policies, and SOC 2 compliance. Your prompts and data are never stored or used for training."
     },
     {
-      question: "Is this a limited beta?",
+      question: "What's the difference between Standard and Pro requests?",
       answer:
-        "Yes, Mayura is currently in a public beta. The Free tier is available for everyone. The Pro tier and its features will be fully rolled out after the beta period."
+        "Standard requests use reliable, fast models perfect for everyday tasks like coding, writing, and analysis. Pro requests access the most advanced models available for complex reasoning, research, and critical work requiring the highest quality output."
     },
     {
-      question: "What's the difference between request types?",
+      question: "Is this a limited beta?",
       answer:
-        "Standard Requests use reliable models like GPT-4o and are great for everyday tasks. Pro Requests use the most powerful models available (like Claude 4 and Gemini 2.5 Pro) for complex reasoning, creative, and critical tasks."
+        "Yes, Mayura is currently in public beta. The Free tier is fully available now. The Pro tier with manual model selection and additional features will launch after the beta period."
     }
   ]
 
@@ -71,7 +81,6 @@ export default function HomePage() {
     <div className="min-h-screen w-full bg-gradient-to-br from-black via-slate-900 to-black">
       {/* Header */}
       <header className="flex w-full items-center justify-between border-b border-slate-700 bg-black/20 p-6 shadow-sm backdrop-blur-sm">
-        <a href="/">
           <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <h1
@@ -82,7 +91,6 @@ export default function HomePage() {
           </h1>
               </div>
           </div>
-        </a>
         <nav className="hidden items-center gap-6 md:flex">
           <Link
             href="#how-it-works"
@@ -102,7 +110,6 @@ export default function HomePage() {
           <Link href="#faq" className="text-base font-medium text-slate-300 hover:text-violet-400 hover:underline">
             FAQ
           </Link>
-        </nav>
         <div className="flex items-center gap-4">
           <Button asChild className="bg-violet-600 text-white hover:bg-violet-700">
             <Link href="/chat">
@@ -110,6 +117,7 @@ export default function HomePage() {
             </Link>
           </Button>
         </div>
+        </nav>
       </header>
 
       <main className="w-full flex-1">
@@ -121,7 +129,7 @@ export default function HomePage() {
               <div className="flex flex-1 flex-col justify-center space-y-6 text-center md:items-start md:justify-center md:text-left">
                 <div className="space-y-4">
                   <h1
-                    className="relative select-text bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl md:text-6xl lg:text-7xl"
+                    className="pb-2 relative select-text bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl md:text-6xl lg:text-7xl"
                   >
                     <span className="hero-select-hide">One Prompt</span>{" "}<br />
                     <span
@@ -142,8 +150,8 @@ export default function HomePage() {
                       }
                     `}</style>
                   </h1>
-                  <p className="mx-auto max-w-2xl text-xs text-slate-300 md:mx-0 md:text-sm lg:text-base">
-                    Smart AI routing for better results, lower costs.
+                  <p className="mx-auto max-w-2xl text-lg text-slate-300 md:mx-0 md:text-lg lg:text-lg">
+                    Shoot your prompt, we'll route your prompt.
                   </p>
                 </div>
                 <div className="flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
@@ -175,7 +183,7 @@ export default function HomePage() {
                 The Magic Behind Mayura
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-slate-300">
-                Experience seamless AI power in three simple, intelligent steps.
+                Get the right AI model in three simple steps.
               </p>
             </div>
             <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
@@ -186,13 +194,12 @@ export default function HomePage() {
                     <MessageSquare className="size-7" />
                   </div>
                   <CardTitle className="text-xl font-semibold text-white">
-                    1. Your Brilliant Prompt
+                    1. Send Your Prompt
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-slate-300">
                   <p>
-                    Start by simply telling Mayura what you need. From complex
-                    code to creative ideas, one place for all your AI tasks.
+                    Just give us your prompt. <br /> We'll handle the rest.
                   </p>
                 </CardContent>
               </Card>
@@ -205,15 +212,13 @@ export default function HomePage() {
                   <CardTitle
                     className="text-xl font-semibold text-white"
                     dangerouslySetInnerHTML={{
-                      __html: "2. Mayura&apos;s Smart Routing"
+                      __html: "2. Smart Routing"
                     }}
                   />
                 </CardHeader>
                 <CardContent className="text-slate-300">
                   <p>
-                    Our intelligent AI instantly understands your prompt&apos;s
-                    intent and magically routes it to the absolute best LLM for
-                    the job.
+                    Our complex classification system routes your prompt to the best model.
                   </p>
                 </CardContent>
               </Card>
@@ -224,14 +229,12 @@ export default function HomePage() {
                     <Lightbulb className="size-7" />
                   </div>
                   <CardTitle className="text-xl font-semibold text-white">
-                    3. Superior Results, Instantly
+                    3. Perfect Results
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-slate-300">
                   <p>
-                    Voila! Receive precise, high-quality, and cost-efficient
-                    results, tailored by the perfect AI model, every single
-                    time.
+                    Voila! <br /> Best response from the best model.
                   </p>
                 </CardContent>
               </Card>
@@ -240,15 +243,14 @@ export default function HomePage() {
         </section>
 
         {/* Key Benefits Section */}
-        <section className="w-full py-16 md:py-24">
+        <section className="w-full py-16 md:py-24" id="features">
           <div className="container mx-auto px-6">
             <div className="mb-16 text-center">
               <h2 className="mb-4 text-3xl font-bold tracking-tight text-white md:text-4xl">
-                Why Choose Mayura?
+                Why Mayura?
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-slate-300">
-                Stop juggling multiple AI platforms. Get better results with
-                less effort.
+                Stop juggling multiple AI platforms. Get better results with less effort.
               </p>
             </div>
             <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -371,8 +373,7 @@ export default function HomePage() {
                         <div>
                           <strong className="text-white">10 Pro Requests / day</strong>
                           <p className="text-xs text-slate-400">
-                            Use for premium models like Claude 4, Gemini 2.5
-                            Pro, GPT-O3
+                            Access premium models like Gemini 2.5 Pro, Gemini 2.5 Flash Preview
                           </p>
                         </div>
                       </li>
@@ -381,14 +382,13 @@ export default function HomePage() {
                         <div>
                           <strong className="text-white">Unlimited Standard Requests</strong>
                           <p className="text-xs text-slate-400">
-                            Use for models like Gemini-2.5 Flash, GPT-4o,
-                            Deepseek R1
+                            25+ models including Llama 3.3 70B, DeepSeek R1, Qwen 3 235B, Phi-4
                           </p>
                         </div>
                       </li>
                       <li className="flex items-start gap-3">
                         <CheckCircle className="size-5 shrink-0 text-violet-400" />
-                        <div className="text-white">Intelligent Routing</div>
+                        <div className="text-white">Intelligent Auto-Routing Only</div>
                       </li>
                     </ul>
                   </div>
@@ -399,70 +399,67 @@ export default function HomePage() {
               </Card>
 
               {/* Pro Plan */}
-              <Card className="relative flex h-full flex-col border-2 border-violet-600 bg-black/30 shadow-sm backdrop-blur-sm">
-                <div className="absolute -top-4 left-1/2 w-fit -translate-x-1/2 rounded-full bg-violet-600 px-4 py-1 text-sm font-medium text-white">
-                  Recommended
+              <Card className="relative flex h-full flex-col border-2 border-slate-600 bg-black/20 shadow-sm backdrop-blur-sm opacity-80">
+                <div className="absolute -top-4 left-1/2 w-fit -translate-x-1/2 rounded-full bg-slate-600 px-4 py-1 text-sm font-medium text-slate-300">
+                  Coming Soon
                 </div>
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-2xl font-bold text-white">Pro</h3>
-                    <div className="w-fit rounded-full border border-orange-600 bg-orange-900/20 px-3 py-1 text-xs font-medium text-orange-300">
-                      Coming Soon
+                    <h3 className="text-2xl font-bold text-slate-300">Pro</h3>
+                    <div className="w-fit rounded-full border border-slate-600 bg-slate-800/20 px-3 py-1 text-xs font-medium text-slate-400">
+                      After Beta
                     </div>
                   </div>
-                  <p className="pt-2 text-sm text-slate-400">
-                    For professionals and teams who need the best AI has to
-                    offer.
+                  <p className="pt-2 text-sm text-slate-500">
+                    For professionals who need full control and unlimited access.
                   </p>
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col justify-between">
                   <div>
                     <div className="mb-6">
-                      <span className="text-4xl font-bold text-white">$10</span>
-                      <span className="text-lg font-medium text-slate-400">
+                      <span className="text-4xl font-bold text-slate-300">$xx</span>
+                      <span className="text-lg font-medium text-slate-500">
                         /month
                       </span>
                     </div>
-                    <p className="mb-4 font-semibold text-slate-200">
+                    <p className="mb-4 font-semibold text-slate-400">
                       Everything in Free, plus:
                     </p>
                     <ul className="space-y-4 text-sm">
                       <li className="flex items-start gap-3">
-                        <CheckCircle className="size-5 shrink-0 text-violet-400" />
+                        <CheckCircle className="size-5 shrink-0 text-slate-500" />
                         <div>
-                          <strong className="text-white">100 Pro Requests / day</strong>
-                          <p className="text-xs text-slate-400">
-                            Use for premium models like Claude 4, Gemini 2.5
-                            Pro, GPT-O3
+                          <strong className="text-slate-300">100 Pro Requests / day</strong>
+                          <p className="text-xs text-slate-500">
+                            Unlimited access to premium models
                           </p>
                         </div>
                       </li>
                       <li className="flex items-start gap-3">
-                        <CheckCircle className="size-5 shrink-0 text-violet-400" />
+                        <CheckCircle className="size-5 shrink-0 text-slate-500" />
                         <div>
-                          <strong className="text-white">Unlimited Standard Requests</strong>
-                          <p className="text-xs text-slate-400">
-                            Use for models like Gemini-2.5 Flash, GPT-4o,
-                            Deepseek R1
+                          <strong className="text-slate-300">Manual Model Selection</strong>
+                          <p className="text-xs text-slate-500">
+                            Choose specific models or use auto-routing
                           </p>
                         </div>
                       </li>
                       <li className="flex items-start gap-3">
-                        <CheckCircle className="size-5 shrink-0 text-violet-400" />
-                        <div className="text-white">Advanced Intelligent Routing</div>
+                        <CheckCircle className="size-5 shrink-0 text-slate-500" />
+                        <div className="text-slate-300">Priority Support</div>
                       </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle className="size-5 shrink-0 text-violet-400" />
-                        <div className="text-white">Priority Chat Support</div>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle className="size-5 shrink-0 text-violet-400" />
-                        <div className="text-white">API Access</div>
-                      </li>
+                      {/* <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-slate-500" />
+                        <div className="text-slate-300">API Access</div>
+                      </li> */}
+                      {/* <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-slate-500" />
+                        <div className="text-slate-300">Usage Analytics</div>
+                      </li> */}
                     </ul>
                   </div>
-                  <Button className="mt-8 w-full" variant="outline" disabled>
-                    Upgrade to Pro
+                  <Button className="mt-8 w-full bg-slate-600 text-slate-300 cursor-not-allowed" disabled>
+                    Coming After Beta
                   </Button>
                 </CardContent>
               </Card>
@@ -476,20 +473,13 @@ export default function HomePage() {
           <div className="container mx-auto px-6">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="mb-6 text-3xl font-bold tracking-tight text-white md:text-4xl">
-                Built by Students, for Everyone
+                Built by Engineers, for Everyone
               </h2>
-              <p className="mb-8 text-lg text-slate-300">
-                We experienced the frustration of constantly switching between
-                different AI models, never knowing which one would work best for
-                our specific needs. That&apos;s why we built Mayura - to
-                eliminate the guesswork and deliver the right AI solution every
-                time.
+              <p className="mb-2 text-lg text-slate-300">
+                We know your problem bro, we faced it too, that's why we built Mayura.
               </p>
               <p className="text-slate-300">
-                Our mission is to democratize access to the world&apos;s best AI
-                models through intelligent routing, making advanced AI
-                capabilities accessible to individuals, startups, and
-                enterprises alike.
+                We just want to make your life easier and some money :P.
               </p>
             </div>
           </div>
@@ -559,124 +549,112 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="w-full border-t border-slate-700 bg-black/30 py-12 backdrop-blur-sm">
-        <div className="container mx-auto px-6">
-          <div className="grid gap-8 md:grid-cols-4">
-            <div>
-              <div className="mb-4 flex items-center gap-2">
-                <div className="rounded bg-violet-600 p-2">
-                  <p className="font-bold text-white">M</p>
-                </div>
-                <h3 className="font-bold text-white">Mayura</h3>
-              </div>
-              <p className="mb-4 text-sm text-slate-300">
-                Intelligent AI routing for superior results, every time.
-              </p>
-            </div>
-            <div>
-              <h4 className="mb-4 font-semibold text-white">Product</h4>
-              <ul className="space-y-2 text-sm text-slate-300">
-                <li>
-                  <Link href="#features" className="hover:text-violet-400 hover:underline">
-                    Features
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#pricing" className="hover:text-violet-400 hover:underline">
-                    Pricing
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/docs" className="hover:text-violet-400 hover:underline">
-                    API Docs
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/integrations" className="hover:text-violet-400 hover:underline">
-                    Integrations
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="mb-4 font-semibold text-white">Company</h4>
-              <ul className="space-y-2 text-sm text-slate-300">
-                <li>
-                  <Link href="/about" className="hover:text-violet-400 hover:underline">
-                    About Us
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog" className="hover:text-violet-400 hover:underline">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/careers" className="hover:text-violet-400 hover:underline">
-                    Careers
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="hover:text-violet-400 hover:underline">
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="mb-4 font-semibold text-white">Support</h4>
-              <ul className="space-y-2 text-sm text-slate-300">
-                <li>
-                  <Link href="/help" className="hover:text-violet-400 hover:underline">
-                    Help Center
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/support" className="hover:text-violet-400 hover:underline">
-                    Contact Support
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/status" className="hover:text-violet-400 hover:underline">
-                    Status
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/community" className="hover:text-violet-400 hover:underline">
-                    Community
-                  </Link>
-                </li>
-              </ul>
-            </div>
+  <div className="container mx-auto px-6 space-y-16">
+    
+    {/* Row 1: Branding + Navigation */}
+    <div className="flex flex-row lg:flex-row justify-between items-start lg:items-center gap-6 mb-6">
+      
+      {/* Branding and Subline */}
+      <div>
+        <div className="flex items-center gap-2 mb-2">
+          <div className="rounded bg-violet-600 p-2">
+            <p className="font-bold text-white">M</p>
           </div>
-          <div className="mt-8 flex flex-col items-center justify-between border-t border-slate-700 pt-8 sm:flex-row">
-            <p className="text-xs text-slate-400">
-              © 2025 Mayura. All rights reserved. Currently in Beta.
-            </p>
-            <nav className="mt-4 flex gap-6 sm:mt-0">
-              <Link
-                href="/privacy"
-                className="text-xs text-slate-400 hover:text-violet-400 hover:underline"
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                href="/terms"
-                className="text-xs text-slate-400 hover:text-violet-400 hover:underline"
-              >
-                Terms of Service
-              </Link>
-              <Link
-                href="/cookies"
-                className="text-xs text-slate-400 hover:text-violet-400 hover:underline"
-              >
-                Cookie Policy
-              </Link>
-            </nav>
+          <h3 className="font-bold text-white text-lg">Mayura</h3>
+        </div>
+        <p className="text-sm text-slate-300">
+          Intelligent AI routing for superior results, every time.
+        </p>
+      </div>
+
+      {/* Navigation Links */}
+      <div className="flex flex-row gap-6">
+        <Link href="#features" className="text-sm text-slate-300 hover:text-violet-400 hover:underline">
+          Features
+        </Link>
+        <Link href="#pricing" className="text-sm text-slate-300 hover:text-violet-400 hover:underline">
+          Pricing
+        </Link>
+        <Link href="/about" className="text-sm text-slate-300 hover:text-violet-400 hover:underline">
+          About Us
+        </Link>
+      </div>
+    </div>
+
+    {/* Row 2: Contact Info */}
+    <div className="text-sm text-slate-400">
+      <p className="mb-2">Contact us:</p>
+      <div className="flex flex-row gap-12">
+        {/* Pavan Manish */}
+        <div className="flex flex-col gap-1">
+          <p className="text-slate-300 font-bold">Pavan Manish</p>
+          <div className="flex gap-4 text-xs">
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=pavanmanishd@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-violet-400 hover:text-violet-300 hover:underline"
+            >
+              Email
+            </a>
+            <a
+              href="https://linkedin.com/in/pavanmanishd"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-violet-400 hover:text-violet-300 hover:underline"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://github.com/pavanmanishd"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-violet-400 hover:text-violet-300 hover:underline"
+            >
+              GitHub
+            </a>
           </div>
         </div>
-      </footer>
+
+        {/* Sai Vishal */}
+        <div className="flex flex-col gap-1">
+          <p className="text-slate-300 font-bold">Sai Vishal</p>
+          <div className="flex gap-4 text-xs">
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=saivishalradham@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-violet-400 hover:text-violet-300 hover:underline"
+            >
+              Email
+            </a>
+            <a
+              href="https://www.linkedin.com/in/vishalsai010304/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-violet-400 hover:text-violet-300 hover:underline"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://github.com/Vishal0129"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-violet-400 hover:text-violet-300 hover:underline"
+            >
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+
+
 
       {/* Big MAYURA Footer */}
       {/* <div className="relative w-full overflow-hidden py-28 flex items-end justify-center bg-black/30 backdrop-blur-sm">
