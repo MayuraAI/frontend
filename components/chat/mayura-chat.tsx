@@ -10,14 +10,12 @@ import { useScroll } from "./chat-hooks/use-scroll"
 import { ChatInput } from "./chat-input"
 import { ChatMessages } from "./chat-messages"
 import { Button } from "../ui/button"
-
-import { Card, CardContent } from "@/components/ui/card"
-import { Sparkles, Code2, Brain, BarChart3, ChevronDown } from "lucide-react"
+import { ChevronDown, Sparkles, Zap } from "lucide-react"
 
 interface MayuraChatProps {}
 
 export const MayuraChat: FC<MayuraChatProps> = ({}) => {
-  const { setSelectedChat, chatMessages, setChatMessages, isGenerating } =
+  const { setSelectedChat, chatMessages, setChatMessages, isGenerating, profile } =
     useContext(MayuraContext)
 
   const params = useParams()
@@ -64,33 +62,6 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
     return <Loading />
   }
 
-  const examplePrompts = [
-    {
-      icon: Sparkles,
-      title: "Creative Writing",
-      description: "Help me write a story about the future",
-      category: "creative"
-    },
-    {
-      icon: Code2,
-      title: "Code Analysis",
-      description: "Review my Python code for improvements",
-      category: "code"
-    },
-    {
-      icon: Brain,
-      title: "Research Help",
-      description: "Explain quantum computing concepts",
-      category: "research"
-    },
-    {
-      icon: BarChart3,
-      title: "Data Analysis",
-      description: "Help me analyze my business metrics",
-      category: "analysis"
-    }
-  ]
-
   return (
     <div className="bg-background relative flex h-full flex-col">
       {/* Chat Messages Area */}
@@ -109,43 +80,14 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
           {(!chatMessages || chatMessages.length === 0) && !isGenerating && (
             <div className="flex h-full min-h-[500px] flex-col items-center justify-center text-center bg-background">
               {/* Welcome Header */}
-              <div className="mb-16">
-                <h1 className="text-foreground mb-4 text-4xl font-bold bg-background">
-                  Welcome to Mayura
-                </h1>
-                <p className="text-muted-foreground max-w-md text-lg">
-                  How can I help you today?
-                </p>
-              </div>
-
-              {/* Example Prompts */}
-              <div className="w-full max-w-4xl">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {examplePrompts.map((prompt, index) => {
-                    const IconComponent = prompt.icon
-                    return (
-                      <Card
-                        key={index}
-                        className="cursor-no-effect rounded-lg"
-                      >
-                        <CardContent className="p-6">
-                          <div className="flex items-start space-x-4">
-                            <div className="rounded-lg bg-violet-900/20 p-3">
-                              <IconComponent className="size-6 text-violet-400" />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <h3 className="text-foreground mb-2 font-semibold">
-                                {prompt.title}
-                              </h3>
-                              <p className="text-muted-foreground text-sm leading-relaxed">
-                                {prompt.description}
-                              </p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )
-                  })}
+              <div className="flex flex-col items-center justify-center">
+                <div className="max-w-2xl">
+                  <p className="text-muted-foreground text-5xl font-medium">
+                    Hey <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent font-bold">{profile?.display_name.split(" ")[0] || "there"}</span>,
+                  </p>
+                  <p className="text-muted-foreground/80 text-xl pt-6">
+                    Let's see which AI model I pick for you today!
+                  </p>
                 </div>
               </div>
             </div>

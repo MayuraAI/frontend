@@ -477,7 +477,7 @@ export default function HomePage() {
           <div className="container mx-auto px-6">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="mb-6 text-3xl font-bold tracking-tight text-white md:text-4xl">
-                Built by Engineers, for Everyone
+                Built by Students, for Everyone
               </h2>
               <p className="mb-8 text-lg text-slate-300">
                 We experienced the frustration of constantly switching between

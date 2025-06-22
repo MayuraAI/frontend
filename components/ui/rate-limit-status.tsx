@@ -209,7 +209,7 @@ export default function RateLimitStatus({
                   <IconCheck size={16} className="text-violet-400" />
                 )}
                 <span className="text-xs font-medium">
-                  {requests_remaining} left
+                  {isFree ? "Free tier" : "Pro" + " " + requests_remaining + " left"}
                 </span>
               </div>
             ) : (
