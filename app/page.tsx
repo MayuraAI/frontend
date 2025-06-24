@@ -83,12 +83,12 @@ export default function HomePage() {
       <header className="flex w-full items-center justify-between border-b border-slate-700 bg-black/20 p-6 shadow-sm backdrop-blur-sm">
           <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <h1
-            className="flex-1 text-sidebar-foreground cursor-pointer text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight transition-opacity hover:opacity-80"
-            onClick={() => (window.location.href = "/")}
+                <p
+            className="flex-1 text-sidebar-foreground cursor-pointer text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight transition-opacity hover:opacity-80 slackey-regular"
           >
-            Mayura <span className="text-base font-semibold opacity-60 align-top ml-1">(beta)</span>
-          </h1>
+            Mayura 
+          </p>
+            <span className="text-base font-semibold opacity-60 align-top ml-1">(beta)</span>
               </div>
           </div>
         <nav className="hidden items-center gap-6 md:flex">

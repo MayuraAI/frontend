@@ -30,12 +30,13 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
           {/* <div className="rounded-lg bg-violet-600 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16">
             <span className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white">M</span>
           </div> */}
-          <h1
-            className="flex-1 text-sidebar-foreground cursor-pointer text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight transition-opacity hover:opacity-80"
+          <p
+            className="flex-1 text-sidebar-foreground cursor-pointer text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight transition-opacity hover:opacity-80 slackey-regular"
             onClick={() => (window.location.href = "/")}
           >
-            Mayura <span className="text-base font-semibold opacity-60 align-top ml-1">(beta)</span>
-          </h1>
+            Mayura 
+          </p>
+            <span className="text-base font-semibold opacity-60 align-top ml-1">(beta)</span>
         {/* </div> */}
       </header>
 

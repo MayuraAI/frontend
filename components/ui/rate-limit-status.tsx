@@ -246,7 +246,7 @@ export default function RateLimitStatus({
               </span>
               <div className="flex items-center space-x-1 text-slate-400">
                 <IconClock size={12} />
-                <span>Resets {timeUntilReset}</span>
+                <span>{timeUntilReset}</span>
               </div>
             </div>
 
