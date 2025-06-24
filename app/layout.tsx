@@ -32,6 +32,11 @@ export const metadata: Metadata = {
   },
   description: APP_DESCRIPTION,
   manifest: "/manifest.json",
+  icons: {
+    icon: "/logo_512.png",
+    shortcut: "/logo_512.png",
+    apple: "/logo_192.png"
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black",

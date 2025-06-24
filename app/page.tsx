@@ -83,8 +83,13 @@ export default function HomePage() {
       <header className="flex w-full items-center justify-between border-b border-slate-700 bg-black/20 p-6 shadow-sm backdrop-blur-sm">
           <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
+                <img 
+                  src="/logo_512.png" 
+                  alt="Mayura Logo" 
+                  className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12"
+                />
                 <p
-            className="flex-1 text-sidebar-foreground cursor-pointer text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight transition-opacity hover:opacity-80 slackey-regular"
+            className="flex-1 text-sidebar-foreground text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight slackey-regular"
           >
             Mayura 
           </p>

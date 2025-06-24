@@ -26,18 +26,20 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
     >
       {/* Dark Modern Header */}
       <header className="bg-sidebar shrink-0 p-6 flex justify-center">
-        {/* <div className="flex w-full items-center gap-4"> */}
-          {/* <div className="rounded-lg bg-violet-600 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16">
-            <span className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white">M</span>
-          </div> */}
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => (window.location.href = "/")}>
+          <img 
+            src="/logo_512.png" 
+            alt="Mayura Logo" 
+            className="w-8 h-6 md:w-8 md:h-10 lg:w-10 lg:h-10"
+            
+          />
           <p
-            className="flex-1 text-sidebar-foreground cursor-pointer text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight transition-opacity hover:opacity-80 slackey-regular"
-            onClick={() => (window.location.href = "/")}
+            className="flex-1 text-sidebar-foreground text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight transition-opacity hover:opacity-80 slackey-regular"
           >
             Mayura 
           </p>
-            <span className="text-base font-semibold opacity-60 align-top ml-1">(beta)</span>
-        {/* </div> */}
+          <span className="text-base font-semibold opacity-60 align-top ml-1">(beta)</span>
+        </div>
       </header>
 
       {/* Chat History Section */}
