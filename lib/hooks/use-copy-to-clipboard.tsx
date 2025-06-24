@@ -1,24 +1,33 @@
 import { useState } from "react"
 
 export interface useCopyToClipboardProps {
-  timeout?: number
+  timeout?: number,
+  setIsCopied: (isCopied: boolean) => void
 }
 
 export function useCopyToClipboard({
-  timeout = 2000
+  timeout = 2000,
+  setIsCopied
 }: useCopyToClipboardProps) {
-  const [isCopied, setIsCopied] = useState<Boolean>(false)
 
-  const copyToClipboard = (value: string) => {
-    if (typeof window === "undefined" || !navigator.clipboard?.writeText) {
-      return
-    }
+  const filterThinkTags = (text: string): string => {
+    // Remove content between ◁think▷ and ◁/think▷ tags (including the tags themselves)
+    return text.replace(/◁think▷[\s\S]*?◁\/think▷/g, '').trim()
+  }
 
+  const copyToClipboard = async (value: string) => {
     if (!value) {
       return
     }
 
-    navigator.clipboard.writeText(value).then(() => {
+    // Filter out think tags from the value
+    const filteredValue = filterThinkTags(value)
+    
+    if (!filteredValue) {
+      return
+    }
+
+    navigator.clipboard.writeText(filteredValue).then(() => {
       setIsCopied(true)
 
       setTimeout(() => {
@@ -27,5 +36,5 @@ export function useCopyToClipboard({
     })
   }
 
-  return { isCopied, copyToClipboard }
+  return { copyToClipboard }
 }

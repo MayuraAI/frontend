@@ -77,8 +77,8 @@ export const ChatInput: FC<ChatInputProps> = () => {
         <form onSubmit={handleFormSubmit} className="relative">
           <div
             className={cn(
-              "border-3 flex min-h-[60px] items-start border-black bg-white shadow-[4px_4px_0px_0px_black] transition-all duration-200",
-              isFocused && "shadow-[6px_6px_0px_0px_black]"
+              "flex items-start rounded-lg border border-slate-600 bg-black transition-all duration-200",
+              isFocused && "border-violet-500"
             )}
           >
             <textarea
@@ -89,10 +89,10 @@ export const ChatInput: FC<ChatInputProps> = () => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               placeholder={
-                isGenerating ? "AI is thinking..." : "TYPE YOUR MESSAGE HERE..."
+                isGenerating ? "AI is thinking..." : "Type your message here..."
               }
               disabled={isGenerating}
-              className="w-full resize-none border-0 bg-transparent p-4 font-mono text-base font-bold leading-relaxed text-black placeholder:text-gray-500 focus:outline-none"
+              className="w-full resize-none p-6 text-base leading-relaxed text-white"
               rows={1}
               style={{
                 maxHeight: "200px",
@@ -101,32 +101,28 @@ export const ChatInput: FC<ChatInputProps> = () => {
               }}
             />
 
-            <div className="flex shrink-0 items-start p-4">
+            <div className="flex shrink-0 items-start px-2 py-4">
               {isGenerating ? (
-                <button
+                <Button
                   type="button"
                   onClick={handleStopMessage}
-                  className="btn-neobrutalist flex items-center gap-2 bg-red-400 px-4 py-2 text-black transition-all duration-150 hover:bg-red-500"
-                  aria-label="Stop generation"
+                  variant="destructive"
+                  size="sm"
+                  className="flex items-center gap-2"
                 >
-                  <Square size={16} strokeWidth={3} />
-                  <span className="font-sans font-bold">STOP</span>
-                </button>
+                  <Square size={16} />
+                  <span className="py-4 font-bold">Stop</span>
+                </Button>
               ) : (
-                <button
+                <Button
                   type="submit"
                   disabled={!canSend}
-                  className={cn(
-                    "btn-neobrutalist flex items-center gap-2 px-4 py-2 font-sans font-bold text-black transition-all duration-150",
-                    canSend
-                      ? "bg-neobrutalist-green hover:bg-green-400"
-                      : "cursor-not-allowed bg-gray-300 text-gray-500"
-                  )}
-                  aria-label="Send message"
+                  size="sm"
+                  className="flex items-center gap-3 bg-violet-600 text-white hover:bg-violet-700"
                 >
-                  <Send size={16} strokeWidth={3} />
-                  <span>SEND</span>
-                </button>
+                  <Send size={16} />
+                  <span className="py-4 font-bold">Send</span>
+                </Button>
               )}
             </div>
           </div>

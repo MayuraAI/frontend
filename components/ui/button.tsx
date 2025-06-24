@@ -5,24 +5,24 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md border-2 border-black bg-white font-bold shadow transition-all duration-100 ease-in-out hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 active:translate-x-px active:translate-y-px active:shadow-none disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-violet-600 text-white shadow-sm hover:bg-violet-700 hover:shadow-md",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "bg-red-600 text-white shadow-sm hover:bg-red-700 hover:shadow-md",
         outline:
-          "border-black bg-transparent text-black hover:bg-black hover:text-white",
-        secondary: "bg-card text-card-foreground hover:bg-card/80",
+          "border border-slate-700 bg-black text-white shadow-sm hover:bg-slate-900 hover:shadow-md",
+        secondary: "border border-slate-700 bg-slate-800 text-white shadow-sm hover:bg-slate-700 hover:shadow-md",
         ghost:
-          "border-transparent bg-transparent shadow-none hover:bg-zinc-200",
-        link: "border-transparent bg-transparent underline-offset-4 shadow-none hover:underline"
+          "text-white hover:bg-slate-800 hover:text-white",
+        link: "text-violet-400 underline-offset-4 hover:underline"
       },
       size: {
         default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
+        sm: "h-9 px-3 text-sm",
+        lg: "h-11 px-8 text-base",
         icon: "size-10"
       }
     },

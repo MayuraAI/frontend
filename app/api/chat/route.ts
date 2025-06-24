@@ -69,61 +69,64 @@ export async function POST(request: Request) {
     )
 
     if (!response.ok) {
-      // Handle authentication failures and other errors with streaming format
-      if (response.status === 401) {
-        // Create a streaming error response for authentication failures
-        const errorMessage = "Authentication failed. Please log in again."
-        const encoder = new TextEncoder()
-        const stream = new ReadableStream({
-          start(controller) {
-            controller.enqueue(
-              encoder.encode(
-                `data: {"error": "${errorMessage}", "status": 401}\n\n`
-              )
-            )
-            controller.close()
-          }
-        })
-        return new StreamingTextResponse(stream)
+      // Pass through the exact status code and error message from backend
+      let errorMessage: string
+      
+      try {
+        const errorData = await response.json()
+        errorMessage = errorData.message || errorData.error || `Backend error: ${response.status} ${response.statusText}`
+      } catch {
+        // If response body is not JSON, use status text
+        errorMessage = `Backend error: ${response.status} ${response.statusText}`
       }
 
-      if (response.status === 429) {
-        // Create a streaming error response for rate limiting
-        const errorMessage =
-          "Rate limit exceeded. Please wait before sending another message."
-        const encoder = new TextEncoder()
-        const stream = new ReadableStream({
-          start(controller) {
-            controller.enqueue(
-              encoder.encode(
-                `data: {"error": "${errorMessage}", "status": 429}\n\n`
-              )
-            )
-            controller.close()
+      return new Response(
+        JSON.stringify({ 
+          message: errorMessage,
+          error: errorMessage 
+        }), 
+        { 
+          status: response.status,
+          headers: {
+            'Content-Type': 'application/json',
+            // Pass through rate limit headers if they exist
+            ...(response.headers.get('X-RateLimit-Limit') && {
+              'X-RateLimit-Limit': response.headers.get('X-RateLimit-Limit')!
+            }),
+            ...(response.headers.get('X-RateLimit-Remaining') && {
+              'X-RateLimit-Remaining': response.headers.get('X-RateLimit-Remaining')!
+            }),
+            ...(response.headers.get('X-RateLimit-Reset') && {
+              'X-RateLimit-Reset': response.headers.get('X-RateLimit-Reset')!
+            }),
+            ...(response.headers.get('X-RateLimit-Reset-After') && {
+              'X-RateLimit-Reset-After': response.headers.get('X-RateLimit-Reset-After')!
+            })
           }
-        })
-        return new StreamingTextResponse(stream)
-      }
-
-      // Handle other backend errors with streaming format
-      const errorMessage = `Backend error: ${response.status} ${response.statusText}`
-      const encoder = new TextEncoder()
-      const stream = new ReadableStream({
-        start(controller) {
-          controller.enqueue(
-            encoder.encode(
-              `data: {"error": "${errorMessage}", "status": ${response.status}}\n\n`
-            )
-          )
-          controller.close()
         }
-      })
-      return new StreamingTextResponse(stream)
+      )
+    }
+
+    // For successful responses, pass through rate limit headers and return the stream
+    const headers: Record<string, string> = {}
+    
+    // Pass through rate limit headers
+    if (response.headers.get('X-RateLimit-Limit')) {
+      headers['X-RateLimit-Limit'] = response.headers.get('X-RateLimit-Limit')!
+    }
+    if (response.headers.get('X-RateLimit-Remaining')) {
+      headers['X-RateLimit-Remaining'] = response.headers.get('X-RateLimit-Remaining')!
+    }
+    if (response.headers.get('X-RateLimit-Reset')) {
+      headers['X-RateLimit-Reset'] = response.headers.get('X-RateLimit-Reset')!
+    }
+    if (response.headers.get('X-RateLimit-Reset-After')) {
+      headers['X-RateLimit-Reset-After'] = response.headers.get('X-RateLimit-Reset-After')!
     }
 
     // Transform the response into a friendly text-stream
     const stream = response.body
-    return new StreamingTextResponse(stream!)
+    return new StreamingTextResponse(stream!, { headers })
   } catch (error: any) {
     // Handle abort errors gracefully
     if (error.name === "AbortError" || error.code === "ECONNRESET") {
@@ -134,8 +137,14 @@ export async function POST(request: Request) {
     const errorMessage = error.message || "An unexpected error occurred"
     const errorCode = error.status || 500
 
-    return new Response(JSON.stringify({ message: errorMessage }), {
-      status: errorCode
+    return new Response(JSON.stringify({ 
+      message: errorMessage,
+      error: errorMessage 
+    }), {
+      status: errorCode,
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
   }
 }

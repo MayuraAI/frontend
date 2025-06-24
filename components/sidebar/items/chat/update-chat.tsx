@@ -47,21 +47,21 @@ export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
   return (
     <Dialog open={showChatDialog} onOpenChange={setShowChatDialog}>
       <DialogTrigger asChild>
-        <button className="hover:border-accent hover:bg-accent hover:text-accent-foreground hover:shadow-neo-sm bg-background border-2 border-transparent p-1 transition-all duration-100">
+        <button className="border-2 border-transparent p-1 transition-all duration-100 hover:border-slate-600">
           <IconEdit className="size-4 font-black" />
         </button>
       </DialogTrigger>
 
       <DialogContent onKeyDown={handleKeyDown}>
         <DialogHeader>
-          <DialogTitle className="font-brutal text-foreground text-2xl font-black">
-            EDIT CHAT NAME
-          </DialogTitle>
+          {/* <DialogTitle className="font-brutal text-foreground text-2xl font-black">
+            Edit Chat Name
+          </DialogTitle> */}
         </DialogHeader>
 
         <div className="neo-form-group">
           <Label className="text-foreground mb-3 block text-lg font-black">
-            CHAT NAME
+            Edit Chat Name
           </Label>
           <Input
             value={name}
@@ -77,7 +77,7 @@ export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
             onClick={() => setShowChatDialog(false)}
             className="font-black"
           >
-            CANCEL
+            Cancel
           </Button>
 
           <Button
@@ -88,7 +88,7 @@ export const UpdateChat: FC<UpdateChatProps> = ({ chat }) => {
             disabled={!name.trim()}
           >
             <IconDeviceFloppy className="mr-2 size-4" />
-            SAVE CHANGES
+            Save changes
           </Button>
         </DialogFooter>
       </DialogContent>

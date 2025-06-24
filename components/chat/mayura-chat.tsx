@@ -9,18 +9,17 @@ import { FC, useContext, useEffect, useState } from "react"
 import { useScroll } from "./chat-hooks/use-scroll"
 import { ChatInput } from "./chat-input"
 import { ChatMessages } from "./chat-messages"
-
-import { Card, CardContent } from "@/components/ui/card"
-import { Sparkles, Code2, Brain, BarChart3 } from "lucide-react"
+import { Button } from "../ui/button"
+import { ChevronDown, Sparkles, Zap } from "lucide-react"
 
 interface MayuraChatProps {}
 
 export const MayuraChat: FC<MayuraChatProps> = ({}) => {
-  const { setSelectedChat, chatMessages, setChatMessages, isGenerating } =
+  const { setSelectedChat, chatMessages, setChatMessages, isGenerating, profile } =
     useContext(MayuraContext)
 
   const params = useParams()
-  const { scrollToBottom, messagesStartRef, messagesEndRef } = useScroll()
+  const { scrollToBottom, messagesStartRef, messagesEndRef, isUserScrolledUp, shouldAutoScroll } = useScroll()
   const [loading, setLoading] = useState(false)
   const [isReady, setIsReady] = useState(true)
 
@@ -63,93 +62,52 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
     return <Loading />
   }
 
-  const examplePrompts = [
-    {
-      icon: Sparkles,
-      title: "Creative Writing",
-      description: "Help me write a story about the future",
-      category: "creative"
-    },
-    {
-      icon: Code2,
-      title: "Code Analysis",
-      description: "Review my Python code for improvements",
-      category: "code"
-    },
-    {
-      icon: Brain,
-      title: "Research Help",
-      description: "Explain quantum computing concepts",
-      category: "research"
-    },
-    {
-      icon: BarChart3,
-      title: "Data Analysis",
-      description: "Help me analyze my business metrics",
-      category: "analysis"
-    }
-  ]
-
   return (
     <div className="bg-background relative flex h-full flex-col">
       {/* Chat Messages Area */}
       <section
-        className="flex-1 overflow-y-auto px-4 py-6 md:px-6 lg:px-8"
+        className="flex-1 overflow-y-auto px-4 py-6 md:px-6 lg:px-8 bg-background"
         role="log"
         aria-live="polite"
         aria-label="Chat messages"
       >
-        <div className="mx-auto max-w-4xl space-y-4">
+        <div className="mx-auto max-w-4xl space-y-4 bg-background">
           <div ref={messagesStartRef} />
           <ChatMessages />
           <div ref={messagesEndRef} />
 
           {/* Welcome Message for New Chats */}
           {(!chatMessages || chatMessages.length === 0) && !isGenerating && (
-            <div className="flex h-full min-h-[500px] flex-col items-center justify-center text-center">
+            <div className="flex h-full min-h-[500px] flex-col items-center justify-center text-center bg-background">
               {/* Welcome Header */}
-              <div className="mb-16">
-                <h1 className="text-foreground mb-4 text-4xl font-bold">
-                  Welcome to Mayura
-                </h1>
-                <p className="text-muted-foreground max-w-md text-lg">
-                  How can I help you today?
-                </p>
-              </div>
-
-              {/* Example Prompts */}
-              <div className="w-full max-w-4xl">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {examplePrompts.map((prompt, index) => {
-                    const IconComponent = prompt.icon
-                    return (
-                      <Card
-                        key={index}
-                        className="border-border rounded-12 cursor-pointer border transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
-                      >
-                        <CardContent className="p-6">
-                          <div className="flex items-start space-x-4">
-                            <div className="bg-muted rounded-12 p-3">
-                              <IconComponent className="text-muted-foreground size-6" />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <h3 className="text-foreground mb-2 font-semibold">
-                                {prompt.title}
-                              </h3>
-                              <p className="text-muted-foreground text-sm leading-relaxed">
-                                {prompt.description}
-                              </p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )
-                  })}
+              <div className="flex flex-col items-center justify-center">
+                <div className="max-w-2xl">
+                  <p className="text-muted-foreground text-5xl font-medium">
+                    Hey <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent font-bold">{profile?.display_name.split(" ")[0] || "there"}</span>,
+                  </p>
+                  <p className="text-muted-foreground/80 text-xl pt-6">
+                    Let&apos;s see which AI model I pick for you today!
+                  </p>
                 </div>
               </div>
             </div>
           )}
         </div>
+
+        {/* Floating Scroll to Bottom Button */}
+        {isUserScrolledUp && chatMessages.length > 0 && (
+          <div className="fixed bottom-20 right-6 z-50">
+            <Button
+              onClick={scrollToBottom}
+              size="sm"
+              className="flex items-center gap-2 rounded-full bg-violet-600 text-white shadow-lg hover:bg-violet-700"
+            >
+              <ChevronDown size={16} />
+              {isGenerating && "New message"}
+              {!isGenerating && "Scroll to bottom"}
+            </Button>
+          </div>
+        )}
       </section>
 
       {/* Chat Input Area */}

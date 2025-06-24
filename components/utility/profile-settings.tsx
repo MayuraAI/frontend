@@ -129,9 +129,9 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
         <Button
           size="icon"
           variant="ghost"
-          className="focus-ring hover:bg-interactive-hover transition-smooth rounded-lg"
+          className="rounded-lg"
         >
-          <IconUser size={24} className="text-text-primary" />
+          <IconUser size={24} className="text-white" />
         </Button>
       </SheetTrigger>
 
@@ -142,12 +142,13 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
       >
         <div className="grow overflow-auto">
           <SheetHeader>
-            <SheetTitle className="text-text-primary flex items-center justify-between space-x-2">
+            <SheetTitle className="flex items-center justify-between space-x-2 text-white">
               <div>User Profile</div>
 
               <Button
                 tabIndex={-1}
-                className="bg-destructive hover:bg-destructive/90 text-xs text-white"
+                variant="outline"
+                className="border-red-600 bg-red-600 text-xs text-white hover:bg-red-700"
                 size="sm"
                 onClick={handleSignOut}
               >
@@ -159,14 +160,13 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
 
           <div className="mt-4 space-y-4">
             <div className="space-y-2">
-              <Label className="text-text-primary">Display Name</Label>
+              <Label className="text-white">Display Name</Label>
 
               <div className="space-y-1">
                 <Input
                   placeholder="Display Name"
                   value={displayName}
                   onChange={e => setDisplayName(e.target.value)}
-                  className="bg-bg-tertiary border-border-color focus:border-brand-primary text-text-primary"
                 />
 
                 <LimitDisplay
@@ -177,7 +177,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-text-primary">Username</Label>
+              <Label className="text-white">Username</Label>
 
               <div className="space-y-1">
                 <div className="relative">
@@ -188,14 +188,13 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                       setUsername(e.target.value)
                       checkUsernameAvailability(e.target.value)
                     }}
-                    className="bg-bg-tertiary border-border-color focus:border-brand-primary text-text-primary"
                   />
 
                   {username.length > 0 && (
                     <div className="absolute inset-y-0 right-2 flex items-center">
                       {loadingUsername ? (
                         <IconLoader2
-                          className="text-text-muted animate-spin"
+                          className="animate-spin text-slate-400"
                           size={20}
                         />
                       ) : usernameAvailable ? (
@@ -203,7 +202,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                           display={<div>Username is available</div>}
                           trigger={
                             <IconCircleCheckFilled
-                              className="text-green-500"
+                              className="text-violet-500"
                               size={20}
                             />
                           }
@@ -231,7 +230,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-text-primary">Profile Instructions</Label>
+              <Label className="text-white">Profile Instructions</Label>
 
               <div className="space-y-1">
                 <TextareaAutosize
@@ -240,7 +239,6 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                   onValueChange={setProfileInstructions}
                   minRows={3}
                   maxRows={6}
-                  className="bg-bg-tertiary border-border-color focus:border-brand-primary text-text-primary"
                 />
 
                 <LimitDisplay
@@ -255,7 +253,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
         <div className="mt-6">
           <Button
             ref={buttonRef}
-            className="bg-primary hover:bg-primary/90 w-full text-white"
+            className="w-full bg-violet-600 text-white hover:bg-violet-700"
             disabled={
               !usernameAvailable ||
               username.length < PROFILE_USERNAME_MIN ||

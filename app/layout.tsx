@@ -22,9 +22,6 @@ const APP_DESCRIPTION = "Your intelligent routing assistant."
 
 interface RootLayoutProps {
   children: ReactNode
-  params: {
-    locale: string
-  }
 }
 
 export const metadata: Metadata = {
@@ -35,6 +32,11 @@ export const metadata: Metadata = {
   },
   description: APP_DESCRIPTION,
   manifest: "/manifest.json",
+  icons: {
+    icon: "/logo_512.png",
+    shortcut: "/logo_512.png",
+    apple: "/logo_192.png"
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black",
@@ -63,12 +65,11 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#FFFFFF"
+  themeColor: "#0F0F0F"
 }
 
 export default async function RootLayout({
-  children,
-  params: { locale }
+  children
 }: RootLayoutProps) {
   const cookieStore = cookies()
   const supabase = createServerClient<Database>(
@@ -85,11 +86,11 @@ export default async function RootLayout({
   const session = (await supabase.auth.getSession()).data.session
 
   return (
-    <html lang="en" className="light">
-      <body className={`${dmSans.variable} font-sans antialiased`}>
+    <html lang="en" className="dark">
+      <body className={`${dmSans.variable} font-sans antialiased`} style={{backgroundColor: '#0F0F0F', color: '#F5F5F5'}}>
         <Providers>
           <Toaster richColors position="top-center" duration={3000} />
-          <div className="bg-background text-foreground flex h-screen w-full flex-col items-center">
+          <div className="w-full min-h-screen flex flex-col" style={{backgroundColor: '#0F0F0F', color: '#F5F5F5'}}>
             {session ? <GlobalState>{children}</GlobalState> : children}
           </div>
         </Providers>

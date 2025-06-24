@@ -1,20 +1,20 @@
 {
-  "name": "Mayura AI",
+  "name": "Mayura",
   "short_name": "Mayura",
   "description": "Your intelligent routing assistant",
   "icons": [
     {
-      "src": "/icon.png",
+      "src": "/logo_192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icon-256x256.png",
+      "src": "/logo_192.png",
       "type": "image/png",
       "sizes": "256x256"
     },
     {
-      "src": "/icon-512x512.png",
+      "src": "/logo_512.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose":"maskable"

@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Fleur+De+Leah:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Yellowtail:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Slackey&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,68 +8,68 @@
 
 @layer base {
   :root {
-    /* Neobrutalist color palette */
-    --background: 0 0% 97%; /* Off-white #F7F7F7 */
-    --foreground: 0 0% 0%; /* Pure black #000000 */
-    --card: 0 0% 100%; /* Pure white #FFFFFF */
-    --card-foreground: 0 0% 0%; /* Pure black #000000 */
-    --popover: 0 0% 100%; /* Pure white #FFFFFF */
-    --popover-foreground: 0 0% 0%; /* Pure black #000000 */
-    --primary: 45 95% 58%; /* Bright yellow #FBEA2B */
-    --primary-foreground: 0 0% 0%; /* Pure black #000000 */
-    --secondary: 140 70% 54%; /* Lime green #32D583 */
-    --secondary-foreground: 0 0% 0%; /* Pure black #000000 */
-    --muted: 0 0% 92%; /* Light grey #EBEBEB */
-    --muted-foreground: 0 0% 0%; /* Pure black #000000 */
-    --accent: 220 100% 50%; /* Bold blue #2970FF */
-    --accent-foreground: 0 0% 100%; /* Pure white #FFFFFF */
-    --destructive: 0 84.2% 60.2%; /* Bright red */
-    --destructive-foreground: 0 0% 100%; /* Pure white #FFFFFF */
-    --border: 0 0% 0%; /* Pure black #000000 */
-    --input: 0 0% 100%; /* Pure white #FFFFFF */
-    --ring: 0 0% 0%; /* Pure black #000000 */
-    --radius: 0rem; /* NO ROUNDED CORNERS */
+    /* Pure Black Theme */
+    --background: 6 6 6; /* Pure black #000000 */
+    --foreground: 255 255 255; /* Pure white text */
+    --card: 6 6 6; /* Very dark gray cards #0A0A0A */
+    --card-foreground: 255 255 255; /* Pure white text */
+    --popover: 6 6 6; /* Very dark gray */
+    --popover-foreground: 255 255 255; /* Pure white text */
+    --primary: 139 92 246; /* violet-500 */
+    --primary-foreground: 255 255 255; /* white */
+    --secondary: 20 20 20; /* Very dark gray #141414 */
+    --secondary-foreground: 255 255 255; /* Pure white text */
+    --muted: 15 15 15; /* Very dark gray #0F0F0F */
+    --muted-foreground: 200 200 200; /* Light gray */
+    --accent: 168 85 247; /* purple-500 */
+    --accent-foreground: 255 255 255; /* white */
+    --destructive: 239 68 68; /* red-500 */
+    --destructive-foreground: 255 255 255; /* white */
+    --border: 6 6 6; /* Dark border #1E1E1E */
+    --input: 6 6 6; /* Very dark gray cards #0A0A0A */
+    --ring: 139 92 246; /* violet-500 */
+    --radius: 0.5rem;
 
-    /* Sidebar specific colors - Neobrutalist */
-    --sidebar: 0 0% 97%; /* Off-white #F7F7F7 */
-    --sidebar-foreground: 0 0% 0%; /* Pure black #000000 */
-    --sidebar-border: 0 0% 0%; /* Pure black #000000 */
-    --sidebar-accent: 45 95% 58%; /* Bright yellow #FBEA2B */
-    --sidebar-accent-foreground: 0 0% 0%; /* Pure black #000000 */
-    --sidebar-muted: 0 0% 92%; /* Light grey #EBEBEB */
-    --sidebar-muted-foreground: 0 0% 0%; /* Pure black #000000 */
+    /* Sidebar specific colors */
+    --sidebar: 6 6 6; /* Even darker gray, almost black */
+    --sidebar-foreground: 255 255 255; /* Pure white text */
+    --sidebar-border: 255 255 255; /* Dark border */
+    --sidebar-accent: 139 92 246; /* violet-500 */
+    --sidebar-accent-foreground: 255 255 255; /* white */
+    --sidebar-muted: 15 15 15; /* Very dark gray */
+    --sidebar-muted-foreground: 200 200 200; /* Light gray */
   }
 
   .dark {
-    /* Dark mode maintains the same Neobrutalist principles */
-    --background: 0 0% 5%; /* Very dark #0D0D0D */
-    --foreground: 0 0% 100%; /* Pure white #FFFFFF */
-    --card: 0 0% 10%; /* Dark grey #1A1A1A */
-    --card-foreground: 0 0% 100%; /* Pure white #FFFFFF */
-    --popover: 0 0% 10%; /* Dark grey #1A1A1A */
-    --popover-foreground: 0 0% 100%; /* Pure white #FFFFFF */
-    --primary: 45 95% 58%; /* Bright yellow #FBEA2B */
-    --primary-foreground: 0 0% 0%; /* Pure black #000000 */
-    --secondary: 140 70% 54%; /* Lime green #32D583 */
-    --secondary-foreground: 0 0% 0%; /* Pure black #000000 */
-    --muted: 0 0% 15%; /* Dark grey #262626 */
-    --muted-foreground: 0 0% 100%; /* Pure white #FFFFFF */
-    --accent: 220 100% 50%; /* Bold blue #2970FF */
-    --accent-foreground: 0 0% 100%; /* Pure white #FFFFFF */
-    --destructive: 0 84.2% 60.2%; /* Bright red */
-    --destructive-foreground: 0 0% 100%; /* Pure white #FFFFFF */
-    --border: 0 0% 100%; /* Pure white #FFFFFF */
-    --input: 0 0% 10%; /* Dark grey #1A1A1A */
-    --ring: 0 0% 100%; /* Pure white #FFFFFF */
+    /* Pure Black Theme - Same as light mode for consistency */
+    --background: 6 6 6; /* Pure black #000000 */
+    --foreground: 255 255 255; /* Pure white text */
+    --card: 6 6 6; /* Very dark gray cards #0A0A0A */
+    --card-foreground: 255 255 255; /* Pure white text */
+    --popover: 6 6 6; /* Very dark gray */
+    --popover-foreground: 255 255 255; /* Pure white text */
+    --primary: 139 92 246; /* violet-500 */
+    --primary-foreground: 255 255 255; /* white */
+    --secondary: 20 20 20; /* Very dark gray #141414 */
+    --secondary-foreground: 255 255 255; /* Pure white text */
+    --muted: 15 15 15; /* Very dark gray #0F0F0F */
+    --muted-foreground: 200 200 200; /* Light gray */
+    --accent: 168 85 247; /* purple-500 */
+    --accent-foreground: 255 255 255; /* white */
+    --destructive: 239 68 68; /* red-500 */
+    --destructive-foreground: 255 255 255; /* white */
+    --border: 6 6 6; /* Dark border #1E1E1E */
+    --input: 6 6 6; /* Pure black input background */
+    --ring: 139 92 246; /* violet-500 */
 
     /* Sidebar specific colors for dark mode */
-    --sidebar: 0 0% 5%; /* Very dark #0D0D0D */
-    --sidebar-foreground: 0 0% 100%; /* Pure white #FFFFFF */
-    --sidebar-border: 0 0% 100%; /* Pure white #FFFFFF */
-    --sidebar-accent: 45 95% 58%; /* Bright yellow #FBEA2B */
-    --sidebar-accent-foreground: 0 0% 0%; /* Pure black #000000 */
-    --sidebar-muted: 0 0% 15%; /* Dark grey #262626 */
-    --sidebar-muted-foreground: 0 0% 100%; /* Pure white #FFFFFF */
+    --sidebar: 4 4 4; /* Even darker gray, almost black */
+    --sidebar-foreground: 255 255 255; /* Pure white text */
+    --sidebar-border: 4 4 4; /* Dark border */
+    --sidebar-accent: 139 92 246; /* violet-500 */
+    --sidebar-accent-foreground: 255 255 255; /* white */
+    --sidebar-muted: 15 15 15; /* Very dark gray */
+    --sidebar-muted-foreground: 200 200 200; /* Light gray */
   }
 }
 
@@ -81,114 +80,165 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    font-family: 'Inter', 'IBM Plex Mono', monospace, system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: rgb(0, 0, 0) !important; /* Force pure black background */
+    color: rgb(255, 255, 255) !important; /* Force pure white text */
   }
 
-  /* Neobrutalist Typography */
-  h1, h2, h3, h4, h5, h6 {
+  /* Apply white text selectively, excluding elements that might have gradients */
+  p:not([class*="bg-gradient"]), 
+  div:not([class*="bg-gradient"]), 
+  label:not([class*="bg-gradient"]), 
+  button:not([class*="bg-gradient"]), 
+  a:not([class*="bg-gradient"]), 
+  li:not([class*="bg-gradient"]), 
+  td:not([class*="bg-gradient"]), 
+  th:not([class*="bg-gradient"]) {
+    color: rgb(255, 255, 255) !important;
+  }
+
+  /* Allow gradient text to work by not forcing color on gradient elements */
+  [class*="bg-gradient"] {
+    color: inherit;
+  }
+
+  /* Input styling - black background with white text */
+  input, textarea, select {
+    background-color: rgb(0, 0, 0) !important;
+    color: rgb(255, 255, 255) !important;
+    border: 1px solid rgb(30, 30, 30) !important;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: rgb(150, 150, 150) !important;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    background-color: rgb(0, 0, 0) !important;
+    color: rgb(255, 255, 255) !important;
+    border-color: rgb(139, 92, 246) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2) !important;
+  }
+
+  /* Modern Typography - allow gradients to work */
+  h1:not([class*="bg-gradient"]), 
+  h2:not([class*="bg-gradient"]), 
+  h3:not([class*="bg-gradient"]), 
+  h4:not([class*="bg-gradient"]), 
+  h5:not([class*="bg-gradient"]), 
+  h6:not([class*="bg-gradient"]) {
     font-family: 'Inter', sans-serif;
-    font-weight: 900;
-    /* text-transform: uppercase; */
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: rgb(255, 255, 255) !important;
+  }
+
+  /* Allow gradient headings to work */
+  h1[class*="bg-gradient"], 
+  h2[class*="bg-gradient"], 
+  h3[class*="bg-gradient"], 
+  h4[class*="bg-gradient"], 
+  h5[class*="bg-gradient"], 
+  h6[class*="bg-gradient"] {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
     letter-spacing: -0.025em;
   }
 
-  .font-fleur {
-    font-family: "Fleur De Leah", cursive;
-    font-weight: 500;
-    font-style: normal;
-    font-size: 3rem;
+  h1 {
+    @apply text-3xl font-bold;
+  }
+  
+  h2 {
+    @apply text-2xl font-semibold;
+  }
+  
+  h3 {
+    @apply text-xl font-medium;
   }
 
   .font-mono {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'IBM Plex Mono', 'Fira Code', Consolas, monospace;
   }
 
-  .font-yellowtail {
-    font-family: 'Yellowtail';
-    font-weight: 500;
-    font-style: normal;
-    font-size: 3rem;
-  }
-
-  /* NO CUSTOM SCROLLBAR - Keep it standard and bold */
+  /* Modern Scrollbar */
   ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: hsl(var(--background));
-    border: 2px solid hsl(var(--border));
+    background: hsl(var(--muted));
   }
 
   ::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
-    border: none;
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--foreground));
+    background: hsl(var(--muted-foreground) / 0.5);
   }
 
   /* Firefox scrollbar */
   * {
-    scrollbar-width: thick;
-    scrollbar-color: hsl(var(--border)) hsl(var(--background));
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.3) hsl(var(--muted));
   }
 }
 
 @layer components {
-  /* Neobrutalist Button Base */
-  .btn-neobrutalist {
-    @apply font-bold tracking-wide border-3 border-black shadow-[4px_4px_0px_0px_black] transition-all duration-150;
+  /* Modern Button Base */
+  .btn-modern {
+    @apply inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
     font-family: 'Inter', sans-serif;
   }
 
-  .btn-neobrutalist:hover {
-    @apply shadow-[6px_6px_0px_0px_black] translate-x-[-2px] translate-y-[-2px];
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md;
   }
 
-  .btn-neobrutalist:active {
-    @apply shadow-[2px_2px_0px_0px_black] translate-x-[2px] translate-y-[2px];
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border shadow-sm hover:shadow-md;
   }
 
-  /* Neobrutalist Container Base */
-  .container-neobrutalist {
-    @apply border-3 border-black shadow-[4px_4px_0px_0px_black] bg-white;
+  /* Modern Container Base */
+  .container-modern {
+    @apply rounded-lg border bg-card text-card-foreground shadow-sm;
   }
 
-  /* Neobrutalist Chat Message Block */
+  /* Modern Chat Messages */
   .message-block {
-    @apply border-2 border-black shadow-[4px_4px_0px_0px_black] bg-white p-4;
+    @apply rounded-lg border bg-card p-4 shadow-sm;
   }
 
   .message-block--user {
-    @apply bg-white border-black;
+    @apply bg-slate-900;
   }
 
   .message-block--ai {
-    @apply bg-muted border-black;
+    @apply border-none;
   }
 
   .markdown-content {
     @apply text-foreground;
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Inter', sans-serif;
   }
   
   .markdown-content h1 {
-    @apply text-2xl font-bold mb-4 mt-6 first:mt-0 uppercase;
-    font-family: 'Inter', sans-serif;
+    @apply text-2xl font-bold mb-4 mt-6 first:mt-0;
   }
   
   .markdown-content h2 {
-    @apply text-xl font-bold mb-3 mt-5 first:mt-0 uppercase;
-    font-family: 'Inter', sans-serif;
+    @apply text-xl font-semibold mb-3 mt-5 first:mt-0;
   }
   
   .markdown-content h3 {
-    @apply text-lg font-semibold mb-2 mt-4 first:mt-0 uppercase;
-    font-family: 'Inter', sans-serif;
+    @apply text-lg font-medium mb-2 mt-4 first:mt-0;
   }
   
   .markdown-content p {
@@ -208,48 +258,121 @@
   }
   
   .markdown-content pre {
-    @apply relative my-6 overflow-x-auto bg-black text-sm border-2 border-black shadow-[4px_4px_0px_0px_black];
-    padding: 1.5rem; /* 24px consistent padding on all sides */
+    @apply bg-muted rounded-lg p-4 mb-4 overflow-x-auto;
+    font-family: 'IBM Plex Mono', monospace;
   }
   
   .markdown-content code {
-    @apply relative bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold border border-black;
+    @apply bg-muted px-1.5 py-0.5 rounded text-sm;
+    font-family: 'IBM Plex Mono', monospace;
   }
   
   .markdown-content pre code {
-    @apply bg-transparent p-0 text-white border-none;
+    @apply bg-transparent p-0;
   }
   
   .markdown-content blockquote {
-    @apply border-l-4 border-black pl-4 font-bold text-foreground bg-muted p-4 shadow-[4px_4px_0px_0px_black];
+    @apply border-l-4 border-border pl-4 italic text-muted-foreground mb-4;
   }
   
   .markdown-content table {
-    @apply my-4 w-full border-collapse border-2 border-black shadow-[4px_4px_0px_0px_black];
+    @apply w-full border-collapse border border-border mb-4;
   }
   
   .markdown-content th,
   .markdown-content td {
-    @apply border-2 border-black p-2 text-left;
+    @apply border border-border px-4 py-2 text-left;
   }
   
   .markdown-content th {
-    @apply bg-primary font-bold text-primary-foreground uppercase;
+    @apply bg-muted font-semibold;
   }
   
   .markdown-content a {
-    @apply text-accent underline underline-offset-4 hover:underline-offset-2 font-bold;
+    @apply text-primary hover:underline;
   }
-
+  
   .markdown-content strong {
-    @apply font-bold;
+    @apply font-semibold;
   }
-
+  
   .markdown-content em {
     @apply italic;
   }
+
+  /* Email-style components with pure black theme */
+  .email-sidebar {
+    background-color: rgb(0, 0, 0);
+    border-right: 1px solid rgb(30, 30, 30);
+  }
+
+  .email-item {
+    @apply p-3 border-b cursor-pointer transition-colors;
+    border-bottom-color: rgb(30, 30, 30);
+  }
+
+  .email-item:hover {
+    background-color: rgb(15, 15, 15);
+  }
+
+  .email-item.active {
+    background-color: rgb(139, 92, 246);
+    color: rgb(255, 255, 255);
+  }
+
+  .inbox-header {
+    @apply p-4 font-semibold border-b;
+    background-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(30, 30, 30);
+    color: rgb(255, 255, 255);
+  }
+
+  .tag {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .tag-primary {
+    @apply bg-primary/20 text-primary border border-primary/30;
+  }
+
+  .tag-secondary {
+    @apply bg-secondary text-secondary-foreground border border-border;
+  }
+
+  .tag-accent {
+    @apply bg-accent/20 text-accent border border-accent/30;
+  }
+
+  /* Chat input styling - pure black */
+  .chat-input {
+    @apply bg-card border border-border rounded-lg flex items-start transition-all duration-200;
+    background-color: rgb(0, 0, 0) !important;
+  }
+
+  .modern-container {
+    @apply bg-card border border-border rounded-lg shadow-sm;
+  }
 }
 
+.center-setup-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
 
+.bg-sidebar {
+  background-color: hsl(var(--sidebar)) !important;
+}
 
+.hljs {
+  color: #c9d1d9;
+  background: #0d1117;
+}
+
+.slackey-regular {
+  font-family: "Slackey", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
 

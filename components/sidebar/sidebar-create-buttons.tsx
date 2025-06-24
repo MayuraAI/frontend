@@ -13,12 +13,7 @@ export const SidebarCreateButtons: FC<SidebarCreateButtonsProps> = ({
   hasData
 }) => {
   const renderCreateButton = (contentType: ContentType) => {
-    switch (contentType) {
-      case "chats":
-        return <CreateChat />
-      default:
-        return null
-    }
+    return <CreateChat />
   }
 
   return (

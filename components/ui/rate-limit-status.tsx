@@ -111,14 +111,14 @@ export default function RateLimitStatus({
     return (
       <div
         className={cn(
-          "bg-card w-64 border-4 border-black p-4 shadow-[4px_4px_0px_0px_black]",
+          "w-64 rounded-lg border border-slate-700 bg-black p-4 shadow-sm",
           className
         )}
       >
         <div className="flex items-center space-x-3">
-          <div className="bg-muted size-4 animate-pulse border-2 border-black" />
-          <div className="bg-muted h-4 flex-1 animate-pulse border-2 border-black" />
-          <div className="bg-muted h-4 w-12 animate-pulse border-2 border-black" />
+          <div className="size-4 animate-pulse rounded bg-slate-700" />
+          <div className="h-4 flex-1 animate-pulse rounded bg-slate-700" />
+          <div className="h-4 w-12 animate-pulse rounded bg-slate-700" />
         </div>
       </div>
     )
@@ -128,22 +128,22 @@ export default function RateLimitStatus({
     return (
       <div
         className={cn(
-          "bg-destructive text-destructive-foreground w-64 border-4 border-black p-4 shadow-[4px_4px_0px_0px_black]",
+          "w-64 rounded-lg border border-red-700 bg-red-900/20 p-4 text-red-400",
           className
         )}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <IconAlertTriangle size={20} strokeWidth={3} />
-            <span className="text-sm font-semibold">Rate limit error</span>
+            <IconAlertTriangle size={20} />
+            <span className="text-sm font-medium">Rate limit error</span>
           </div>
           <Button
             variant="ghost"
             size="sm"
             onClick={fetchStatus}
-            className="size-8 border-2 border-black bg-white p-0 shadow-[2px_2px_0px_0px_black] transition-all hover:bg-zinc-100 hover:shadow-[3px_3px_0px_0px_black]"
+            className="size-8 p-0"
           >
-            <IconRefresh size={16} strokeWidth={3} />
+            <IconRefresh size={16} />
           </Button>
         </div>
       </div>
@@ -171,7 +171,7 @@ export default function RateLimitStatus({
     if (isPro) {
       return (
         <div className="flex items-center space-x-2">
-          <IconCheck size={18} strokeWidth={3} className="text-green-600" />
+          <IconCheck size={18} className="text-violet-400" />
           <span className="ml-1">
             {requests_used} / {daily_limit} Pro
           </span>
@@ -180,7 +180,7 @@ export default function RateLimitStatus({
     } else {
       return (
         <div className="flex items-center space-x-2">
-          <IconBolt size={18} strokeWidth={3} className="text-yellow-600" />
+          <IconBolt size={18} className="text-yellow-400" />
           <span className="ml-1">Free mode active</span>
         </div>
       )
@@ -193,59 +193,66 @@ export default function RateLimitStatus({
         <TooltipTrigger asChild>
           <div
             className={cn(
-              "border-3 inline-flex items-center space-x-2 border-black px-3 py-2 text-sm font-semibold shadow-[2px_2px_0px_0px_black] transition-all duration-100",
+              "inline-flex items-center space-x-2 rounded-lg border px-3 py-2 text-sm font-medium shadow-sm transition-all duration-200",
               isFree
-                ? "bg-yellow-300 text-black"
-                : "bg-primary text-primary-foreground",
-              "cursor-default"
+                ? "border-yellow-700 bg-yellow-900/20 text-yellow-400"
+                : "border-violet-700 bg-violet-900/20 text-violet-400",
+              "cursor-default",
+              className
             )}
           >
-            <span>{getTag()}</span>
-            {loading && (
-              <span className="ml-2 animate-pulse text-xs">
-                (refreshing...)
-              </span>
+            {compact ? (
+              <div className="flex items-center space-x-2">
+                {isFree ? (
+                  <IconBolt size={16} className="text-yellow-400" />
+                ) : (
+                  <IconCheck size={16} className="text-violet-400" />
+                )}
+                <span className="text-xs font-medium">
+                  {isFree ? "Free tier" : "Pro" + " " + requests_remaining + " left"}
+                </span>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center space-x-2">
+                  {getTag()}
+                </div>
+                <div className="text-xs text-slate-400">
+                  {requests_remaining} remaining
+                </div>
+              </>
             )}
           </div>
         </TooltipTrigger>
-        <TooltipContent
-          side="bottom"
-          className="bg-card w-72 border-4 border-black p-4 shadow-[4px_4px_0px_0px_black]"
-        >
-          <div className="space-y-2">
+        <TooltipContent side="bottom" className="border border-slate-700 bg-black text-white shadow-lg">
+          <div className="space-y-3 p-2">
             <div className="flex items-center justify-between">
-              <span className="text-base font-semibold tracking-wide">
-                {isPro ? "Pro usage" : "Free mode active"}
-              </span>
-              <span className="text-muted-foreground text-xs">
-                {timeUntilReset}
+              <span className="text-sm font-medium">Daily Usage</span>
+              <span className="text-xs text-slate-400">
+                {requests_used} / {daily_limit}
               </span>
             </div>
-            {isPro && (
-              <div className="bg-muted relative h-3 w-full border-2 border-black">
-                <div
-                  className="h-full border-r-2 border-black bg-black transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                />
+            
+            <div className="h-2 w-full rounded-full bg-slate-700">
+              <div
+                className="h-2 rounded-full bg-white transition-all duration-300"
+                style={{ width: `${Math.min(progress, 100)}%` }}
+              />
+            </div>
+
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-slate-400">
+                {isPro ? "Pro Plan" : "Free Plan"}
+              </span>
+              <div className="flex items-center space-x-1 text-slate-400">
+                <IconClock size={12} />
+                <span>{timeUntilReset}</span>
               </div>
-            )}
-            <p className="text-foreground text-xs font-medium">{message}</p>
-            {proExhausted && (
-              <div className="mt-2 flex items-center space-x-2 border-2 border-black bg-yellow-400 p-2 text-sm text-black shadow-[2px_2px_0px_0px_black]">
-                <IconBolt size={16} />
-                <span>
-                  <strong>Pro quota exhausted.</strong> You&apos;re now using
-                  Free tier.
-                </span>
-              </div>
-            )}
-            {lastUpdated && (
-              <div className="text-muted-foreground text-right text-[11px]">
-                Updated at{" "}
-                {lastUpdated.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit"
-                })}
+            </div>
+
+            {message && (
+              <div className="border-t border-slate-700 pt-2 text-xs text-slate-400">
+                {message}
               </div>
             )}
           </div>

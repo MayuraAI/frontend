@@ -4,32 +4,24 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const alertVariants = cva(
-  "shadow-neo [&>svg]:text-foreground relative w-full border-4 border-black p-6 text-lg font-bold [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-6 [&>svg]:top-6 [&>svg]:size-5 [&>svg~*]:pl-8",
+  "relative w-full rounded-lg border p-4 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-slate-300 [&>svg~*]:pl-7",
   {
     variants: {
       variant: {
-        // Theme-responsive variants
-        default: "bg-background text-foreground",
-
-        // Status-specific variants with proper contrast
-        success:
-          "bg-success text-success-foreground [&>svg]:text-success-foreground",
+        default: "border-slate-700 bg-black text-white",
         destructive:
-          "bg-destructive text-destructive-foreground [&>svg]:text-destructive-foreground",
+          "border-red-200 bg-red-50 text-red-800 [&>svg]:text-red-600",
         warning:
-          "bg-warning text-warning-foreground [&>svg]:text-warning-foreground",
-        info: "bg-info text-info-foreground [&>svg]:text-info-foreground",
-
-        // Fixed neobrutalism color variants
-        electric: "bg-neo-electric text-black [&>svg]:text-black",
-        neon: "bg-neo-neon text-white [&>svg]:text-white",
-        cyber: "bg-neo-cyber text-black [&>svg]:text-black",
-        toxic: "bg-neo-toxic text-black [&>svg]:text-black"
-      }
+          "border-yellow-200 bg-yellow-50 text-yellow-800 [&>svg]:text-yellow-600",
+        success:
+          "border-green-200 bg-green-50 text-green-800 [&>svg]:text-green-600",
+        info:
+          "border-blue-200 bg-blue-50 text-blue-800 [&>svg]:text-blue-600",
+      },
     },
     defaultVariants: {
-      variant: "default"
-    }
+      variant: "default",
+    },
   }
 )
 
@@ -52,10 +44,7 @@ const AlertTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h5
     ref={ref}
-    className={cn(
-      "font-brutal mb-2 text-xl font-black leading-none tracking-tight",
-      className
-    )}
+    className={cn("mb-1 font-medium leading-none tracking-tight", className)}
     {...props}
   />
 ))
@@ -67,10 +56,7 @@ const AlertDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "font-neo text-base font-bold [&_p]:leading-relaxed",
-      className
-    )}
+    className={cn("text-sm [&_p]:leading-relaxed", className)}
     {...props}
   />
 ))

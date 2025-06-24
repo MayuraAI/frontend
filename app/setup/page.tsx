@@ -138,17 +138,17 @@ export default function SetupPage() {
 
   if (loading) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <div className="flex h-full items-center justify-center bg-black">
         <div className="flex flex-col items-center space-y-4">
-          <div className="text-xl font-bold">Loading...</div>
-          <div className="size-8 animate-spin rounded-full border-y-2 border-blue-500"></div>
+          <div className="text-xl font-bold text-white">Loading...</div>
+          <div className="size-8 animate-spin rounded-full border-y-2 border-violet-500"></div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex h-full items-center justify-center">
+    <div className="center-setup-step">
       {renderStep(currentStep)}
     </div>
   )

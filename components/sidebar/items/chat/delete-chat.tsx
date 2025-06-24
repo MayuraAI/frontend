@@ -49,19 +49,20 @@ export const DeleteChat: FC<DeleteChatProps> = ({ chat }) => {
   return (
     <Dialog open={showChatDialog} onOpenChange={setShowChatDialog}>
       <DialogTrigger asChild>
-        <button className="hover:border-destructive hover:bg-destructive hover:text-destructive-foreground hover:shadow-neo-sm bg-background border-2 border-transparent p-1 transition-all duration-100">
+        <button className="border-2 border-transparent p-1 transition-all duration-100 hover:border-slate-600">
           <IconTrash className="size-4 font-black" />
         </button>
       </DialogTrigger>
 
       <DialogContent onKeyDown={handleKeyDown}>
         <DialogHeader>
-          <DialogTitle className="font-brutal text-foreground text-2xl font-black">
-            DELETE &quot;{chat.name.toUpperCase()}&quot;
+          <DialogTitle className="text-foreground text-2xl font-black">
+            Delete &quot;{chat.name}&quot;?
           </DialogTitle>
 
-          <DialogDescription className="text-foreground text-lg font-bold">
-            Are you sure you want to permanently delete this chat? This action
+          <DialogDescription className="text-foreground text-lg">
+            Are you sure you want to delete this chat? <br />
+            This action
             cannot be undone.
           </DialogDescription>
         </DialogHeader>
@@ -72,7 +73,7 @@ export const DeleteChat: FC<DeleteChatProps> = ({ chat }) => {
             onClick={() => setShowChatDialog(false)}
             className="font-black"
           >
-            CANCEL
+            Cancel
           </Button>
 
           <Button
@@ -82,7 +83,7 @@ export const DeleteChat: FC<DeleteChatProps> = ({ chat }) => {
             className="font-black"
           >
             <IconTrash className="mr-2 size-4" />
-            DELETE NOW
+            Delete
           </Button>
         </DialogFooter>
       </DialogContent>

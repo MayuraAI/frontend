@@ -30,10 +30,10 @@ export default function ChatPage() {
 
   if (isLoading) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <div className="flex h-full items-center justify-center bg-black">
         <div className="flex flex-col items-center space-y-4">
-          <div className="text-xl font-bold">Loading chat...</div>
-          <div className="size-8 animate-spin rounded-full border-y-2 border-blue-500"></div>
+          <div className="text-xl font-semibold text-white">Loading chat...</div>
+          <div className="size-8 animate-spin rounded-full border-y-2 border-violet-500"></div>
         </div>
       </div>
     )
@@ -42,8 +42,8 @@ export default function ChatPage() {
   if (!profile) {
     console.error("No profile found")
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="text-xl font-bold text-red-500">Profile not found</div>
+      <div className="flex h-full items-center justify-center bg-black">
+        <div className="text-xl font-semibold text-red-400">Profile not found</div>
       </div>
     )
   }
