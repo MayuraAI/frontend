@@ -56,6 +56,32 @@ jobs:
           EDGE_CONFIG: ${{ secrets.EDGE_CONFIG }}
           ANALYZE: ${{ vars.ANALYZE || 'false' }}
 
+      - name: Verify environment variables
+        run: |
+          echo "Checking environment variables..."
+          if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ]; then
+            echo "❌ NEXT_PUBLIC_SUPABASE_URL is not set"
+            exit 1
+          else
+            echo "✅ NEXT_PUBLIC_SUPABASE_URL is set"
+          fi
+          if [ -z "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then
+            echo "❌ NEXT_PUBLIC_SUPABASE_ANON_KEY is not set"
+            exit 1
+          else
+            echo "✅ NEXT_PUBLIC_SUPABASE_ANON_KEY is set"
+          fi
+          if [ -z "$NEXT_PUBLIC_BACKEND_URL" ]; then
+            echo "❌ NEXT_PUBLIC_BACKEND_URL is not set"
+            exit 1
+          else
+            echo "✅ NEXT_PUBLIC_BACKEND_URL is set"
+          fi
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || vars.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL || vars.NEXT_PUBLIC_BACKEND_URL }}
+
       - name: Create deployment package
         run: |
           mkdir deployment
