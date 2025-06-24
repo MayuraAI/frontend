@@ -1,13 +1,13 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy Node.js app to Azure Web App - Mayura
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
   workflow_dispatch:
@@ -24,17 +24,31 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: '22.x'
-      # husky install
-      - name: Install pnpm
+          node-version: '20.x'
+
+      - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: latest
 
-      - name: npm install, build, and test
+      - name: Get pnpm store directory
+        shell: bash
         run: |
-          pnpm install
-          pnpm run build
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build application
+        run: pnpm run build
         env:
           NODE_ENV: production
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || vars.NEXT_PUBLIC_SUPABASE_URL }}
@@ -45,8 +59,78 @@ jobs:
           EDGE_CONFIG: ${{ secrets.EDGE_CONFIG }}
           ANALYZE: ${{ vars.ANALYZE || 'false' }}
 
+      - name: Create deployment package
+        run: |
+          echo "Creating deployment package..."
+          mkdir -p deployment
+          
+          # Copy standalone build output
+          if [ -d ".next/standalone" ]; then
+            echo "Copying standalone build..."
+            cp -r .next/standalone/* deployment/
+          else
+            echo "No standalone build found, copying regular build..."
+            cp -r .next deployment/
+          fi
+          
+          # Copy static files
+          if [ -d ".next/static" ]; then
+            echo "Copying static files..."
+            mkdir -p deployment/.next
+            cp -r .next/static deployment/.next/static
+          fi
+          
+          # Copy public assets
+          if [ -d "public" ]; then
+            echo "Copying public assets..."
+            cp -r public deployment/public
+          fi
+          
+          # Copy necessary config files
+          cp package.json deployment/
+          cp pnpm-lock.yaml deployment/
+          
+          # Copy web.config if it exists
+          if [ -f "web.config" ]; then
+            cp web.config deployment/
+          fi
+          
+          # Create startup script
+          cat > deployment/startup.sh << 'EOF'
+          #!/bin/bash
+          echo "Starting Next.js application..."
+          
+          # Set default port if not provided
+          export PORT=${PORT:-8080}
+          
+          # Install dependencies if needed
+          if [ ! -d "node_modules" ]; then
+            echo "Installing dependencies..."
+            npm install --production
+          fi
+          
+          # Start the application
+          echo "Starting server on port $PORT..."
+          if [ -f "server.js" ]; then
+            echo "Starting with standalone server..."
+            node server.js
+          else
+            echo "Starting with next start..."
+            npm start
+          fi
+          EOF
+          
+          chmod +x deployment/startup.sh
+          
+          echo "Deployment package created successfully"
+          ls -la deployment/
+
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: |
+          cd deployment
+          zip -r ../release.zip ./*
+          cd ..
+          echo "Artifact size: $(du -h release.zip)"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -57,6 +141,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    environment: production
     
     permissions:
       id-token: write #This is required for requesting the JWT
@@ -69,157 +154,97 @@ jobs:
           name: node-app
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip
+        run: |
+          echo "Extracting deployment package..."
+          unzip -q release.zip
+          echo "Extracted files:"
+          ls -la
       
-      - name: Login to Azure
+      - name: Login to Azure CLI
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_981BFD612F8E43748E49C32364800263 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_911D586BA66F4744BC6E08C866BB698F }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8D2E084D1BD146799188061D345C560E }}
 
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'Mayura'
-          slot-name: 'Production'
-          package: .
+      - name: Stop Azure Web App
+        run: |
+          echo "Stopping Azure Web App..."
+          az webapp stop --name Mayura --resource-group ${{ vars.AZURE_RESOURCE_GROUP || 'DefaultResourceGroup-EUS' }}
+          echo "Web app stopped"
+
+      - name: Deploy files to Azure Web App
+        run: |
+          echo "Deploying files to Azure Web App..."
           
-
-
-# name: Build and deploy Node.js app to Azure Web App - Mayura
-
-# on:
-#   push:
-#     branches:
-#       - main
-#   workflow_dispatch:
-
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     permissions:
-#       contents: read #This is required for actions/checkout
-
-#     steps:
-#       - uses: actions/checkout@v4
-
-#       - name: Set up Node.js version
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: '20.x'
-
-#       - name: Setup pnpm
-#         uses: pnpm/action-setup@v2
-#         with:
-#           version: latest
-
-#       - name: Get pnpm store directory
-#         shell: bash
-#         run: |
-#           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-#       - name: Setup pnpm cache
-#         uses: actions/cache@v3
-#         with:
-#           path: ${{ env.STORE_PATH }}
-#           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-#           restore-keys: |
-#             ${{ runner.os }}-pnpm-store-
-
-#       - name: Install dependencies
-#         run: pnpm install --frozen-lockfile
-      
-#       - name: Verify environment variables
-#         run: |
-#           echo "Checking environment variables..."
-#           if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ]; then
-#             echo "❌ NEXT_PUBLIC_SUPABASE_URL is not set"
-#             exit 1
-#           else
-#             echo "✅ NEXT_PUBLIC_SUPABASE_URL is set"
-#           fi
-#           if [ -z "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then
-#             echo "❌ NEXT_PUBLIC_SUPABASE_ANON_KEY is not set"
-#             exit 1
-#           else
-#             echo "✅ NEXT_PUBLIC_SUPABASE_ANON_KEY is set"
-#           fi
-#           if [ -z "$NEXT_PUBLIC_BACKEND_URL" ]; then
-#             echo "❌ NEXT_PUBLIC_BACKEND_URL is not set"
-#             exit 1
-#           else
-#             echo "✅ NEXT_PUBLIC_BACKEND_URL is set"
-#           fi
-#         env:
-#           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || vars.NEXT_PUBLIC_SUPABASE_URL }}
-#           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-#           NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL || vars.NEXT_PUBLIC_BACKEND_URL }}
-
-#       - name: Build application
-#         run: pnpm run build
-#         env:
-#           NODE_ENV: production
-#           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || vars.NEXT_PUBLIC_SUPABASE_URL }}
-#           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-#           NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL || vars.NEXT_PUBLIC_BACKEND_URL }}
-#           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-#           VALIDATE_TOKEN_IN_PROXY: ${{ vars.VALIDATE_TOKEN_IN_PROXY || 'false' }}
-#           EDGE_CONFIG: ${{ secrets.EDGE_CONFIG }}
-#           ANALYZE: ${{ vars.ANALYZE || 'false' }}
-
-#       - name: Create deployment package
-#         run: |
-#           mkdir deployment
-#           cp -r .next/standalone/* deployment/
-#           cp -r .next/static deployment/.next/static
-#           cp -r public deployment/public
-#           cp package.json deployment/
-#           cp pnpm-lock.yaml deployment/
-#           cp web.config deployment/
-
-#       - name: Zip artifact for deployment
-#         run: |
-#           cd deployment
-#           zip -r ../release.zip ./*
-
-#       - name: Upload artifact for deployment job
-#         uses: actions/upload-artifact@v4
-#         with:
-#           name: node-app
-#           path: release.zip
-
-#   deploy:
-#     runs-on: ubuntu-latest
-#     needs: build
-#     environment: production
-    
-#     permissions:
-#       id-token: write #This is required for requesting the JWT
-#       contents: read #This is required for actions/checkout
-
-#     steps:
-#       - name: Download artifact from build job
-#         uses: actions/download-artifact@v4
-#         with:
-#           name: node-app
-
-#       - name: Unzip artifact for deployment
-#         run: unzip release.zip
-      
-#       - name: Login to Azure
-#         uses: azure/login@v2
-#         with:
-#           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_981BFD612F8E43748E49C32364800263 }}
-#           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_911D586BA66F4744BC6E08C866BB698F }}
-#           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8D2E084D1BD146799188061D345C560E }}
-
-#       - name: 'Deploy to Azure Web App'
-#         id: deploy-to-webapp
-#         uses: azure/webapps-deploy@v3
-#         with:
-#           app-name: 'Mayura'
-#           slot-name: 'Production'
-#           package: .
+          # Create a zip file for deployment
+          zip -r app-deployment.zip ./* -x "*.zip"
           
+          # Deploy using Azure CLI
+          az webapp deployment source config-zip \
+            --name Mayura \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP || 'DefaultResourceGroup-EUS' }} \
+            --src app-deployment.zip
+          
+          echo "Files deployed successfully"
+
+      - name: Set environment variables in Azure
+        run: |
+          echo "Setting environment variables..."
+          az webapp config appsettings set \
+            --name Mayura \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP || 'DefaultResourceGroup-EUS' }} \
+            --settings \
+              NODE_ENV=production \
+              NEXT_PUBLIC_SUPABASE_URL="${{ secrets.NEXT_PUBLIC_SUPABASE_URL || vars.NEXT_PUBLIC_SUPABASE_URL }}" \
+              NEXT_PUBLIC_SUPABASE_ANON_KEY="${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
+              NEXT_PUBLIC_BACKEND_URL="${{ secrets.NEXT_PUBLIC_BACKEND_URL || vars.NEXT_PUBLIC_BACKEND_URL }}" \
+              SUPABASE_SERVICE_ROLE_KEY="${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+              VALIDATE_TOKEN_IN_PROXY="${{ vars.VALIDATE_TOKEN_IN_PROXY || 'false' }}" \
+              WEBSITE_NODE_DEFAULT_VERSION="20.x" \
+              SCM_DO_BUILD_DURING_DEPLOYMENT=false
+          
+          echo "Environment variables set"
+
+      - name: Start Azure Web App
+        run: |
+          echo "Starting Azure Web App..."
+          az webapp start --name Mayura --resource-group ${{ vars.AZURE_RESOURCE_GROUP || 'DefaultResourceGroup-EUS' }}
+          echo "Web app started"
+
+      - name: Wait for application startup
+        run: |
+          echo "Waiting for application to start..."
+          sleep 30
+          
+          # Get the app URL
+          APP_URL=$(az webapp show --name Mayura --resource-group ${{ vars.AZURE_RESOURCE_GROUP || 'DefaultResourceGroup-EUS' }} --query "defaultHostName" -o tsv)
+          echo "App URL: https://$APP_URL"
+          
+          # Test if the app is responding
+          for i in {1..10}; do
+            echo "Health check attempt $i..."
+            if curl -f -s "https://$APP_URL" > /dev/null; then
+              echo "✅ Application is responding!"
+              echo "🌐 Your app is available at: https://$APP_URL"
+              break
+            else
+              echo "⏳ App not ready yet, waiting..."
+              sleep 10
+            fi
+          done
+
+      - name: Get application logs
+        if: always()
+        run: |
+          echo "Fetching recent application logs..."
+          az webapp log download \
+            --name Mayura \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP || 'DefaultResourceGroup-EUS' }} \
+            --log-file app-logs.zip || true
+          
+          if [ -f "app-logs.zip" ]; then
+            unzip -q app-logs.zip
+            echo "Recent logs:"
+            find . -name "*.log" -exec tail -20 {} \; || true
+          fi
