@@ -25,11 +25,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '22.x'
+      # husky install
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
 
       - name: npm install, build, and test
         run: |
-          npm install
-          npm run build --if-present
+          pnpm install
+          pnpm run build --if-present
         env:
           NODE_ENV: production
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || vars.NEXT_PUBLIC_SUPABASE_URL }}
@@ -80,3 +85,141 @@ jobs:
           app-name: 'Mayura'
           slot-name: 'Production'
           package: .
+          
+
+
+# name: Build and deploy Node.js app to Azure Web App - Mayura
+
+# on:
+#   push:
+#     branches:
+#       - main
+#   workflow_dispatch:
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read #This is required for actions/checkout
+
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - name: Set up Node.js version
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '20.x'
+
+#       - name: Setup pnpm
+#         uses: pnpm/action-setup@v2
+#         with:
+#           version: latest
+
+#       - name: Get pnpm store directory
+#         shell: bash
+#         run: |
+#           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+#       - name: Setup pnpm cache
+#         uses: actions/cache@v3
+#         with:
+#           path: ${{ env.STORE_PATH }}
+#           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+#           restore-keys: |
+#             ${{ runner.os }}-pnpm-store-
+
+#       - name: Install dependencies
+#         run: pnpm install --frozen-lockfile
+      
+#       - name: Verify environment variables
+#         run: |
+#           echo "Checking environment variables..."
+#           if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ]; then
+#             echo "❌ NEXT_PUBLIC_SUPABASE_URL is not set"
+#             exit 1
+#           else
+#             echo "✅ NEXT_PUBLIC_SUPABASE_URL is set"
+#           fi
+#           if [ -z "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then
+#             echo "❌ NEXT_PUBLIC_SUPABASE_ANON_KEY is not set"
+#             exit 1
+#           else
+#             echo "✅ NEXT_PUBLIC_SUPABASE_ANON_KEY is set"
+#           fi
+#           if [ -z "$NEXT_PUBLIC_BACKEND_URL" ]; then
+#             echo "❌ NEXT_PUBLIC_BACKEND_URL is not set"
+#             exit 1
+#           else
+#             echo "✅ NEXT_PUBLIC_BACKEND_URL is set"
+#           fi
+#         env:
+#           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || vars.NEXT_PUBLIC_SUPABASE_URL }}
+#           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+#           NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL || vars.NEXT_PUBLIC_BACKEND_URL }}
+
+#       - name: Build application
+#         run: pnpm run build
+#         env:
+#           NODE_ENV: production
+#           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || vars.NEXT_PUBLIC_SUPABASE_URL }}
+#           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+#           NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL || vars.NEXT_PUBLIC_BACKEND_URL }}
+#           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+#           VALIDATE_TOKEN_IN_PROXY: ${{ vars.VALIDATE_TOKEN_IN_PROXY || 'false' }}
+#           EDGE_CONFIG: ${{ secrets.EDGE_CONFIG }}
+#           ANALYZE: ${{ vars.ANALYZE || 'false' }}
+
+#       - name: Create deployment package
+#         run: |
+#           mkdir deployment
+#           cp -r .next/standalone/* deployment/
+#           cp -r .next/static deployment/.next/static
+#           cp -r public deployment/public
+#           cp package.json deployment/
+#           cp pnpm-lock.yaml deployment/
+#           cp web.config deployment/
+
+#       - name: Zip artifact for deployment
+#         run: |
+#           cd deployment
+#           zip -r ../release.zip ./*
+
+#       - name: Upload artifact for deployment job
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: node-app
+#           path: release.zip
+
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: build
+#     environment: production
+    
+#     permissions:
+#       id-token: write #This is required for requesting the JWT
+#       contents: read #This is required for actions/checkout
+
+#     steps:
+#       - name: Download artifact from build job
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: node-app
+
+#       - name: Unzip artifact for deployment
+#         run: unzip release.zip
+      
+#       - name: Login to Azure
+#         uses: azure/login@v2
+#         with:
+#           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_981BFD612F8E43748E49C32364800263 }}
+#           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_911D586BA66F4744BC6E08C866BB698F }}
+#           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8D2E084D1BD146799188061D345C560E }}
+
+#       - name: 'Deploy to Azure Web App'
+#         id: deploy-to-webapp
+#         uses: azure/webapps-deploy@v3
+#         with:
+#           app-name: 'Mayura'
+#           slot-name: 'Production'
+#           package: .
+          
