@@ -9,6 +9,7 @@ import { ReactNode, useContext, useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Loader2 } from "lucide-react"
+import { getProfileByUserId } from "@/db/profile"
 
 interface ChatLayoutProps {
   children: ReactNode
@@ -19,20 +20,31 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
   const searchParams = useSearchParams()
   const chatId = searchParams.get("id")
 
-  const { profile, setChats, chats, setSelectedChat, setChatSettings } =
+  const { profile, setProfile, setChats, chats, setSelectedChat, setChatSettings } =
     useContext(MayuraContext)
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!profile) {
-      setLoading(false)
-      return
+    const loadProfile = async () => {
+      if (!profile) {
+        setLoading(true)
+        const session = (await supabase.auth.getSession()).data.session
+      if (!session) {
+        return router.push("/login")
+      }
+      const profile = await getProfileByUserId(session.user.id)
+        setProfile(profile)
+        return
+      }
     }
+    loadProfile()
 
-    fetchChatData(profile.user_id)
-  }, [profile])
+    if (profile) {
+      fetchChatData(profile.user_id)
+    }
+  }, [profile, router])
 
   useEffect(() => {
     if (chatId && chats.length > 0) {
@@ -72,7 +84,7 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
     }
   }
 
-  if (loading) {
+  if (loading || !profile) {
     return (
       <div className="bg-background flex h-screen items-center justify-center">
         <Card className="w-96">
@@ -118,22 +130,22 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
     )
   }
 
-  if (!profile) {
-    return (
-      <div className="bg-background flex h-screen items-center justify-center">
-        <Card className="w-96">
-          <CardContent className="p-6">
-            <div className="text-center">
-              <h3 className="text-foreground text-lg font-semibold">Profile Required</h3>
-              <p className="text-muted-foreground text-sm">
-                Please complete your profile setup first.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
+  // if (!profile) {
+  //   return (
+  //     <div className="bg-background flex h-screen items-center justify-center">
+  //       <Card className="w-96">
+  //         <CardContent className="p-6">
+  //           <div className="text-center">
+  //             <h3 className="text-foreground text-lg font-semibold">Profile Required</h3>
+  //             <p className="text-muted-foreground text-sm">
+  //               Please complete your profile setup first.
+  //             </p>
+  //           </div>
+  //         </CardContent>
+  //       </Card>
+  //     </div>
+  //   )
+  // }
 
   return <Dashboard>{children}</Dashboard>
 }

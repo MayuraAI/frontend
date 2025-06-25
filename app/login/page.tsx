@@ -36,7 +36,6 @@ export default function Login() {
   // On mount, check if user is already logged in
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      console.log("Supabase session:", data.session)
       if (data.session) {
         router.replace("/chat")
       }
