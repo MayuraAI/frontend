@@ -1,4 +1,7 @@
 "use client"
+import { useEffect, useState, useCallback } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { supabase } from "@/lib/supabase/client" // or browser-client if you prefer
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
@@ -11,13 +14,6 @@ import {
 } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { GoogleSVG } from "@/components/icons/google-svg"
-import { createClient } from "@/lib/supabase/server"
-import { Database } from "@/supabase/types"
-import { createServerClient } from "@supabase/ssr"
-import { get } from "@vercel/edge-config"
-import { Metadata } from "next"
-import { cookies, headers } from "next/headers"
-import { redirect } from "next/navigation"
 import {
   AlertCircle,
   Zap,
@@ -28,236 +24,204 @@ import {
   RotateCcw
 } from "lucide-react"
 
-export const metadata: Metadata = {
-  title: "Login - Mayura"
-}
+export default function Login() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState<string | null>(null)
+  const [messageType, setMessageType] = useState<string | undefined>(undefined)
 
-export default async function Login({
-  searchParams
-}: {
-  searchParams: { message: string; type?: string }
-}) {
-  const cookieStore = cookies()
-  const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
-        }
+  // On mount, check if user is already logged in
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        router.replace("/chat")
       }
+    })
+    // Show message from query params if present
+    if (searchParams?.get("message")) {
+      setMessage(searchParams.get("message")!)
+      setMessageType(searchParams.get("type") || undefined)
     }
-  )
-  const session = (await supabase.auth.getSession()).data.session
+  }, [router, searchParams])
 
-  if (session) {
-    return redirect(`/chat`)
-  }
-
-  const signIn = async (formData: FormData) => {
-    "use server"
+  // Sign in with email/password
+  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setLoading(true)
+    setMessage(null)
+    const formData = new FormData(e.currentTarget)
     const email = formData.get("email") as string
     const password = formData.get("password") as string
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    })
-
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    setLoading(false)
     if (error) {
-      // Handle specific error cases with better messaging
       if (error.message.includes("Email not confirmed")) {
-        return redirect(`/login?message=Please check your email and click the verification link before signing in.&type=info`)
+        setMessage("Please check your email and click the verification link before signing in.")
+        setMessageType("info")
+      } else if (error.message.includes("Invalid login credentials")) {
+        setMessage("Invalid email or password. Please check your credentials and try again.")
+        setMessageType("destructive")
+      } else {
+        setMessage(error.message)
+        setMessageType("destructive")
       }
-      if (error.message.includes("Invalid login credentials")) {
-        return redirect(`/login?message=Invalid email or password. Please check your credentials and try again.`)
-      }
-      return redirect(`/login?message=${error.message}`)
+    } else {
+      router.replace("/chat")
     }
-    return redirect(`/chat`)
   }
 
-  const getEnvVarOrEdgeConfigValue = async (name: string) => {
-    "use server"
-    if (process.env.EDGE_CONFIG) {
-      return await get<string>(name)
-    }
-    return process.env[name]
-  }
-
-  const signUp = async (formData: FormData) => {
-    "use server"
+  // Sign up with email/password
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setLoading(true)
+    setMessage(null)
+    const formData = new FormData(e.currentTarget)
     const email = formData.get("email") as string
     const password = formData.get("password") as string
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
 
-    // Check if email verification is enabled
-    const enableEmailConfirmation = true
-    const origin = headers().get("origin")
-
-    const { data, error } = await supabase.auth.signUp({ 
-      email, 
-      password, 
-      // options: enableEmailConfirmation ? {
-      //   emailRedirectTo: `${origin}/auth/callback?next=/setup`
-      // } : {}
-      options: {}
-    })
-
-    // Supabase workaround: if data.user exists and identities is empty, email is taken
+    const { data, error } = await supabase.auth.signUp({ email, password })
+    setLoading(false)
     if (data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
-      return redirect(`/login?message=An account with this email already exists. Please sign in instead.&type=existing`)
+      setMessage("An account with this email already exists. Please sign in instead.")
+      setMessageType("existing")
+      return
     }
-
     if (error) {
-      if (error.message.includes("User already registered")) {
-        return redirect(`/login?message=An account with this email already exists. Please sign in instead.&type=existing`)
+      if (error.message.includes("already registered") || error.message.includes("email_exists")) {
+        setMessage("An account with this email already exists. Please sign in instead.")
+        setMessageType("existing")
+      } else if (error.message.includes("weak_password")) {
+        setMessage("Password is too weak. Please choose a stronger password.")
+        setMessageType("destructive")
+      } else {
+        setMessage(error.message)
+        setMessageType("destructive")
       }
-      if (error.message.includes("email_exists") || error.message.includes("already registered")) {
-        return redirect(`/login?message=An account with this email already exists. Please sign in instead.&type=existing`)
-      }
-      if (error.message.includes("weak_password")) {
-        return redirect(`/login?message=Password is too weak. Please choose a stronger password.`)
-      }
-      
-      return redirect(`/login?message=${error.message}`)
+      return
     }
-
-    const session = (await supabase.auth.signInWithPassword({
-      email,
-      password
-    })).data.session
-    if (session) {
-      return redirect("/chat")
-    } else {
-      if (enableEmailConfirmation) {
-        return redirect("/login?message=Please check your email and click the verification link to complete your account setup.&type=success")
-      }
-      return redirect("/login?message=Account created successfully! Please sign in to continue.&type=success")
-    }
+    setMessage("Please check your email and click the verification link to complete your account setup.")
+    setMessageType("success")
   }
 
+  // Google OAuth
   const signInWithGoogle = async () => {
-    "use server"
-    const origin = headers().get("origin")
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    setLoading(true)
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${origin}/auth/callback?next=/chat` }
+      options: { redirectTo: `${window.location.origin}/login` }
     })
-
+    setLoading(false)
     if (error) {
-      return redirect(`/login?message=${error.message}`)
+      setMessage(error.message)
+      setMessageType("destructive")
     }
-    if (data.url) {
-      return redirect(data.url)
-    }
+    // On success, user will be redirected to Google and back to /login
+    // useEffect will check session and redirect to /chat
   }
 
-  const handleResetPassword = async (formData: FormData) => {
-    "use server"
-    const origin = headers().get("origin")
+  // Password reset
+  const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setLoading(true)
+    setMessage(null)
+    const formData = new FormData(e.currentTarget)
     const email = formData.get("email") as string
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-
     if (!email) {
-      return redirect(`/login?message=Please enter your email address first.`)
+      setMessage("Please enter your email address first.")
+      setMessageType("destructive")
+      setLoading(false)
+      return
     }
-
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${origin}/auth/callback?next=/login/password`
+      redirectTo: `${window.location.origin}/login/password`
     })
-
+    setLoading(false)
     if (error) {
-      return redirect(`/login?message=${error.message}`)
+      setMessage(error.message)
+      setMessageType("destructive")
+    } else {
+      setMessage("Password reset link has been sent to your email.")
+      setMessageType("success")
     }
-    return redirect("/login?message=Password reset link has been sent to your email.&type=success")
   }
 
-  const resendVerification = async (formData: FormData) => {
-    "use server"
+  // Resend verification email
+  const handleResendVerification = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setLoading(true)
+    setMessage(null)
+    const formData = new FormData(e.currentTarget)
     const email = formData.get("email") as string
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-    const origin = headers().get("origin")
-
     if (!email) {
-      return redirect(`/login?message=Please enter your email address first.`)
+      setMessage("Please enter your email address first.")
+      setMessageType("destructive")
+      setLoading(false)
+      return
     }
-
     const { error } = await supabase.auth.resend({
-      type: 'signup',
-      email: email,
-      options: {
-        emailRedirectTo: `${origin}/auth/callback?next=/setup`
-      }
+      type: "signup",
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/setup` }
     })
-
+    setLoading(false)
     if (error) {
-      return redirect(`/login?message=${error.message}`)
+      setMessage(error.message)
+      setMessageType("destructive")
+    } else {
+      setMessage("Verification email has been resent. Please check your inbox.")
+      setMessageType("success")
     }
-    return redirect("/login?message=Verification email has been resent. Please check your inbox.&type=success")
   }
 
-  // Determine alert variant based on message type
+  // UI helpers (same as before)
   const getAlertVariant = (type?: string) => {
     switch (type) {
-      case 'success':
-        return 'success' as const
-      case 'info':
-        return 'info' as const
-      case 'warning':
-        return 'warning' as const
+      case "success":
+        return "success" as const
+      case "info":
+        return "info" as const
+      case "warning":
+        return "warning" as const
       default:
-        return 'destructive' as const
+        return "destructive" as const
     }
   }
-
   const getAlertIcon = (type?: string) => {
     switch (type) {
-      case 'success':
+      case "success":
         return <CheckCircle className="h-4 w-4 text-green-600" />
-      case 'info':
+      case "info":
         return <AlertCircle className="h-4 w-4 text-blue-600" />
-      case 'warning':
+      case "warning":
         return <AlertCircle className="h-4 w-4 text-yellow-600" />
       default:
         return <AlertCircle className="h-4 w-4 text-red-600" />
     }
   }
-
-  // Helper to get custom background class for each alert type (dark mode)
   const getAlertBgClass = (type?: string) => {
     switch (type) {
-      case 'success':
-        return 'bg-green-900/40 border-green-700'
-      case 'info':
-        return 'bg-blue-900/40 border-blue-700'
-      case 'warning':
-        return 'bg-yellow-900/40 border-yellow-700'
+      case "success":
+        return "bg-green-900/40 border-green-700"
+      case "info":
+        return "bg-blue-900/40 border-blue-700"
+      case "warning":
+        return "bg-yellow-900/40 border-yellow-700"
       default:
-        return 'bg-red-900/40 border-red-700'
+        return "bg-red-900/40 border-red-700"
     }
   }
-
-  // Helper to get custom text color for each alert type (dark mode)
   const getAlertTextClass = (type?: string) => {
     switch (type) {
-      case 'success':
-        return 'text-green-200'
-      case 'info':
-        return 'text-blue-200'
-      case 'warning':
-        return 'text-yellow-200'
+      case "success":
+        return "text-green-200"
+      case "info":
+        return "text-blue-200"
+      case "warning":
+        return "text-yellow-200"
       default:
-        return 'text-red-200'
+        return "text-red-200"
     }
   }
 
@@ -273,23 +237,21 @@ export default async function Login({
               Welcome back! Sign in to continue.
             </CardDescription>
           </CardHeader>
-
           <CardContent className="grid gap-6 px-8 py-6">
-            {/* Display messages */}
-            {searchParams?.message && (
-              <Alert variant={getAlertVariant(searchParams.type)} className={`mb-4 ${getAlertBgClass(searchParams.type)} ${getAlertTextClass(searchParams.type)} border`}>
-                {getAlertIcon(searchParams.type)}
-                <AlertDescription className={`text-sm ${getAlertTextClass(searchParams.type)}`}>
-                  {searchParams.message}
-                  {/* Show resend verification button for email confirmation messages */}
-                  {searchParams.type === 'info' && searchParams.message.includes('verification') && (
-                    <form action={resendVerification} className="mt-3">
-                      <input type="hidden" name="email" />
-                      <Button 
-                        type="submit" 
-                        variant="outline" 
+            {message && (
+              <Alert variant={getAlertVariant(messageType)} className={`mb-4 ${getAlertBgClass(messageType)} ${getAlertTextClass(messageType)} border`}>
+                {getAlertIcon(messageType)}
+                <AlertDescription className={`text-sm ${getAlertTextClass(messageType)}`}>
+                  {message}
+                  {messageType === "info" && message.includes("verification") && (
+                    <form onSubmit={handleResendVerification} className="mt-3">
+                      <input type="email" name="email" placeholder="Email" required className="mb-2" />
+                      <Button
+                        type="submit"
+                        variant="outline"
                         size="sm"
                         className="w-full border-blue-700 text-blue-200 hover:bg-blue-800/40"
+                        disabled={loading}
                       >
                         <RotateCcw className="mr-2 h-3 w-3" />
                         Resend Verification Email
@@ -301,7 +263,7 @@ export default async function Login({
             )}
 
             {/* Email & Password Form */}
-            <form action={signIn} className="grid gap-4">
+            <form onSubmit={handleSignIn} className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
@@ -316,7 +278,6 @@ export default async function Login({
                   />
                 </div>
               </div>
-
               <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
@@ -330,31 +291,36 @@ export default async function Login({
                     className="pl-10"
                   />
                 </div>
-                <Button
-                  formAction={handleResetPassword}
-                  type="submit"
-                  variant="link"
-                  size="sm"
-                  className="h-auto self-end p-0 font-normal text-muted-foreground"
-                >
-                  Forgot Password?
-                </Button>
+                <form onSubmit={handleResetPassword}>
+                  <Button
+                    type="submit"
+                    variant="link"
+                    size="sm"
+                    className="h-auto self-end p-0 font-normal text-muted-foreground"
+                    disabled={loading}
+                  >
+                    Forgot Password?
+                  </Button>
+                  <Input type="hidden" name="email" value="" />
+                </form>
               </div>
-
               <div className="grid gap-3 pt-2">
-                <Button type="submit" className="w-full font-semibold" size="lg">
+                <Button type="submit" className="w-full font-semibold" size="lg" disabled={loading}>
                   <Zap className="mr-2 h-4 w-4" />
                   Sign In
                 </Button>
-                <Button
-                  formAction={signUp}
-                  variant="outline"
-                  className="w-full"
-                  size="lg"
-                >
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Create Account
-                </Button>
+                <form onSubmit={handleSignUp}>
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    className="w-full"
+                    size="lg"
+                    disabled={loading}
+                  >
+                    <UserPlus className="mr-2 h-4 w-4" />
+                    Create Account
+                  </Button>
+                </form>
               </div>
             </form>
 
@@ -370,13 +336,17 @@ export default async function Login({
               </div>
             </div>
 
-            {/* Google Sign In Form */}
-            <form action={signInWithGoogle}>
-              <Button type="submit" variant="outline" className="w-full" size="lg">
-                <GoogleSVG className="mr-2 h-5 w-5" />
-                Continue with Google
-              </Button>
-            </form>
+            {/* Google Sign In Button */}
+            <Button
+              onClick={signInWithGoogle}
+              variant="outline"
+              className="w-full"
+              size="lg"
+              disabled={loading}
+            >
+              <GoogleSVG className="mr-2 h-5 w-5" />
+              Continue with Google
+            </Button>
           </CardContent>
         </Card>
       </div>
