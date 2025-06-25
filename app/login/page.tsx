@@ -30,6 +30,8 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [messageType, setMessageType] = useState<string | undefined>(undefined)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   // On mount, check if user is already logged in
   useEffect(() => {
@@ -51,9 +53,6 @@ export default function Login() {
     e.preventDefault()
     setLoading(true)
     setMessage(null)
-    const formData = new FormData(e.currentTarget)
-    const email = formData.get("email") as string
-    const password = formData.get("password") as string
 
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     setLoading(false)
@@ -74,13 +73,15 @@ export default function Login() {
   }
 
   // Sign up with email/password
-  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleSignUp = async () => {
+    if (!email || !password) {
+      setMessage("Please enter both email and password.")
+      setMessageType("destructive")
+      return
+    }
+
     setLoading(true)
     setMessage(null)
-    const formData = new FormData(e.currentTarget)
-    const email = formData.get("email") as string
-    const password = formData.get("password") as string
 
     const { data, error } = await supabase.auth.signUp({ email, password })
     setLoading(false)
@@ -123,18 +124,16 @@ export default function Login() {
   }
 
   // Password reset
-  const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
-    setMessage(null)
-    const formData = new FormData(e.currentTarget)
-    const email = formData.get("email") as string
+  const handleResetPassword = async () => {
     if (!email) {
       setMessage("Please enter your email address first.")
       setMessageType("destructive")
-      setLoading(false)
       return
     }
+    
+    setLoading(true)
+    setMessage(null)
+    
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/login/password`
     })
@@ -149,18 +148,16 @@ export default function Login() {
   }
 
   // Resend verification email
-  const handleResendVerification = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
-    setMessage(null)
-    const formData = new FormData(e.currentTarget)
-    const email = formData.get("email") as string
+  const handleResendVerification = async () => {
     if (!email) {
       setMessage("Please enter your email address first.")
       setMessageType("destructive")
-      setLoading(false)
       return
     }
+    
+    setLoading(true)
+    setMessage(null)
+    
     const { error } = await supabase.auth.resend({
       type: "signup",
       email,
@@ -176,7 +173,7 @@ export default function Login() {
     }
   }
 
-  // UI helpers (same as before)
+  // UI helpers
   const getAlertVariant = (type?: string) => {
     switch (type) {
       case "success":
@@ -245,10 +242,9 @@ export default function Login() {
                 <AlertDescription className={`text-sm ${getAlertTextClass(messageType)}`}>
                   {message}
                   {messageType === "info" && message.includes("verification") && (
-                    <form onSubmit={handleResendVerification} className="mt-3">
-                      <input type="email" name="email" placeholder="Email" required className="mb-2" />
+                    <div className="mt-3">
                       <Button
-                        type="submit"
+                        onClick={handleResendVerification}
                         variant="outline"
                         size="sm"
                         className="w-full border-blue-700 text-blue-200 hover:bg-blue-800/40"
@@ -257,7 +253,7 @@ export default function Login() {
                         <RotateCcw className="mr-2 h-3 w-3" />
                         Resend Verification Email
                       </Button>
-                    </form>
+                    </div>
                   )}
                 </AlertDescription>
               </Alert>
@@ -276,6 +272,8 @@ export default function Login() {
                     placeholder="your@email.com"
                     required
                     className="pl-10"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
               </div>
@@ -290,38 +288,37 @@ export default function Login() {
                     placeholder="••••••••"
                     required
                     className="pl-10"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                <form onSubmit={handleResetPassword}>
-                  <Button
-                    type="submit"
-                    variant="link"
-                    size="sm"
-                    className="h-auto self-end p-0 font-normal text-muted-foreground"
-                    disabled={loading}
-                  >
-                    Forgot Password?
-                  </Button>
-                  <Input type="hidden" name="email" value="" />
-                </form>
+                <Button
+                  type="button"
+                  onClick={handleResetPassword}
+                  variant="link"
+                  size="sm"
+                  className="h-auto self-end p-0 font-normal text-muted-foreground"
+                  disabled={loading}
+                >
+                  Forgot Password?
+                </Button>
               </div>
               <div className="grid gap-3 pt-2">
                 <Button type="submit" className="w-full font-semibold" size="lg" disabled={loading}>
                   <Zap className="mr-2 h-4 w-4" />
                   Sign In
                 </Button>
-                <form onSubmit={handleSignUp}>
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    className="w-full"
-                    size="lg"
-                    disabled={loading}
-                  >
-                    <UserPlus className="mr-2 h-4 w-4" />
-                    Create Account
-                  </Button>
-                </form>
+                <Button
+                  type="button"
+                  onClick={handleSignUp}
+                  variant="outline"
+                  className="w-full"
+                  size="lg"
+                  disabled={loading}
+                >
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Create Account
+                </Button>
               </div>
             </form>
 
