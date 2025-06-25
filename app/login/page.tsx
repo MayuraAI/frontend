@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState, useCallback } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { supabase } from "@/lib/supabase/client" // or browser-client if you prefer
+import { supabase } from "@/lib/supabase/browser-client"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
@@ -34,6 +34,7 @@ export default function Login() {
   // On mount, check if user is already logged in
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
+      console.log("Supabase session:", data.session)
       if (data.session) {
         router.replace("/chat")
       }
