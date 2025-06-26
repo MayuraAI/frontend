@@ -6,20 +6,21 @@ import { cn } from "@/lib/utils"
 interface ThinkingBlockProps {
   thinking: string
   isPlaceholder?: boolean
-  thinkingFlow?: string
+  isComplete?: boolean // New prop to clearly indicate when thinking is done
 }
 
 export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({ 
   thinking, 
   isPlaceholder = false,
-  thinkingFlow
+  isComplete = false
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
+  // Don't render anything if no thinking content and not a placeholder
   if (!thinking && !isPlaceholder) return null
 
-  // Show minimal placeholder while thinking
-  if (isPlaceholder) {
+  // Show placeholder while waiting for thinking to start
+  if (isPlaceholder && !thinking) {
     return (
       <div className="mb-4 rounded-lg border border-slate-600 bg-slate-900/30">
         <div className="flex items-center gap-2 p-3 text-sm text-slate-400">
@@ -35,52 +36,36 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
     )
   }
 
-  // Check if this is live thinking content (no thinkingFlow means it's still streaming)
-  // But if thinkingFlow exists, it means thinking is complete and should show as dropdown
-  // Also, if thinking content looks complete (contains full sentences or is very long), treat as completed
-  const looksLikeCompletedThinking = thinking && (
-    thinking.includes('.') || 
-    thinking.includes('!') || 
-    thinking.includes('?') || 
-    thinking.length > 200
-  )
-  
-  const isLiveThinking = !thinkingFlow && thinking && thinking.trim().length > 0 && isPlaceholder === false && !looksLikeCompletedThinking
-
-  // Show live thinking preview (2 rows) while streaming
-  if (isLiveThinking) {
-    // For live thinking, show the most recent content (last 2 lines or last ~300 characters)
+  // Show live thinking with scrolling preview (when thinking is in progress)
+  if (!isComplete && thinking) {
+    // Get the last two lines or last ~200 characters for scrolling effect
     const lines = thinking.split('\n').filter(line => line.trim().length > 0)
     let previewText = ""
     
     if (lines.length <= 2) {
-      // If 2 or fewer lines, show all
-      previewText = thinking.substring(Math.max(0, thinking.length - 300))
+      // Show all if 2 or fewer lines
+      previewText = thinking
     } else {
-      // Show last 2 lines for scrolling effect
+      // Show last 2 lines
       previewText = lines.slice(-2).join('\n')
     }
     
-    // Ensure we don't exceed 300 characters for display
-    if (previewText.length > 300) {
-      previewText = "..." + previewText.substring(previewText.length - 297)
+    // Limit preview to reasonable length
+    if (previewText.length > 200) {
+      previewText = "..." + previewText.substring(previewText.length - 197)
     }
-
-    const hasMore = thinking.length > previewText.length
 
     return (
       <div className="mb-4 rounded-lg border border-slate-600 bg-slate-900/20">
         <div className="p-3">
-          <div className="flex items-center gap-2 mb-2 text-sm text-slate-400">
+          <div className="flex items-center gap-2 mb-2 text-sm">
             <IconBrain size={16} className="animate-pulse text-slate-500" />
-            <span className="text-slate-400">AI is thinking...</span>
+            <span className="animate-pulse text-slate-400">AI is thinking...</span>
           </div>
-          <div className="text-xs text-slate-500 leading-relaxed">
-            <div className="whitespace-pre-wrap">
+          <div className="text-xs text-slate-400 leading-relaxed font-mono">
+            <div className="whitespace-pre-wrap max-h-12 overflow-hidden">
               {previewText}
-              {hasMore && (
-                <span className="animate-pulse"> ...</span>
-              )}
+              <span className="animate-pulse">...</span>
             </div>
           </div>
         </div>
@@ -88,43 +73,48 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
     )
   }
 
-  // If thinkingFlow is missing but thinking is present and not a placeholder, still show the dropdown using the full thinking as content
-  const displayThinkingFlow = thinkingFlow || (thinking && !isPlaceholder ? thinking.substring(0, 100) + (thinking.length > 100 ? '...' : '') : undefined)
+  // Show completed thinking as expandable dropdown
+  if (isComplete && thinking) {
+    // Create a brief preview for the dropdown header
+    const previewText = thinking.length > 100 
+      ? thinking.substring(0, 100) + "..." 
+      : thinking
 
-  return (
-    <div className="mb-4 rounded-lg border border-slate-600 bg-slate-900/20">
-      <Button
-        variant="ghost"
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="h-auto w-full justify-between p-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-300"
-      >
-        <div className="flex items-center gap-2 text-sm">
-          <IconBrain size={16} className="text-slate-500" />
-          <div className="flex-1 text-left">
-            <div className="font-medium text-slate-400">AI Reasoning</div>
-            {displayThinkingFlow && (
+    return (
+      <div className="mb-4 rounded-lg border border-slate-600 bg-slate-900/20">
+        <Button
+          variant="ghost"
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="h-auto w-full justify-between p-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-300"
+        >
+          <div className="flex items-center gap-2 text-sm">
+            <IconBrain size={16} className="text-slate-500" />
+            <div className="flex-1 text-left">
+              <div className="font-medium text-slate-400">AI Reasoning</div>
               <div className="mt-1 truncate text-xs text-slate-500">
-                {displayThinkingFlow}...
+                {previewText}
               </div>
-            )}
-          </div>
-        </div>
-        {isExpanded ? (
-          <IconChevronUp size={16} className="text-slate-500" />
-        ) : (
-          <IconChevronDown size={16} className="text-slate-500" />
-        )}
-      </Button>
-
-      {isExpanded && (
-        <div className="px-3 pb-3">
-          <div className="border-t border-slate-600 pt-3">
-            <div className="whitespace-pre-wrap rounded border border-slate-600 bg-slate-900 p-3 font-mono text-sm text-slate-300">
-              {thinking}
             </div>
           </div>
-        </div>
-      )}
-    </div>
-  )
+          {isExpanded ? (
+            <IconChevronUp size={16} className="text-slate-500" />
+          ) : (
+            <IconChevronDown size={16} className="text-slate-500" />
+          )}
+        </Button>
+
+        {isExpanded && (
+          <div className="px-3 pb-3">
+            <div className="border-t border-slate-600 pt-3">
+              <div className="whitespace-pre-wrap rounded border border-slate-600 bg-slate-900 p-3 font-mono text-sm text-slate-300">
+                {thinking}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  return null
 }

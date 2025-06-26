@@ -97,11 +97,6 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
                   Please wait while we set everything up
                 </p>
               </div>
-              <div className="w-full space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
-              </div>
             </div>
           </CardContent>
         </Card>

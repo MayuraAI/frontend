@@ -110,7 +110,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ aiResponse }) => {
   }
 
   // Parse the response to separate thinking from main content
-  const { thinking, response, isThinkingPlaceholder, thinkingFlow } = parseThinkingResponse(aiResponse)
+  const { thinking, response, isThinkingPlaceholder, isComplete } = parseThinkingResponse(aiResponse)
 
   return (
     <div className="github-markdown">
@@ -119,7 +119,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ aiResponse }) => {
         <ThinkingBlock 
           thinking={thinking || ''} 
           isPlaceholder={isThinkingPlaceholder}
-          thinkingFlow={thinkingFlow}
+          isComplete={isComplete}
         />
       )}
 

@@ -18,7 +18,6 @@ interface PromptExample {
   text: string
   targetModel: string
   description: string
-  icon: any
 }
 
 const aiModels: AIModel[] = [
@@ -52,7 +51,7 @@ const aiModels: AIModel[] = [
     color: "from-red-400 to-red-600",
     specialty: "General Intelligence",
     icon: Code,
-    arrowColor: "#a78bfa"
+    arrowColor: "#f43f5e"
   }
 ]
 
@@ -60,26 +59,22 @@ const promptExamples: PromptExample[] = [
   {
     text: "Write a Python function to sort a list",
     targetModel: "claude",
-    description: "Code Generation",
-    icon: Code
+    description: "Code Generation"
   },
   {
     text: "Analyze this proposal for key insights",
     targetModel: "gpt4",
-    description: "Analysis",
-    icon: FileText
+    description: "Analysis"
   },
   {
     text: "How is the weather in Hyderabad?",
     targetModel: "llama",
-    description: "Conversation",
-    icon: Brain
+    description: "Conversation"
   },
   {
     text: "Help me plan a 2-week vacation",
     targetModel: "gemini",
-    description: "General Intelligence",
-    icon: Brain
+    description: "General Intelligence"
   }
 ]
 
@@ -126,8 +121,6 @@ export function AIRoutingAnimation() {
   }, [currentPromptIndex]);
 
   const currentPrompt = promptExamples[currentPromptIndex]
-  const selectedModelData = aiModels.find(m => m.id === selectedModel)
-  const PromptIcon = currentPrompt.icon
 
   return (
     <div className="relative mx-auto flex min-h-[420px] w-full max-w-sm flex-col items-center justify-center">

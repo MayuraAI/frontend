@@ -128,6 +128,8 @@ export const useChatHandler = () => {
         throw new Error("No valid session found. Please log in again.")
       }
 
+      const lastFourMessages = messages.slice(-4)
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -135,7 +137,7 @@ export const useChatHandler = () => {
           Authorization: `Bearer ${session.access_token}`
         },
         body: JSON.stringify({
-          messages: messages,
+          messages: lastFourMessages,
           profile_context: chatSettings.includeProfileContext
             ? profile.profile_context
             : undefined

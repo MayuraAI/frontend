@@ -34,7 +34,7 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
             
           />
           <p
-            className="flex-1 text-sidebar-foreground text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight transition-opacity hover:opacity-80 slackey-regular"
+            className="flex-1 text-sidebar-foreground text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight transition-opacity hover:opacity-80"
           >
             Mayura 
           </p>
