@@ -61,8 +61,6 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
     }
 
     setLoading(true)
-    console.log("Fetching chat data for user:", userId)
-
     try {
       setChatSettings({
         model: "gpt-4",

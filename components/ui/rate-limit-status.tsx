@@ -106,13 +106,8 @@ export default function RateLimitStatus({
   // Listen for manual refresh triggers (like after sending messages)
   useEffect(() => {
     if (rateLimitRefreshTrigger > 0) {
-      console.log(
-        "Rate limit refresh triggered, count:",
-        rateLimitRefreshTrigger
-      )
       // Add a small delay to allow the backend to process the request
       const timeoutId = setTimeout(() => {
-        console.log("Executing delayed rate limit fetch...")
         fetchStatus()
       }, 100)
       return () => clearTimeout(timeoutId)

@@ -10,9 +10,6 @@ export const getProfileByUserId = async (userId: string) => {
 
   if (error) {
     if (error.code === "PGRST116") {
-      // Profile not found, create a new one with robust error handling
-      console.log("Profile not found, creating new profile for user:", userId)
-
       try {
         // Generate a unique username
         const baseUsername = `user_${userId.slice(0, 8)}`
