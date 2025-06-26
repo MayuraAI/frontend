@@ -21,21 +21,21 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
 
   return (
     <TabsContent
-      className="bg-sidebar m-0 flex w-full flex-col size-full"
+      className="bg-sidebar m-0 flex size-full w-full flex-col"
       value={contentType}
     >
       {/* Responsive Header */}
-      <header className="bg-sidebar shrink-0 p-4 md:p-6 flex justify-center">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => (window.location.href = "/")}>
+      <header className="bg-sidebar flex shrink-0 justify-center p-4 md:p-6">
+        <div className="flex cursor-pointer items-center gap-2" onClick={() => (window.location.href = "/")}>
           <img 
             src="/logo_512.png" 
             alt="Mayura Logo" 
-            className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-10 lg:h-10"
+            className="size-6 sm:size-7 md:size-8 lg:size-10"
           />
-          <p className="flex-1 text-sidebar-foreground text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight transition-opacity hover:opacity-80">
+          <p className="text-sidebar-foreground flex-1 text-xl font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-2xl md:text-3xl lg:text-4xl">
             Mayura 
           </p>
-          <span className="text-xs sm:text-sm md:text-base font-semibold opacity-60 align-top ml-1">(beta)</span>
+          <span className="ml-1 align-top text-xs font-semibold opacity-60 sm:text-sm md:text-base">(beta)</span>
         </div>
       </header>
 
@@ -49,16 +49,16 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
 
           {/* Responsive Empty State */}
           {(!chats || chats.length === 0) && (
-            <div className="flex flex-col items-center justify-center py-8 md:py-16 text-center">
+            <div className="flex flex-col items-center justify-center py-8 text-center md:py-16">
               <div className="bg-muted border-border max-w-xs rounded-lg border p-4 md:p-8">
                 <MessageCircle
-                  className="text-muted-foreground mx-auto mb-4 md:mb-6 size-12 md:size-16"
+                  className="text-muted-foreground mx-auto mb-4 size-12 md:mb-6 md:size-16"
                   strokeWidth={1.5}
                 />
-                <h3 className="text-foreground mb-2 md:mb-4 text-base md:text-lg font-semibold">
+                <h3 className="text-foreground mb-2 text-base font-semibold md:mb-4 md:text-lg">
                   No chats yet
                 </h3>
-                <p className="text-muted-foreground text-xs md:text-sm leading-relaxed">
+                <p className="text-muted-foreground text-xs leading-relaxed md:text-sm">
                   Start a conversation to see your chat history here
                 </p>
               </div>

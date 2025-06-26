@@ -14,10 +14,10 @@ export default function AboutPage() {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <h1
-                className="flex-1 text-sidebar-foreground cursor-pointer text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight transition-opacity hover:opacity-80"
+                className="text-sidebar-foreground flex-1 cursor-pointer text-3xl font-extrabold tracking-tight transition-opacity hover:opacity-80 md:text-4xl lg:text-5xl"
                 onClick={() => (window.location.href = "/")}
               >
-                Mayura <span className="text-base font-semibold opacity-60 align-top ml-1">(beta)</span>
+                Mayura <span className="ml-1 align-top text-base font-semibold opacity-60">(beta)</span>
               </h1>
             </div>
           </div>

@@ -92,7 +92,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
                 isGenerating ? "AI is thinking..." : "Type your message here..."
               }
               disabled={isGenerating}
-              className="w-full resize-none p-4 sm:p-5 md:p-6 text-sm sm:text-base leading-relaxed text-white"
+              className="w-full resize-none p-4 text-sm leading-relaxed text-white sm:p-5 sm:text-base md:p-6"
               rows={1}
               style={{
                 maxHeight: "200px",
@@ -108,20 +108,20 @@ export const ChatInput: FC<ChatInputProps> = () => {
                   onClick={handleStopMessage}
                   variant="destructive"
                   size="sm"
-                  className="flex items-center gap-1 sm:gap-2 h-8 sm:h-9 px-2 sm:px-3"
+                  className="flex h-8 items-center gap-1 px-2 sm:h-9 sm:gap-2 sm:px-3"
                 >
                   <Square size={14} className="sm:size-4" />
-                  <span className="text-xs sm:text-sm font-bold">Stop</span>
+                  <span className="text-xs font-bold sm:text-sm">Stop</span>
                 </Button>
               ) : (
                 <Button
                   type="submit"
                   disabled={!canSend}
                   size="sm"
-                  className="flex items-center gap-1 sm:gap-2 bg-violet-600 text-white hover:bg-violet-700 h-8 sm:h-9 px-2 sm:px-3"
+                  className="flex h-8 items-center gap-1 bg-violet-600 px-2 text-white hover:bg-violet-700 sm:h-9 sm:gap-2 sm:px-3"
                 >
                   <Send size={14} className="sm:size-4" />
-                  <span className="text-xs sm:text-sm font-bold">Send</span>
+                  <span className="text-xs font-bold sm:text-sm">Send</span>
                 </Button>
               )}
             </div>

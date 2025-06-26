@@ -107,7 +107,7 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
           <Button
             variant="outline"
             size="icon"
-            className="h-9 w-9 rounded-lg border shadow-sm"
+            className="size-9 rounded-lg border shadow-sm"
             onClick={handleToggleSidebar}
             aria-label="Toggle navigation menu"
           >
@@ -130,7 +130,7 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
         {/* Desktop Sidebar Toggle Button */}
         <Button
           className={cn(
-            "bg-sidebar hover:bg-sidebar-muted border-sidebar-border absolute left-1 top-1/2 z-50 h-8 w-8 rounded-lg border shadow-md transition-all duration-300",
+            "bg-sidebar hover:bg-sidebar-muted border-sidebar-border absolute left-1 top-1/2 z-50 size-8 rounded-lg border shadow-md transition-all duration-300",
             "hidden md:flex"
           )}
           style={{

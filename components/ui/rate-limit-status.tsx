@@ -249,7 +249,7 @@ export default function RateLimitStatus({
 
       {/* Expanded Details */}
       {isExpanded && (
-        <div className="absolute top-full right-0 mt-2 w-64 rounded-lg border border-slate-700 bg-black text-white shadow-lg z-50">
+        <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-lg border border-slate-700 bg-black text-white shadow-lg">
           <div className="space-y-3 p-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Daily Usage</span>

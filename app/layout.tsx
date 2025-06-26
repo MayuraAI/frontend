@@ -90,7 +90,7 @@ export default async function RootLayout({
       <body className={`${dmSans.variable} font-sans antialiased`} style={{backgroundColor: '#0F0F0F', color: '#F5F5F5'}}>
         <Providers>
           <Toaster richColors position="top-center" duration={3000} />
-          <div className="w-full min-h-screen flex flex-col" style={{backgroundColor: '#0F0F0F', color: '#F5F5F5'}}>
+          <div className="flex min-h-screen w-full flex-col" style={{backgroundColor: '#0F0F0F', color: '#F5F5F5'}}>
             {session ? <GlobalState>{children}</GlobalState> : children}
           </div>
         </Providers>

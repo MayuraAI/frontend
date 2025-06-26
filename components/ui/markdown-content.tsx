@@ -47,7 +47,7 @@ const PreWithCopy: React.FC<React.HTMLAttributes<HTMLPreElement>> = ({
       <pre
         ref={preRef}
         {...props}
-        className="overflow-x-auto rounded-md hljs p-4 font-mono text-sm leading-relaxed text-slate-100 border border-slate-600"
+        className="hljs overflow-x-auto rounded-md border border-slate-600 p-4 font-mono text-sm leading-relaxed text-slate-100"
       >
         {children}
       </pre>
@@ -270,7 +270,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ aiResponse }) => {
             if (!match) {
               return (
                 <code
-                  className="rounded hljs px-1.5 py-0.5 font-mono text-sm text-slate-200"
+                  className="hljs rounded px-1.5 py-0.5 font-mono text-sm text-slate-200"
                   {...props}
                 >
                   {children}

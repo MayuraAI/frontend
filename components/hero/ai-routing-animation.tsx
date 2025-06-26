@@ -126,13 +126,13 @@ export function AIRoutingAnimation() {
     <div className="relative mx-auto flex min-h-[420px] w-full max-w-sm flex-col items-center justify-center">
       {/* Prompt */}
       <div className="z-20 mb-6 w-full">
-        <Card className="relative overflow-hidden border-0 bg-slate-800/90 shadow-2xl shadow-violet-900/30 w-[380px] h-[72px] flex items-center justify-center">
-          <CardContent className="flex items-center gap-2 p-4 w-full h-full">
+        <Card className="relative flex h-[72px] w-[380px] items-center justify-center overflow-hidden border-0 bg-slate-800/90 shadow-2xl shadow-violet-900/30">
+          <CardContent className="flex size-full items-center gap-2 p-4">
             <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-700 shadow-lg">
               <UserIcon className="size-4 text-white" />
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="mb-1 text-base font-medium leading-relaxed text-white truncate" title={currentPrompt.text}>
+            <div className="min-w-0 flex-1">
+              <p className="mb-1 truncate text-base font-medium leading-relaxed text-white" title={currentPrompt.text}>
                 &quot;{currentPrompt.text}&quot;
               </p>
               {/* <Badge variant="secondary" className="border-violet-600 bg-violet-900/30 px-2 py-1 text-xs text-violet-300">{currentPrompt.description}</Badge> */}
@@ -200,14 +200,14 @@ export function AIRoutingAnimation() {
       </svg>
       {/* Router */}
       <div className="relative z-20 mb-8 h-full">
-        <div className="flex flex-col items-center gap-3 rounded-2xl border-0 bg-gradient-to-r from-violet-600 to-purple-700 px-6 py-4 shadow-2xl w-[260px] justify-center h-full">
+        <div className="flex h-full w-[260px] flex-col items-center justify-center gap-3 rounded-2xl border-0 bg-gradient-to-r from-violet-600 to-purple-700 px-6 py-4 shadow-2xl">
           <div
             className={cn(
-              "flex items-center gap-3 w-full justify-center",
+              "flex w-full items-center justify-center gap-3",
               isRouting ? "shadow-violet-500/40" : "shadow-violet-900/20"
             )}
           >
-            <span className="text-base font-semibold tracking-wide text-white whitespace-nowrap overflow-hidden text-ellipsis">{"Mayura Router"}</span>
+            <span className="truncate text-base font-semibold tracking-wide text-white">{"Mayura Router"}</span>
             <Zap className={cn("size-5 text-white transition-all duration-300", isRouting && "animate-pulse")} />
           </div>
           {/* {isRouting ? <Badge variant="secondary" className="border-violet-600 bg-violet-900/30 px-2 py-1 text-xs text-violet-300 max-w-[200px] truncate">{currentPrompt.description}</Badge> : <div className="h-[50px] w-full"></div>} */}
@@ -218,7 +218,7 @@ export function AIRoutingAnimation() {
         )}
       </div>
       {/* Models Row */}
-      <div className="relative z-20 mt-4 flex w-full max-w-[320px] flex-row items-end justify-between gap-2 h-full">
+      <div className="relative z-20 mt-4 flex size-full max-w-[320px] flex-row items-end justify-between gap-2">
         {aiModels.map((model, i) => {
           const ModelIcon = model.icon
           const isSelected = selectedModel === model.id

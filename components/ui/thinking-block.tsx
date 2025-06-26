@@ -24,9 +24,9 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
     return (
       <div className="mb-4 rounded-lg border border-slate-600 bg-slate-900/30">
         <div className="flex items-center gap-2 p-3 text-sm text-slate-400">
-          <IconBrain size={16} className="animate-pulse text-slate-500 shrink-0" />
+          <IconBrain size={16} className="shrink-0 animate-pulse text-slate-500" />
           <span className="animate-pulse text-slate-500">AI is thinking...</span>
-          <div className="ml-auto flex space-x-1 shrink-0">
+          <div className="ml-auto flex shrink-0 space-x-1">
             <div className="size-1 animate-bounce rounded-full bg-slate-500 [animation-delay:-0.3s]"></div>
             <div className="size-1 animate-bounce rounded-full bg-slate-500 [animation-delay:-0.15s]"></div>
             <div className="size-1 animate-bounce rounded-full bg-slate-500"></div>
@@ -58,12 +58,12 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
     return (
       <div className="mb-4 rounded-lg border border-slate-600 bg-slate-900/20">
         <div className="p-3">
-          <div className="flex items-center gap-2 mb-2 text-sm">
-            <IconBrain size={16} className="animate-pulse text-slate-500 shrink-0" />
+          <div className="mb-2 flex items-center gap-2 text-sm">
+            <IconBrain size={16} className="shrink-0 animate-pulse text-slate-500" />
             <span className="animate-pulse text-slate-400">AI is thinking...</span>
           </div>
-          <div className="text-xs text-slate-400 leading-relaxed font-mono">
-            <div className="whitespace-pre-wrap max-h-12 overflow-hidden break-words">
+          <div className="font-mono text-xs leading-relaxed text-slate-400">
+            <div className="max-h-12 overflow-hidden whitespace-pre-wrap break-words">
               {previewText}
               <span className="animate-pulse">...</span>
             </div>
@@ -87,16 +87,16 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
           onClick={() => setIsExpanded(!isExpanded)}
           className="h-auto w-full justify-between p-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-300"
         >
-          <div className="flex items-center gap-2 text-sm min-w-0 flex-1">
-            <IconBrain size={14} className="text-slate-500 shrink-0 sm:size-4" />
-            <div className="flex-1 min-w-0 text-left">
-              <div className="font-medium text-slate-400 text-xs sm:text-sm">AI Reasoning</div>
-              <div className="mt-1 text-xs text-slate-500 break-words overflow-hidden line-clamp-2 sm:line-clamp-1">
+          <div className="flex min-w-0 flex-1 items-center gap-2 text-sm">
+            <IconBrain size={14} className="shrink-0 text-slate-500 sm:size-4" />
+            <div className="min-w-0 flex-1 text-left">
+              <div className="text-xs font-medium text-slate-400 sm:text-sm">AI Reasoning</div>
+              <div className="mt-1 line-clamp-2 overflow-hidden break-words text-xs text-slate-500 sm:line-clamp-1">
                 {previewText}
               </div>
             </div>
           </div>
-          <div className="shrink-0 ml-2">
+          <div className="ml-2 shrink-0">
             {isExpanded ? (
               <IconChevronUp size={14} className="text-slate-500 sm:size-4" />
             ) : (
@@ -108,7 +108,7 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
         {isExpanded && (
           <div className="px-3 pb-3">
             <div className="border-t border-slate-600 pt-3">
-              <div className="whitespace-pre-wrap rounded border border-slate-600 bg-slate-900 p-3 font-mono text-xs sm:text-sm text-slate-300 overflow-x-auto">
+              <div className="overflow-x-auto whitespace-pre-wrap rounded border border-slate-600 bg-slate-900 p-3 font-mono text-xs text-slate-300 sm:text-sm">
                 {thinking}
               </div>
             </div>

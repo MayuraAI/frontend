@@ -86,14 +86,14 @@ export default function HomePage() {
                 <img 
                   src="/logo_512.png" 
                   alt="Mayura Logo" 
-                  className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12"
+                  className="size-8 md:size-10 lg:size-12"
                 />
                 <p
-            className="flex-1 text-sidebar-foreground text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
+            className="text-sidebar-foreground flex-1 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl"
           >
             Mayura 
           </p>
-            <span className="text-base font-semibold opacity-60 align-top ml-1">(beta)</span>
+            <span className="ml-1 align-top text-base font-semibold opacity-60">(beta)</span>
               </div>
           </div>
         <nav className="hidden items-center gap-6 md:flex">
@@ -134,7 +134,7 @@ export default function HomePage() {
               <div className="flex flex-1 flex-col justify-center space-y-6 text-center md:items-start md:justify-center md:text-left">
                 <div className="space-y-4">
                   <h1
-                    className="pb-2 relative select-text bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl md:text-6xl lg:text-7xl"
+                    className="relative select-text bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text pb-2 text-4xl font-bold text-transparent sm:text-5xl md:text-6xl lg:text-7xl"
                   >
                     <span className="hero-select-hide">One Prompt</span>{" "}<br />
                     <span
@@ -404,7 +404,7 @@ export default function HomePage() {
               </Card>
 
               {/* Pro Plan */}
-              <Card className="relative flex h-full flex-col border-2 border-slate-600 bg-black/20 shadow-sm backdrop-blur-sm opacity-80">
+              <Card className="relative flex h-full flex-col border-2 border-slate-600 bg-black/20 opacity-80 shadow-sm backdrop-blur-sm">
                 <div className="absolute -top-4 left-1/2 w-fit -translate-x-1/2 rounded-full bg-slate-600 px-4 py-1 text-sm font-medium text-slate-300">
                   Coming Soon
                 </div>
@@ -463,7 +463,7 @@ export default function HomePage() {
                       </li> */}
                     </ul>
                   </div>
-                  <Button className="mt-8 w-full bg-slate-600 text-slate-300 cursor-not-allowed" disabled>
+                  <Button className="mt-8 w-full cursor-not-allowed bg-slate-600 text-slate-300" disabled>
                     Coming After Beta
                   </Button>
                 </CardContent>
@@ -555,13 +555,13 @@ export default function HomePage() {
         </section>
 
         {/* Beta Notice Section */}
-        <section className="py-12 border-t border-slate-700">
+        <section className="border-t border-slate-700 py-12">
           <div className="container mx-auto px-6">
             <div className="mx-auto max-w-4xl">
               <div className="rounded-lg border border-amber-600/30 bg-amber-900/10 p-6 backdrop-blur-sm">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-600/20">
+                  <div className="shrink-0">
+                    <div className="flex size-8 items-center justify-center rounded-full bg-amber-600/20">
                       <span className="text-sm font-bold text-amber-400">β</span>
                     </div>
                   </div>
@@ -570,7 +570,7 @@ export default function HomePage() {
                       Beta Version Notice
                     </h3>
                     <p className="mb-4 text-slate-300">
-                      Mayura is currently in public beta. While we've worked hard to make it as stable as possible, 
+                      Mayura is currently in public beta. While we&apos;ve worked hard to make it as stable as possible, 
                       you might encounter occasional bugs or unexpected behavior. Your feedback is invaluable in helping 
                       us improve the platform.
                     </p>
@@ -607,18 +607,18 @@ export default function HomePage() {
       </main>
 
       <footer className="w-full border-t border-slate-700 bg-black/30 py-12 backdrop-blur-sm">
-  <div className="container mx-auto px-6 space-y-16">
+  <div className="container mx-auto space-y-16 px-6">
     
     {/* Row 1: Branding + Navigation */}
-    <div className="flex flex-row lg:flex-row justify-between items-start lg:items-center gap-6 mb-6">
+    <div className="mb-6 flex flex-row items-start justify-between gap-6 lg:flex-row lg:items-center">
       
       {/* Branding and Subline */}
       <div>
-        <div className="flex items-center gap-2 mb-2">
+        <div className="mb-2 flex items-center gap-2">
           <div className="rounded bg-violet-600 p-2">
             <p className="font-bold text-white">M</p>
           </div>
-          <h3 className="font-bold text-white text-lg">Mayura</h3>
+          <h3 className="text-lg font-bold text-white">Mayura</h3>
         </div>
         <p className="text-sm text-slate-300">
           Intelligent AI routing for superior results, every time.
@@ -645,7 +645,7 @@ export default function HomePage() {
       <div className="flex flex-row gap-12">
         {/* Pavan Manish */}
         <div className="flex flex-col gap-1">
-          <p className="text-slate-300 font-bold">Pavan Manish</p>
+          <p className="font-bold text-slate-300">Pavan Manish</p>
           <div className="flex gap-4 text-xs">
             <a
               href="https://x.com/fromleg"
@@ -676,7 +676,7 @@ export default function HomePage() {
 
         {/* Sai Vishal */}
         <div className="flex flex-col gap-1">
-          <p className="text-slate-300 font-bold">Sai Vishal</p>
+          <p className="font-bold text-slate-300">Sai Vishal</p>
           <div className="flex gap-4 text-xs">
             <a
               href="https://x.com/lahsiv_ias"

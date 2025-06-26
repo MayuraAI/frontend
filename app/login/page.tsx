@@ -188,13 +188,13 @@ export default function Login() {
   const getAlertIcon = (type?: string) => {
     switch (type) {
       case "success":
-        return <CheckCircle className="h-4 w-4 text-green-600" />
+        return <CheckCircle className="size-4 text-green-600" />
       case "info":
-        return <AlertCircle className="h-4 w-4 text-blue-600" />
+        return <AlertCircle className="size-4 text-blue-600" />
       case "warning":
-        return <AlertCircle className="h-4 w-4 text-yellow-600" />
+        return <AlertCircle className="size-4 text-yellow-600" />
       default:
-        return <AlertCircle className="h-4 w-4 text-red-600" />
+        return <AlertCircle className="size-4 text-red-600" />
     }
   }
   const getAlertBgClass = (type?: string) => {
@@ -223,9 +223,9 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-background bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] p-4">
+    <div className="bg-background flex min-h-screen w-full items-center justify-center bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] p-4">
       <div className="w-full max-w-md">
-        <Card className="shadow-2xl shadow-primary/10">
+        <Card className="shadow-primary/10 shadow-2xl">
           <CardHeader className="flex flex-col items-center justify-center text-center">
             <CardTitle className="text-3xl font-bold tracking-tight">
               Mayura
@@ -249,7 +249,7 @@ export default function Login() {
                         className="w-full border-blue-700 text-blue-200 hover:bg-blue-800/40"
                         disabled={loading}
                       >
-                        <RotateCcw className="mr-2 h-3 w-3" />
+                        <RotateCcw className="mr-2 size-3" />
                         Resend Verification Email
                       </Button>
                     </div>
@@ -263,7 +263,7 @@ export default function Login() {
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Mail className="text-muted-foreground absolute left-3 top-1/2 size-4 -translate-y-1/2" />
                   <Input
                     id="email"
                     name="email"
@@ -279,7 +279,7 @@ export default function Login() {
               <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
-                  <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <KeyRound className="text-muted-foreground absolute left-3 top-1/2 size-4 -translate-y-1/2" />
                   <Input
                     id="password"
                     name="password"
@@ -296,7 +296,7 @@ export default function Login() {
                   onClick={handleResetPassword}
                   variant="link"
                   size="sm"
-                  className="h-auto self-end p-0 font-normal text-muted-foreground"
+                  className="text-muted-foreground h-auto self-end p-0 font-normal"
                   disabled={loading}
                 >
                   Forgot Password?
@@ -304,7 +304,7 @@ export default function Login() {
               </div>
               <div className="grid gap-3 pt-2">
                 <Button type="submit" className="w-full font-semibold" size="lg" disabled={loading}>
-                  <Zap className="mr-2 h-4 w-4" />
+                  <Zap className="mr-2 size-4" />
                   Sign In
                 </Button>
                 <Button
@@ -315,7 +315,7 @@ export default function Login() {
                   size="lg"
                   disabled={loading}
                 >
-                  <UserPlus className="mr-2 h-4 w-4" />
+                  <UserPlus className="mr-2 size-4" />
                   Create Account
                 </Button>
               </div>
@@ -327,7 +327,7 @@ export default function Login() {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
+                <span className="bg-card text-muted-foreground px-2">
                   Or
                 </span>
               </div>
@@ -341,7 +341,7 @@ export default function Login() {
               size="lg"
               disabled={loading}
             >
-              <GoogleSVG className="mr-2 h-5 w-5" />
+              <GoogleSVG className="mr-2 size-5" />
               Continue with Google
             </Button>
           </CardContent>
