@@ -109,14 +109,14 @@ export const Message: FC<MessageProps> = ({
                   value={editedContent}
                   onChange={e => setEditedContent(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="min-h-[100px] sm:min-h-[120px] w-full resize-none border-0 bg-transparent p-0 text-sm focus-visible:ring-0"
+                  className="min-h-[100px] w-full resize-none border-0 bg-transparent p-0 text-sm focus-visible:ring-0 sm:min-h-[120px]"
                   placeholder="Edit your message..."
                 />
-                <div className="mt-4 sm:mt-6 flex items-center gap-2 sm:gap-3 pt-3 sm:pt-4">
+                <div className="mt-4 flex items-center gap-2 pt-3 sm:mt-6 sm:gap-3 sm:pt-4">
                   <Button
                     onClick={handleSubmit}
                     size="sm"
-                    className="flex items-center gap-1 sm:gap-2 h-8 sm:h-9 px-2 sm:px-3"
+                    className="flex h-8 items-center gap-1 px-2 sm:h-9 sm:gap-2 sm:px-3"
                   >
                     <IconCheck size={14} className="sm:size-4" />
                     <span className="text-xs sm:text-sm">Save</span>
@@ -125,7 +125,7 @@ export const Message: FC<MessageProps> = ({
                     onClick={onCancelEdit}
                     size="sm"
                     variant="outline"
-                    className="flex items-center gap-1 sm:gap-2 h-8 sm:h-9 px-2 sm:px-3"
+                    className="flex h-8 items-center gap-1 px-2 sm:h-9 sm:gap-2 sm:px-3"
                   >
                     <IconX size={14} className="sm:size-4" />
                     <span className="text-xs sm:text-sm">Cancel</span>
@@ -134,16 +134,16 @@ export const Message: FC<MessageProps> = ({
               </div>
             ) : (
               <div className="message-block message-block--user relative">
-                <p className="whitespace-pre-wrap text-xs sm:text-sm leading-relaxed">
+                <p className="whitespace-pre-wrap text-xs leading-relaxed sm:text-sm">
                   {displayContent}
                 </p>
                 {shouldCollapse && (
-                  <div className="mt-2 sm:mt-3 flex justify-end gap-1 sm:gap-2">
+                  <div className="mt-2 flex justify-end gap-1 sm:mt-3 sm:gap-2">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={handleCopy}
-                      className="h-7 sm:h-8 px-2 sm:px-3 text-xs"
+                      className="h-7 px-2 text-xs sm:h-8 sm:px-3"
                     >
                       {isCopied ? (
                         <IconCheck size={12} className="sm:size-3.5" />
@@ -155,7 +155,7 @@ export const Message: FC<MessageProps> = ({
                       variant="ghost"
                       size="sm"
                       onClick={toggleExpanded}
-                      className="h-7 sm:h-8 px-2 sm:px-3 text-xs"
+                      className="h-7 px-2 text-xs sm:h-8 sm:px-3"
                     >
                       {isExpanded ? (
                         <>
@@ -173,12 +173,12 @@ export const Message: FC<MessageProps> = ({
                 )}
                 {/* Add copy button for short messages that don't collapse */}
                 {!shouldCollapse && (
-                  <div className="absolute right-1 sm:right-2 top-1 sm:top-2">
+                  <div className="absolute right-1 top-1 sm:right-2 sm:top-2">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={handleCopy}
-                      className="h-6 sm:h-8 px-2 sm:px-3 text-xs opacity-0 transition-opacity group-hover:opacity-100"
+                      className="h-6 px-2 text-xs opacity-0 transition-opacity group-hover:opacity-100 sm:h-8 sm:px-3"
                     >
                       {isCopied ? (
                         <IconCheck size={12} className="sm:size-3.5" />
@@ -197,7 +197,7 @@ export const Message: FC<MessageProps> = ({
         <div className="mx-auto w-full max-w-4xl py-1 sm:py-2">
           <div className="space-y-3 sm:space-y-4">
             <div className="message-block message-block--ai relative w-full pt-5 sm:pt-6">
-              <div className="bg-muted text-muted-foreground absolute left-2 sm:left-3 top-0 z-10 w-fit -translate-y-1/2 rounded-full px-2 sm:px-3 py-1 text-xs font-medium cursor-default">
+              <div className="bg-muted text-muted-foreground absolute left-2 top-0 z-10 w-fit -translate-y-1/2 cursor-default rounded-full px-2 py-1 text-xs font-medium sm:left-3 sm:px-3">
                 {getModelName()}
               </div>
               <div className="prose prose-sm dark:prose-invert max-w-none text-sm sm:text-base">
@@ -207,12 +207,12 @@ export const Message: FC<MessageProps> = ({
 
             {/* Message Actions */}
             {!isGenerating && (
-              <div className="ml-1 sm:ml-2 flex items-center gap-1 sm:gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+              <div className="ml-1 flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:ml-2 sm:gap-2">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleCopy}
-                  className="h-8 sm:h-10 px-2 sm:px-3"
+                  className="h-8 px-2 sm:h-10 sm:px-3"
                 >
                   {isCopied ? (
                     <IconCheck size={14} className="sm:size-4" />

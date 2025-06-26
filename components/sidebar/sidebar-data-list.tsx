@@ -72,8 +72,8 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
   const olderData = getSortedData(data, "Older")
 
   const SectionHeader = ({ title }: { title: string }) => (
-    <div className="px-1 sm:px-2 py-1 sm:py-2">
-      <h3 className="font-sans text-sm sm:text-base md:text-lg font-bold tracking-wide sm:tracking-widest text-slate-400 opacity-80">
+    <div className="p-1 sm:p-2">
+      <h3 className="font-sans text-sm font-bold tracking-wide text-slate-400 opacity-80 sm:text-base sm:tracking-widest md:text-lg">
         {title}
       </h3>
     </div>
@@ -83,7 +83,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     <div
       ref={divRef}
       className={cn(
-        "scrollbar-hide flex-1 overflow-auto flex flex-col gap-0.5 sm:gap-1 md:gap-1.5 lg:gap-2",
+        "scrollbar-hide flex flex-1 flex-col gap-0.5 overflow-auto sm:gap-1 md:gap-1.5 lg:gap-2",
         isOverflowing && "pr-1 sm:pr-2"
       )}
       role="list"
