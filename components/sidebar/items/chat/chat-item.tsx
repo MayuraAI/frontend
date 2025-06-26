@@ -34,7 +34,7 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
     <div
       ref={itemRef}
       className={cn(
-        "group flex w-full cursor-pointer items-center rounded-lg transition-all duration-200 mb-1",
+        "group flex w-full cursor-pointer items-center rounded-lg transition-all duration-200 mb-0.5 sm:mb-1",
         isActive
           ? "bg-slate-800"
           : "hover:bg-slate-800/50"
@@ -48,7 +48,7 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
       <div className="min-w-0 flex-1">
         <div
           className={cn(
-            "truncate font-medium leading-relaxed p-2",
+            "truncate font-medium leading-relaxed p-1.5 sm:p-2 text-sm sm:text-base",
             isActive ? "opacity-100" : "opacity-50 hover:opacity-100"
           )}
         >
@@ -62,7 +62,7 @@ export const ChatItem: FC<ChatItemProps> = ({ chat }) => {
           e.preventDefault()
         }}
         className={cn(
-          "ml-2 flex items-center gap-1 transition-all duration-200",
+          "ml-1 sm:ml-2 flex items-center gap-0.5 sm:gap-1 transition-all duration-200 pr-1 sm:pr-2",
           isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
         )}
       >

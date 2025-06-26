@@ -42,9 +42,6 @@ export async function GET(request: Request) {
         .single()
 
       if (profileError && profileError.code === "PGRST116") {
-        // Profile doesn't exist, create one
-        console.log("Creating profile for user:", user.id)
-
         // Generate a unique username
         const baseUsername = `user_${user.id.slice(0, 8)}`
         let finalUsername = baseUsername
@@ -108,8 +105,6 @@ export async function GET(request: Request) {
             )
           }
         }
-
-        console.log("Successfully created profile for user")
         // New user - redirect to setup
         return NextResponse.redirect(requestUrl.origin + "/setup")
       } else if (profileError) {

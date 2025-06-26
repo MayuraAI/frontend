@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Slackey&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -88,6 +87,13 @@
     color: rgb(255, 255, 255) !important; /* Force pure white text */
   }
 
+  /* Responsive font sizes */
+  @media (max-width: 640px) {
+    body {
+      font-size: 13px;
+    }
+  }
+
   /* Apply white text selectively, excluding elements that might have gradients */
   p:not([class*="bg-gradient"]), 
   div:not([class*="bg-gradient"]), 
@@ -161,14 +167,36 @@
     @apply text-xl font-medium;
   }
 
+  /* Responsive heading sizes */
+  @media (max-width: 640px) {
+    h1 {
+      @apply text-2xl;
+    }
+    
+    h2 {
+      @apply text-xl;
+    }
+    
+    h3 {
+      @apply text-lg;
+    }
+  }
+
   .font-mono {
     font-family: 'IBM Plex Mono', 'Fira Code', Consolas, monospace;
   }
 
   /* Modern Scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
+  }
+
+  @media (min-width: 768px) {
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
   }
 
   ::-webkit-scrollbar-track {
@@ -199,180 +227,182 @@
   }
 
   .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md;
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
   }
 
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border shadow-sm hover:shadow-md;
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
   }
 
-  /* Modern Container Base */
   .container-modern {
-    @apply rounded-lg border bg-card text-card-foreground shadow-sm;
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
-  /* Modern Chat Messages */
+  /* Responsive Message Blocks */
   .message-block {
-    @apply rounded-lg border bg-card p-4 shadow-sm;
+    @apply rounded-lg border border-slate-700 bg-slate-900/50 p-3 sm:p-4 md:p-6 backdrop-blur-sm;
   }
 
   .message-block--user {
-    @apply bg-slate-900;
+    @apply border-violet-500/30 bg-violet-900/20;
   }
 
   .message-block--ai {
-    @apply border-none;
+    @apply border-slate-600/50 bg-slate-800/30;
   }
 
+  /* Responsive markdown content */
   .markdown-content {
-    @apply text-foreground;
-    font-family: 'Inter', sans-serif;
+    @apply text-sm sm:text-base leading-relaxed;
   }
-  
+
   .markdown-content h1 {
-    @apply text-2xl font-bold mb-4 mt-6 first:mt-0;
+    @apply text-xl sm:text-2xl font-bold mb-3 sm:mb-4;
   }
-  
+
   .markdown-content h2 {
-    @apply text-xl font-semibold mb-3 mt-5 first:mt-0;
+    @apply text-lg sm:text-xl font-semibold mb-2 sm:mb-3;
   }
-  
+
   .markdown-content h3 {
-    @apply text-lg font-medium mb-2 mt-4 first:mt-0;
+    @apply text-base sm:text-lg font-medium mb-2;
   }
-  
+
   .markdown-content p {
-    @apply mb-4 leading-relaxed;
+    @apply mb-3 sm:mb-4;
   }
-  
+
   .markdown-content ul {
-    @apply list-disc space-y-1 pl-6 mb-4;
+    @apply mb-3 sm:mb-4 ml-4 sm:ml-6 list-disc;
   }
-  
+
   .markdown-content ol {
-    @apply list-decimal space-y-1 pl-6 mb-4;
+    @apply mb-3 sm:mb-4 ml-4 sm:ml-6 list-decimal;
   }
-  
+
   .markdown-content li {
-    @apply leading-relaxed;
+    @apply mb-1 sm:mb-2;
   }
-  
+
   .markdown-content pre {
-    @apply bg-muted rounded-lg p-4 mb-4 overflow-x-auto;
-    font-family: 'IBM Plex Mono', monospace;
+    @apply mb-3 sm:mb-4 rounded-lg bg-slate-900 p-3 sm:p-4 overflow-x-auto;
+    font-size: 0.8rem;
   }
-  
+
+  @media (min-width: 640px) {
+    .markdown-content pre {
+      font-size: 0.875rem;
+    }
+  }
+
   .markdown-content code {
-    @apply bg-muted px-1.5 py-0.5 rounded text-sm;
-    font-family: 'IBM Plex Mono', monospace;
+    @apply rounded bg-slate-800 px-1 py-0.5 text-xs sm:text-sm font-mono;
   }
-  
+
   .markdown-content pre code {
     @apply bg-transparent p-0;
   }
-  
+
   .markdown-content blockquote {
-    @apply border-l-4 border-border pl-4 italic text-muted-foreground mb-4;
+    @apply border-l-4 border-violet-500 pl-3 sm:pl-4 italic;
   }
-  
+
   .markdown-content table {
-    @apply w-full border-collapse border border-border mb-4;
+    @apply mb-3 sm:mb-4 w-full border-collapse;
   }
-  
+
   .markdown-content th,
   .markdown-content td {
-    @apply border border-border px-4 py-2 text-left;
+    @apply border border-slate-600 p-2 sm:p-3 text-left;
   }
-  
+
   .markdown-content th {
-    @apply bg-muted font-semibold;
+    @apply bg-slate-800 font-semibold;
   }
-  
+
   .markdown-content a {
-    @apply text-primary hover:underline;
+    @apply text-violet-400 hover:text-violet-300 underline;
   }
-  
+
   .markdown-content strong {
     @apply font-semibold;
   }
-  
+
   .markdown-content em {
     @apply italic;
   }
 
-  /* Email-style components with pure black theme */
+  /* Email components */
   .email-sidebar {
-    background-color: rgb(0, 0, 0);
-    border-right: 1px solid rgb(30, 30, 30);
+    @apply w-64 border-r border-slate-700 bg-slate-900;
   }
 
   .email-item {
-    @apply p-3 border-b cursor-pointer transition-colors;
-    border-bottom-color: rgb(30, 30, 30);
+    @apply cursor-pointer border-b border-slate-700 p-3 sm:p-4 transition-colors hover:bg-slate-800;
   }
 
   .email-item:hover {
-    background-color: rgb(15, 15, 15);
+    @apply bg-slate-800;
   }
 
   .email-item.active {
-    background-color: rgb(139, 92, 246);
-    color: rgb(255, 255, 255);
+    @apply bg-violet-900/30 border-violet-500/50;
   }
 
   .inbox-header {
-    @apply p-4 font-semibold border-b;
-    background-color: rgb(0, 0, 0);
-    border-bottom-color: rgb(30, 30, 30);
-    color: rgb(255, 255, 255);
+    @apply border-b border-slate-700 bg-slate-900 p-3 sm:p-4;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
   }
 
+  /* Tags */
   .tag {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply inline-flex items-center rounded-full px-2 py-1 text-xs font-medium;
   }
 
   .tag-primary {
-    @apply bg-primary/20 text-primary border border-primary/30;
+    @apply bg-violet-900/50 text-violet-300;
   }
 
   .tag-secondary {
-    @apply bg-secondary text-secondary-foreground border border-border;
+    @apply bg-slate-700 text-slate-300;
   }
 
   .tag-accent {
-    @apply bg-accent/20 text-accent border border-accent/30;
+    @apply bg-purple-900/50 text-purple-300;
   }
 
-  /* Chat input styling - pure black */
+  /* Chat input responsive styling */
   .chat-input {
-    @apply bg-card border border-border rounded-lg flex items-start transition-all duration-200;
-    background-color: rgb(0, 0, 0) !important;
+    @apply w-full resize-none rounded-lg border border-slate-600 bg-black p-3 sm:p-4 md:p-6 text-sm sm:text-base text-white focus:border-violet-500 focus:outline-none;
   }
 
   .modern-container {
-    @apply bg-card border border-border rounded-lg shadow-sm;
+    @apply mx-auto max-w-4xl px-3 sm:px-4 md:px-6;
   }
 }
 
 .center-setup-step {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .center-setup-step {
+    padding: 2rem;
+  }
 }
 
 .bg-sidebar {
-  background-color: hsl(var(--sidebar)) !important;
+  background-color: hsl(var(--sidebar));
+  color: hsl(var(--sidebar-foreground));
 }
 
 .hljs {
   color: #c9d1d9;
   background: #0d1117;
 }
-
-.slackey-regular {
-  font-family: "Slackey", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-

@@ -92,7 +92,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
                 isGenerating ? "AI is thinking..." : "Type your message here..."
               }
               disabled={isGenerating}
-              className="w-full resize-none p-6 text-base leading-relaxed text-white"
+              className="w-full resize-none p-4 sm:p-5 md:p-6 text-sm sm:text-base leading-relaxed text-white"
               rows={1}
               style={{
                 maxHeight: "200px",
@@ -101,27 +101,27 @@ export const ChatInput: FC<ChatInputProps> = () => {
               }}
             />
 
-            <div className="flex shrink-0 items-start px-2 py-4">
+            <div className="flex shrink-0 items-start px-2 py-3 sm:py-4">
               {isGenerating ? (
                 <Button
                   type="button"
                   onClick={handleStopMessage}
                   variant="destructive"
                   size="sm"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1 sm:gap-2 h-8 sm:h-9 px-2 sm:px-3"
                 >
-                  <Square size={16} />
-                  <span className="py-4 font-bold">Stop</span>
+                  <Square size={14} className="sm:size-4" />
+                  <span className="text-xs sm:text-sm font-bold">Stop</span>
                 </Button>
               ) : (
                 <Button
                   type="submit"
                   disabled={!canSend}
                   size="sm"
-                  className="flex items-center gap-3 bg-violet-600 text-white hover:bg-violet-700"
+                  className="flex items-center gap-1 sm:gap-2 bg-violet-600 text-white hover:bg-violet-700 h-8 sm:h-9 px-2 sm:px-3"
                 >
-                  <Send size={16} />
-                  <span className="py-4 font-bold">Send</span>
+                  <Send size={14} className="sm:size-4" />
+                  <span className="text-xs sm:text-sm font-bold">Send</span>
                 </Button>
               )}
             </div>

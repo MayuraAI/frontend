@@ -89,7 +89,7 @@ export default function HomePage() {
                   className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12"
                 />
                 <p
-            className="flex-1 text-sidebar-foreground text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight slackey-regular"
+            className="flex-1 text-sidebar-foreground text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
           >
             Mayura 
           </p>
@@ -478,14 +478,15 @@ export default function HomePage() {
           <div className="container mx-auto px-6">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="mb-6 text-3xl font-bold tracking-tight text-white md:text-4xl">
-                Built by Engineers, for Everyone
+              Many Models. One Platform. Zero Hassle.
               </h2>
               <p className="mb-2 text-lg text-slate-300">
-                We know your problem bro, we faced it too, that&apos;s why we built Mayura.
+                Jumping from one AI platform to another is a pain. <br />
+                We know your problem, we faced it too, that&apos;s why we built Mayura.
               </p>
-              <p className="text-slate-300">
+              {/* <p className="text-slate-300">
                 We just want to make your life easier and some money :P.
-              </p>
+              </p> */}
             </div>
           </div>
         </section>
@@ -552,6 +553,57 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Beta Notice Section */}
+        <section className="py-12 border-t border-slate-700">
+          <div className="container mx-auto px-6">
+            <div className="mx-auto max-w-4xl">
+              <div className="rounded-lg border border-amber-600/30 bg-amber-900/10 p-6 backdrop-blur-sm">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-600/20">
+                      <span className="text-sm font-bold text-amber-400">β</span>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="mb-2 text-lg font-semibold text-amber-200">
+                      Beta Version Notice
+                    </h3>
+                    <p className="mb-4 text-slate-300">
+                      Mayura is currently in public beta. While we've worked hard to make it as stable as possible, 
+                      you might encounter occasional bugs or unexpected behavior. Your feedback is invaluable in helping 
+                      us improve the platform.
+                    </p>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                      <p className="text-sm text-slate-400">
+                        Found a bug or have suggestions?
+                      </p>
+                      <div className="flex gap-3">
+                        <a
+                          href="https://mail.google.com/mail/?view=cm&fs=1&to=pavanmanishd@gmail.com&su=Mayura%20Beta%20Feedback"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-amber-400 hover:text-amber-300 hover:underline"
+                        >
+                          Report to Pavan
+                        </a>
+                        <span className="text-slate-500">•</span>
+                        <a
+                          href="https://mail.google.com/mail/?view=cm&fs=1&to=saivishalradham@gmail.com&su=Mayura%20Beta%20Feedback"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-amber-400 hover:text-amber-300 hover:underline"
+                        >
+                          Report to Sai Vishal
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="w-full border-t border-slate-700 bg-black/30 py-12 backdrop-blur-sm">
@@ -596,20 +648,20 @@ export default function HomePage() {
           <p className="text-slate-300 font-bold">Pavan Manish</p>
           <div className="flex gap-4 text-xs">
             <a
+              href="https://x.com/fromleg"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-violet-400 hover:text-violet-300 hover:underline"
+            >
+              X
+            </a>
+            <a
               href="https://mail.google.com/mail/?view=cm&fs=1&to=pavanmanishd@gmail.com"
               target="_blank"
               rel="noopener noreferrer"
               className="text-violet-400 hover:text-violet-300 hover:underline"
             >
               Email
-            </a>
-            <a
-              href="https://linkedin.com/in/pavanmanishd"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-violet-400 hover:text-violet-300 hover:underline"
-            >
-              LinkedIn
             </a>
             <a
               href="https://github.com/pavanmanishd"
@@ -627,20 +679,20 @@ export default function HomePage() {
           <p className="text-slate-300 font-bold">Sai Vishal</p>
           <div className="flex gap-4 text-xs">
             <a
+              href="https://x.com/lahsiv_ias"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-violet-400 hover:text-violet-300 hover:underline"
+            >
+              X
+            </a>
+            <a
               href="https://mail.google.com/mail/?view=cm&fs=1&to=saivishalradham@gmail.com"
               target="_blank"
               rel="noopener noreferrer"
               className="text-violet-400 hover:text-violet-300 hover:underline"
             >
               Email
-            </a>
-            <a
-              href="https://www.linkedin.com/in/vishalsai010304/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-violet-400 hover:text-violet-300 hover:underline"
-            >
-              LinkedIn
             </a>
             <a
               href="https://github.com/Vishal0129"

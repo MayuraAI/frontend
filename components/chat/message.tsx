@@ -97,75 +97,75 @@ export const Message: FC<MessageProps> = ({
   }
 
   return (
-    <div className="group mb-8">
+    <div className="group mb-6 sm:mb-8">
       {isUser ? (
         // User Message Block
         <div className="flex justify-end">
-          <div className="w-full max-w-2xl">
+          <div className="w-full max-w-xl sm:max-w-2xl">
             {isEditing ? (
-              <div className="modern-container w-full p-6">
+              <div className="modern-container w-full p-4 sm:p-6">
                 <Textarea
                   ref={userTextareaRef}
                   value={editedContent}
                   onChange={e => setEditedContent(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="min-h-[120px] w-full resize-none border-0 bg-transparent p-0 text-sm focus-visible:ring-0"
+                  className="min-h-[100px] sm:min-h-[120px] w-full resize-none border-0 bg-transparent p-0 text-sm focus-visible:ring-0"
                   placeholder="Edit your message..."
                 />
-                <div className="mt-6 flex items-center gap-3 pt-4">
+                <div className="mt-4 sm:mt-6 flex items-center gap-2 sm:gap-3 pt-3 sm:pt-4">
                   <Button
                     onClick={handleSubmit}
                     size="sm"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-1 sm:gap-2 h-8 sm:h-9 px-2 sm:px-3"
                   >
-                    <IconCheck size={16} />
-                    Save
+                    <IconCheck size={14} className="sm:size-4" />
+                    <span className="text-xs sm:text-sm">Save</span>
                   </Button>
                   <Button
                     onClick={onCancelEdit}
                     size="sm"
                     variant="outline"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-1 sm:gap-2 h-8 sm:h-9 px-2 sm:px-3"
                   >
-                    <IconX size={16} />
-                    Cancel
+                    <IconX size={14} className="sm:size-4" />
+                    <span className="text-xs sm:text-sm">Cancel</span>
                   </Button>
                 </div>
               </div>
             ) : (
               <div className="message-block message-block--user relative">
-                <p className="whitespace-pre-wrap text-sm leading-relaxed">
+                <p className="whitespace-pre-wrap text-xs sm:text-sm leading-relaxed">
                   {displayContent}
                 </p>
                 {shouldCollapse && (
-                  <div className="mt-3 flex justify-end gap-2">
+                  <div className="mt-2 sm:mt-3 flex justify-end gap-1 sm:gap-2">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={handleCopy}
-                      className="h-8 px-3 text-xs"
+                      className="h-7 sm:h-8 px-2 sm:px-3 text-xs"
                     >
                       {isCopied ? (
-                        <IconCheck size={14} />
+                        <IconCheck size={12} className="sm:size-3.5" />
                       ) : (
-                        <IconCopy size={14} />
+                        <IconCopy size={12} className="sm:size-3.5" />
                       )}
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={toggleExpanded}
-                      className="h-8 px-3 text-xs"
+                      className="h-7 sm:h-8 px-2 sm:px-3 text-xs"
                     >
                       {isExpanded ? (
                         <>
-                          <IconChevronUp size={14} className="mr-1" />
-                          Collapse
+                          <IconChevronUp size={12} className="mr-1 sm:size-3.5" />
+                          <span className="hidden sm:inline">Collapse</span>
                         </>
                       ) : (
                         <>
-                          <IconChevronDown size={14} className="mr-1" />
-                          Expand
+                          <IconChevronDown size={12} className="mr-1 sm:size-3.5" />
+                          <span className="hidden sm:inline">Expand</span>
                         </>
                       )}
                     </Button>
@@ -173,17 +173,17 @@ export const Message: FC<MessageProps> = ({
                 )}
                 {/* Add copy button for short messages that don't collapse */}
                 {!shouldCollapse && (
-                  <div className="absolute right-2 top-2">
+                  <div className="absolute right-1 sm:right-2 top-1 sm:top-2">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={handleCopy}
-                      className="h-8 px-3 text-xs opacity-0 transition-opacity group-hover:opacity-100"
+                      className="h-6 sm:h-8 px-2 sm:px-3 text-xs opacity-0 transition-opacity group-hover:opacity-100"
                     >
                       {isCopied ? (
-                        <IconCheck size={14} />
+                        <IconCheck size={12} className="sm:size-3.5" />
                       ) : (
-                        <IconCopy size={14} />
+                        <IconCopy size={12} className="sm:size-3.5" />
                       )}
                     </Button>
                   </div>
@@ -194,30 +194,30 @@ export const Message: FC<MessageProps> = ({
         </div>
       ) : (
         // AI Message Block
-        <div className="mx-auto w-full max-w-4xl py-2">
-          <div className="space-y-4">
-            <div className="message-block message-block--ai relative w-full pt-6">
-              <div className="bg-muted text-muted-foreground absolute left-3 top-0 z-10 w-fit -translate-y-1/2 rounded-full px-3 py-1 text-xs font-medium cursor-default">
+        <div className="mx-auto w-full max-w-4xl py-1 sm:py-2">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="message-block message-block--ai relative w-full pt-5 sm:pt-6">
+              <div className="bg-muted text-muted-foreground absolute left-2 sm:left-3 top-0 z-10 w-fit -translate-y-1/2 rounded-full px-2 sm:px-3 py-1 text-xs font-medium cursor-default">
                 {getModelName()}
               </div>
-              <div className="prose prose-sm dark:prose-invert max-w-none">
+              <div className="prose prose-sm dark:prose-invert max-w-none text-sm sm:text-base">
                 <MarkdownContent aiResponse={message.content} />
               </div>
             </div>
 
             {/* Message Actions */}
             {!isGenerating && (
-              <div className="ml-2 flex items-center gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+              <div className="ml-1 sm:ml-2 flex items-center gap-1 sm:gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleCopy}
-                  className="h-10 px-3"
+                  className="h-8 sm:h-10 px-2 sm:px-3"
                 >
                   {isCopied ? (
-                    <IconCheck size={16} />
+                    <IconCheck size={14} className="sm:size-4" />
                   ) : (
-                    <IconCopy size={16} />
+                    <IconCopy size={14} className="sm:size-4" />
                   )}
                 </Button>
               </div>

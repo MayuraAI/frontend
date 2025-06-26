@@ -61,8 +61,6 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
     }
 
     setLoading(true)
-    console.log("Fetching chat data for user:", userId)
-
     try {
       setChatSettings({
         model: "gpt-4",
@@ -96,11 +94,6 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
                 <p className="text-muted-foreground text-sm">
                   Please wait while we set everything up
                 </p>
-              </div>
-              <div className="w-full space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
               </div>
             </div>
           </CardContent>
