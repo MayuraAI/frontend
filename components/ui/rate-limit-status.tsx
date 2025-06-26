@@ -1,13 +1,7 @@
 "use client"
 
-import { useContext, useEffect, useState, useCallback } from "react"
+import { useContext, useEffect, useState, useCallback, useRef } from "react"
 import { Button } from "@/components/ui/button"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
 import {
   RateLimitStatus as RateLimitStatusType,
   RateLimitState
@@ -19,7 +13,9 @@ import {
   IconAlertTriangle,
   IconBolt,
   IconCheck,
-  IconClock
+  IconClock,
+  IconChevronDown,
+  IconChevronUp
 } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
 import { useRateLimit } from "@/lib/hooks/use-rate-limit"
@@ -37,6 +33,8 @@ export default function RateLimitStatus({
 }: RateLimitStatusProps) {
   const { profile, rateLimitRefreshTrigger } = useContext(MayuraContext)
   const { rateLimitStatus, fetchLatestStatus } = useRateLimit()
+  const [isExpanded, setIsExpanded] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const [rateLimitState, setRateLimitState] = useState<RateLimitState>({
     status: null,
@@ -67,6 +65,23 @@ export default function RateLimitStatus({
       }))
     }
   }, [profile, fetchLatestStatus, onStatusUpdate])
+
+  // Handle click outside to close expanded view
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsExpanded(false)
+      }
+    }
+
+    if (isExpanded) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isExpanded])
 
   useEffect(() => {
     if (rateLimitStatus) {
@@ -187,45 +202,60 @@ export default function RateLimitStatus({
     }
   }
 
+  const handleToggleExpanded = () => {
+    setIsExpanded(!isExpanded)
+  }
+
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div
-            className={cn(
-              "inline-flex items-center space-x-2 rounded-lg border px-3 py-2 text-sm font-medium shadow-sm transition-all duration-200",
-              isFree
-                ? "border-yellow-700 bg-yellow-900/20 text-yellow-400"
-                : "border-violet-700 bg-violet-900/20 text-violet-400",
-              "cursor-default",
-              className
-            )}
-          >
-            {compact ? (
-              <div className="flex items-center space-x-2">
-                {isFree ? (
-                  <IconBolt size={16} className="text-yellow-400" />
-                ) : (
-                  <IconCheck size={16} className="text-violet-400" />
-                )}
-                <span className="text-xs font-medium">
-                  {isFree ? "Free tier" : "Pro" + " " + requests_remaining + " left"}
-                </span>
-              </div>
+    <div ref={containerRef} className="relative">
+      <button
+        onClick={handleToggleExpanded}
+        className={cn(
+          "inline-flex items-center space-x-2 rounded-lg border px-3 py-2 text-sm font-medium shadow-sm transition-all duration-200 hover:opacity-80",
+          isFree
+            ? "border-yellow-700 bg-yellow-900/20 text-yellow-400"
+            : "border-violet-700 bg-violet-900/20 text-violet-400",
+          "cursor-pointer",
+          className
+        )}
+      >
+        {compact ? (
+          <div className="flex items-center space-x-2">
+            {isFree ? (
+              <IconBolt size={16} className="text-yellow-400" />
             ) : (
-              <>
-                <div className="flex items-center space-x-2">
-                  {getTag()}
-                </div>
-                <div className="text-xs text-slate-400">
-                  {requests_remaining} remaining
-                </div>
-              </>
+              <IconCheck size={16} className="text-violet-400" />
+            )}
+            <span className="text-xs font-medium">
+              {isFree ? "Free tier" : "Pro" + " " + requests_remaining + " left"}
+            </span>
+            {isExpanded ? (
+              <IconChevronUp size={14} className="ml-1" />
+            ) : (
+              <IconChevronDown size={14} className="ml-1" />
             )}
           </div>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" className="border border-slate-700 bg-black text-white shadow-lg">
-          <div className="space-y-3 p-2">
+        ) : (
+          <>
+            <div className="flex items-center space-x-2">
+              {getTag()}
+            </div>
+            <div className="text-xs text-slate-400">
+              {requests_remaining} remaining
+            </div>
+            {isExpanded ? (
+              <IconChevronUp size={14} className="ml-1" />
+            ) : (
+              <IconChevronDown size={14} className="ml-1" />
+            )}
+          </>
+        )}
+      </button>
+
+      {/* Expanded Details */}
+      {isExpanded && (
+        <div className="absolute top-full right-0 mt-2 w-64 rounded-lg border border-slate-700 bg-black text-white shadow-lg z-50">
+          <div className="space-y-3 p-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Daily Usage</span>
               <span className="text-xs text-slate-400">
@@ -256,8 +286,8 @@ export default function RateLimitStatus({
               </div>
             )}
           </div>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+        </div>
+      )}
+    </div>
   )
 }
