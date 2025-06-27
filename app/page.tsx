@@ -8,17 +8,11 @@ import {
   Rocket,
   Zap,
   CheckCircle,
-  Users,
-  Code,
-  Shield,
-  BarChart3,
   Clock,
-  DollarSign,
   Star,
   ChevronDown,
   ChevronUp,
   Lightbulb,
-  TrendingUp,
   DollarSign as DollarSignIcon,
   MessageSquare,
   Route
@@ -43,12 +37,12 @@ export default function HomePage() {
     {
       question: "What models are available in the Free tier?",
       answer:
-        "The Free tier includes access to 25+ high-quality models including Llama 3.3 70B, DeepSeek R1, Qwen 3 235B, Phi-4 Reasoning, and many more. You get unlimited access to these standard models plus 10 Pro requests daily for premium models."
+        "The Free tier includes access to high-quality models including Llama 3.3 70B, DeepSeek R1, Qwen 3 32B, Gemma 2 9B, and more. You get unlimited access to these standard models plus 10 Pro requests daily for premium models."
     },
     {
       question: "What premium models are available with Pro requests?",
       answer:
-        "Pro requests give you access to the most powerful models like Gemini 2.5 Pro, Gemini 2.5 Flash Preview, Gemini 2.0 Flash, and other cutting-edge models. These are perfect for complex reasoning, advanced coding, and critical tasks."
+        "Pro requests give you access to the most powerful models like Gemini 2.5 Pro Preview, Gemini 2.5 Flash Preview, Gemini 2.0 Flash, Gemini 2.0 Flash Lite, and Gemini 1.5 Pro. These are perfect for complex reasoning, advanced coding, and critical tasks."
     },
     {
       question: "Can I choose which model to use?",
@@ -335,6 +329,46 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Beta Notice Section */}
+        <section className="py-12">
+          <div className="container mx-auto px-6">
+            <div className="mx-auto max-w-4xl">
+              <div className="rounded-lg border border-amber-600/30 bg-amber-900/10 p-6 backdrop-blur-sm">
+                <div className="flex items-start gap-4">
+                  <div className="shrink-0">
+                    <div className="flex size-8 items-center justify-center rounded-full bg-amber-600/20">
+                      <span className="text-sm font-bold text-amber-400">β</span>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="mb-2 text-lg font-semibold text-amber-200">
+                      Beta Version Notice
+                    </h3>
+                    <p className="mb-4 text-slate-300">
+                      Mayura is currently in public beta. While we&apos;ve worked hard to make it as stable as possible, 
+                      you might encounter occasional bugs or unexpected behavior. Your feedback is invaluable in helping 
+                      us improve the platform.
+                    </p>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                      <p className="text-sm text-slate-400">
+                        Found a bug or have suggestions?
+                      </p>
+                      <a
+                        href="https://mail.google.com/mail/?view=cm&fs=1&to=pavanmanishd@gmail.com&su=Mayura%20Beta%20Feedback"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-amber-400 hover:text-amber-300 hover:underline"
+                      >
+                        Report to us
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* --- START: RESTRUCTURED PRICING SECTION --- */}
         <section id="pricing" className="w-full py-16 md:py-24">
           <div className="container mx-auto px-6">
@@ -387,7 +421,7 @@ export default function HomePage() {
                         <div>
                           <strong className="text-white">Unlimited Standard Requests</strong>
                           <p className="text-xs text-slate-400">
-                            25+ models including Llama 3.3 70B, DeepSeek R1, Qwen 3 235B, Phi-4
+                            Access to models including Llama 3.3 70B, DeepSeek R1, Qwen 3 32B, Gemma 2 9B
                           </p>
                         </div>
                       </li>
@@ -436,7 +470,7 @@ export default function HomePage() {
                         <div>
                           <strong className="text-slate-300">100 Pro Requests / day</strong>
                           <p className="text-xs text-slate-500">
-                            Unlimited access to premium models
+                            Access to premium models
                           </p>
                         </div>
                       </li>
@@ -549,57 +583,6 @@ export default function HomePage() {
                     <DollarSignIcon className="mr-2 size-5" /> View Pricing
                   </Link>
                 </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Beta Notice Section */}
-        <section className="border-t border-slate-700 py-12">
-          <div className="container mx-auto px-6">
-            <div className="mx-auto max-w-4xl">
-              <div className="rounded-lg border border-amber-600/30 bg-amber-900/10 p-6 backdrop-blur-sm">
-                <div className="flex items-start gap-4">
-                  <div className="shrink-0">
-                    <div className="flex size-8 items-center justify-center rounded-full bg-amber-600/20">
-                      <span className="text-sm font-bold text-amber-400">β</span>
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="mb-2 text-lg font-semibold text-amber-200">
-                      Beta Version Notice
-                    </h3>
-                    <p className="mb-4 text-slate-300">
-                      Mayura is currently in public beta. While we&apos;ve worked hard to make it as stable as possible, 
-                      you might encounter occasional bugs or unexpected behavior. Your feedback is invaluable in helping 
-                      us improve the platform.
-                    </p>
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                      <p className="text-sm text-slate-400">
-                        Found a bug or have suggestions?
-                      </p>
-                      <div className="flex gap-3">
-                        <a
-                          href="https://mail.google.com/mail/?view=cm&fs=1&to=pavanmanishd@gmail.com&su=Mayura%20Beta%20Feedback"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm text-amber-400 hover:text-amber-300 hover:underline"
-                        >
-                          Report to Pavan
-                        </a>
-                        <span className="text-slate-500">•</span>
-                        <a
-                          href="https://mail.google.com/mail/?view=cm&fs=1&to=saivishalradham@gmail.com&su=Mayura%20Beta%20Feedback"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm text-amber-400 hover:text-amber-300 hover:underline"
-                        >
-                          Report to Sai Vishal
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

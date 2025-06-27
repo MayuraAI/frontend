@@ -46,8 +46,8 @@ const aiModels: AIModel[] = [
     arrowColor: "#60a5fa"
   },
   {
-    id: "llama",
-    name: "Llama",
+    id: "gemma",
+    name: "Gemma",
     color: "from-red-400 to-red-600",
     specialty: "General Intelligence",
     icon: Code,
@@ -68,7 +68,7 @@ const promptExamples: PromptExample[] = [
   },
   {
     text: "How is the weather in Hyderabad?",
-    targetModel: "llama",
+    targetModel: "gemma",
     description: "Conversation"
   },
   {
