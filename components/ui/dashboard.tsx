@@ -78,7 +78,7 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
       <aside
         className={cn(
           "bg-sidebar absolute z-20 h-full border-r shadow-lg transition-all duration-300 ease-in-out",
-          "md:relative md:shadow-none",
+          "md:relative md:shadow-none h-[calc(100vh-4rem)]",
           showSidebar
             ? "translate-x-0"
             : "-translate-x-full"
@@ -103,7 +103,7 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
       {/* Main Content Area */}
       <main className="bg-background flex min-w-0 flex-1 flex-col">
         {/* Mobile Header */}
-        <header className="bg-sidebar border-sidebar-border flex items-center justify-between border-b p-3 shadow-sm md:hidden">
+        <header className="bg-sidebar border-sidebar-border fixed top-0 left-0 z-20 flex h-16 w-full items-center justify-between border-b p-3 shadow-sm md:hidden">
           <Button
             variant="outline"
             size="icon"

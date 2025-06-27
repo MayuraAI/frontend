@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner"
 import MarkdownContent from "../ui/markdown-content"
 import { useCopyToClipboard } from "@/lib/hooks/use-copy-to-clipboard"
+import { cn } from "@/lib/utils"
 
 interface MessageProps {
   message: Tables<"messages">
@@ -194,7 +195,7 @@ export const Message: FC<MessageProps> = ({
         </div>
       ) : (
         // AI Message Block
-        <div className="mx-auto w-full max-w-4xl py-1 sm:py-2">
+        <div className={cn("mx-auto w-full max-w-4xl py-1 sm:py-2", isLast && "mb-12")}>
           <div className="space-y-3 sm:space-y-4">
             <div className="message-block message-block--ai relative w-full pt-5 sm:pt-6">
               <div className="bg-muted text-muted-foreground absolute left-2 top-0 z-10 w-fit -translate-y-1/2 cursor-default rounded-full px-2 py-1 text-xs font-medium sm:left-3 sm:px-3">
@@ -207,7 +208,7 @@ export const Message: FC<MessageProps> = ({
 
             {/* Message Actions */}
             {!isGenerating && (
-              <div className="ml-1 flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:ml-2 sm:gap-2">
+              <div className="ml-1 flex items-center gap-1 opacity-0 transition-opacity duration-200 opacity-100 sm:ml-2 sm:gap-2">
                 <Button
                   variant="ghost"
                   size="sm"

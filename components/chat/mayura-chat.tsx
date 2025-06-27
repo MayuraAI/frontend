@@ -63,10 +63,10 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
   }
 
   return (
-    <div className="bg-background relative flex h-full flex-col">
+    <div className="relative flex h-full flex-col bg-background">
       {/* Chat Messages Area */}
       <section
-        className="bg-background flex-1 overflow-y-auto px-3 py-4 sm:px-4 sm:py-6 md:px-6 lg:px-8"
+        className="flex-1 overflow-y-auto bg-background px-3 pt-20 pb-32 sm:px-4 md:pt-6 md:pb-6 lg:px-8"
         role="log"
         aria-live="polite"
         aria-label="Chat messages"
@@ -117,7 +117,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
       </section>
 
       {/* Chat Input Area */}
-      <footer className="border-border bg-background/95 supports-[backdrop-filter]:bg-background/60 border-t p-3 backdrop-blur sm:p-4 md:p-6">
+      <footer className="fixed bottom-0 left-0 z-10 w-full border-t border-border bg-background/95 p-3 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:p-4 md:relative md:p-6">
         <div className="mx-auto max-w-4xl">
           <ChatInput />
         </div>
