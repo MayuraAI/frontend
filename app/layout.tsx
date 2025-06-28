@@ -224,6 +224,19 @@ export default async function RootLayout({
             __html: JSON.stringify(structuredData)
           }}
         />
+        
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGJ0GQYWM8"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-EGJ0GQYWM8');
+            `
+          }}
+        />
       </head>
       <body className={`${dmSans.variable} font-sans antialiased`} style={{backgroundColor: '#0F0F0F', color: '#F5F5F5'}}>
         <Providers>
