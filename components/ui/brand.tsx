@@ -13,7 +13,7 @@ export const Brand: FC<BrandProps> = ({ theme = "dark" }) => {
 
   return (
     <Link
-      href="https://www.mayura.ai"
+      href="https://www.mayura.rocks"
       target="_blank"
       rel="noopener noreferrer"
       className="flex items-center gap-2"
