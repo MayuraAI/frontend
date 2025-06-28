@@ -46,15 +46,6 @@ export async function POST(request: Request) {
 
   const latestPrompt = messages[messages.length - 1].content
 
-  // filter only last 4 messages or all if less than 4
-  let messagesToSend = messages.slice(-4)
-  // slice content of the content of the messages if it exceeds 2000 characters
-  // remove think block in ◁think▷ and ◁/think▷
-  messagesToSend = messagesToSend.map(message => ({
-    ...message,
-    content: message.content.replace(/◁think▷.*?◁\/think▷/gs, "").slice(0, 2000)
-  }))
-
   if (!latestPrompt) {
     return new Response("No prompt in the request", { status: 400 })
   }
@@ -69,7 +60,7 @@ export async function POST(request: Request) {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          previous_messages: messagesToSend,
+          previous_messages: messages,
           prompt: latestPrompt,
           profile_context
         }),

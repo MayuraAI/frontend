@@ -18,11 +18,31 @@ import {
   Route
 } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { supabase } from "@/lib/supabase/browser-client"
 import { AIRoutingAnimation } from "@/components/hero/ai-routing-animation"
 
 export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const router = useRouter()
+
+  // Check if user is authenticated and redirect accordingly
+  useEffect(() => {
+    const checkAuthAndRedirect = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (session?.user) {
+          router.push("/chat")
+        }
+      } catch (error) {
+        console.log("Error checking authentication status")
+      }
+    }
+
+    checkAuthAndRedirect()
+  }, [router])
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index)

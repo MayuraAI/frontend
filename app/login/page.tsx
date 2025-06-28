@@ -37,7 +37,7 @@ export default function Login() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) {
-        router.replace("/chat")
+        router.push("/chat")
       }
     })
     // Show message from query params if present
@@ -67,7 +67,7 @@ export default function Login() {
         setMessageType("destructive")
       }
     } else {
-      router.replace("/chat")
+      router.push("/chat")
     }
   }
 

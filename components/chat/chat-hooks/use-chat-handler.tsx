@@ -128,7 +128,14 @@ export const useChatHandler = () => {
         throw new Error("No valid session found. Please log in again.")
       }
 
-      const lastFourMessages = messages.slice(-4)
+      // filter only last 4 messages or all if less than 4
+      let messagesToSend = messages.slice(-4)
+      // slice content of the content of the messages if it exceeds 2000 characters
+      // remove think block in ◁think▷ and ◁/think▷
+      messagesToSend = messagesToSend.map(message => ({
+        ...message,
+        content: message.content.replace(/◁think▷.*?◁\/think▷/gs, "").slice(0, 2000)
+      }))
 
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -137,7 +144,7 @@ export const useChatHandler = () => {
           Authorization: `Bearer ${session.access_token}`
         },
         body: JSON.stringify({
-          messages: lastFourMessages,
+          messages: messagesToSend,
           profile_context: chatSettings.includeProfileContext
             ? profile.profile_context
             : undefined
