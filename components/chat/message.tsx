@@ -179,7 +179,7 @@ export const Message: FC<MessageProps> = ({
                       variant="ghost"
                       size="sm"
                       onClick={handleCopy}
-                      className="h-6 px-2 text-xs opacity-0 transition-opacity group-hover:opacity-100 sm:h-8 sm:px-3"
+                      className="h-6 px-2 text-xs opacity-100 sm:h-8 sm:px-3"
                     >
                       {isCopied ? (
                         <IconCheck size={12} className="sm:size-3.5" />
@@ -208,7 +208,7 @@ export const Message: FC<MessageProps> = ({
 
             {/* Message Actions */}
             {!isGenerating && (
-              <div className="ml-1 flex items-center gap-1 opacity-0 transition-opacity duration-200 opacity-100 sm:ml-2 sm:gap-2">
+              <div className="ml-1 flex items-center gap-1 transition-opacity duration-200 opacity-100 sm:ml-2 sm:gap-2">
                 <Button
                   variant="ghost"
                   size="sm"

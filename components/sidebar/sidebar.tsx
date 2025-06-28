@@ -50,7 +50,7 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
           {/* Responsive Empty State */}
           {(!chats || chats.length === 0) && (
             <div className="flex flex-col items-center justify-center py-8 text-center md:py-16">
-              <div className="bg-muted border-border max-w-xs rounded-lg border p-4 md:p-8">
+              <div className="border-border max-w-xs rounded-lg border p-4 md:p-8">
                 <MessageCircle
                   className="text-muted-foreground mx-auto mb-4 size-12 md:mb-6 md:size-16"
                   strokeWidth={1.5}

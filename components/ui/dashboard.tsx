@@ -77,8 +77,8 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
       {/* Responsive Sidebar */}
       <aside
         className={cn(
-          "bg-sidebar absolute z-20 h-full border-r shadow-lg transition-all duration-300 ease-in-out",
-          "md:relative md:shadow-none h-[calc(100vh-4rem)]",
+          "bg-sidebar fixed z-20 h-full border-r shadow-lg transition-all duration-300 ease-in-out",
+          "md:relative md:shadow-none",
           showSidebar
             ? "translate-x-0"
             : "-translate-x-full"
@@ -92,7 +92,7 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
             value={contentType}
             onValueChange={tabValue => {
               setContentType(tabValue as ContentType)
-              router.replace(`${pathname}?tab=${tabValue}`)
+              router.push(`${pathname}?tab=${tabValue}`)
             }}
           >
             <Sidebar contentType={contentType} showSidebar={showSidebar} />
