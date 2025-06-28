@@ -198,6 +198,26 @@ export default async function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
+        {/* Explicit Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@MayuraAI" />
+        <meta name="twitter:creator" content="@MayuraAI" />
+        <meta name="twitter:title" content={APP_DEFAULT_TITLE} />
+        <meta name="twitter:description" content={APP_DESCRIPTION} />
+        <meta name="twitter:image" content={`${APP_URL}/opengraph-image`} />
+        <meta name="twitter:image:alt" content="Mayura - A Mixture of Models" />
+        
+        {/* Explicit Open Graph Meta Tags */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Mayura" />
+        <meta property="og:title" content={APP_DEFAULT_TITLE} />
+        <meta property="og:description" content={APP_DESCRIPTION} />
+        <meta property="og:image" content={`${APP_URL}/opengraph-image`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Mayura - A Mixture of Models" />
+        <meta property="og:url" content={APP_URL} />
+        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

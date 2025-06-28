@@ -1,17 +1,22 @@
+# Global rules for all crawlers
 User-agent: *
 Allow: /
-
-# Sitemap
-Sitemap: https://mayura.rocks/sitemap.xml
-
-# Crawl-delay (optional, in seconds)
 Crawl-delay: 1
 
-# Disallow certain paths if needed
-# Disallow: /admin/
-# Disallow: /private/
+# Social media bots
+User-agent: Twitterbot
+Allow: /
 
-# Allow specific search engines
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+# Major search engine bots (redundant if already covered by *)
 User-agent: Googlebot
 Allow: /
 
@@ -19,4 +24,11 @@ User-agent: Bingbot
 Allow: /
 
 User-agent: Slurp
-Allow: / 
+Allow: /
+
+# Sitemap location
+Sitemap: https://mayura.rocks/sitemap.xml
+
+# Optional disallows (uncomment if needed)
+# Disallow: /admin/
+# Disallow: /private/
