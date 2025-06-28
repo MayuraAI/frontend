@@ -19,7 +19,7 @@ const dmSans = DM_Sans({
 const APP_NAME = "Mayura"
 const APP_DEFAULT_TITLE = "Mayura - A Mixture of Models"
 const APP_TITLE_TEMPLATE = "%s | Mayura"
-const APP_DESCRIPTION = "Transform your AI workflow with Mayura's intelligent routing system. Access the best AI models automatically - from GPT-4 to Claude, Gemini, and more. Get superior results with zero hassle."
+const APP_DESCRIPTION = "Transform your AI workflow with Mayura's intelligent routing system."
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://mayura.rocks"
 const APP_KEYWORDS = "AI routing, artificial intelligence, GPT-4, Claude, Gemini, AI platform, machine learning, intelligent routing, AI workflow, productivity, automation"
 
@@ -204,7 +204,7 @@ export default async function RootLayout({
         <meta name="twitter:creator" content="@MayuraAI" />
         <meta name="twitter:title" content={APP_DEFAULT_TITLE} />
         <meta name="twitter:description" content={APP_DESCRIPTION} />
-        <meta name="twitter:image" content={`${APP_URL}/opengraph-image`} />
+        <meta name="twitter:image" content={`${APP_URL}/preview.png`} />
         <meta name="twitter:image:alt" content="Mayura - A Mixture of Models" />
         
         {/* Explicit Open Graph Meta Tags */}
@@ -212,7 +212,7 @@ export default async function RootLayout({
         <meta property="og:site_name" content="Mayura" />
         <meta property="og:title" content={APP_DEFAULT_TITLE} />
         <meta property="og:description" content={APP_DESCRIPTION} />
-        <meta property="og:image" content={`${APP_URL}/opengraph-image`} />
+        <meta property="og:image" content={`${APP_URL}/preview.png`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content="Mayura - A Mixture of Models" />
