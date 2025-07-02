@@ -3,6 +3,35 @@ import { NextResponse, type NextRequest } from "next/server"
 
 export async function middleware(request: NextRequest) {
   try {
+    // Handle PostHog proxy requests first
+    if (request.nextUrl.pathname.startsWith('/relay-qesW')) {
+      // Security: Validate request method (PostHog uses GET and POST)
+      if (!['GET', 'POST', 'HEAD'].includes(request.method)) {
+        return new NextResponse('Method not allowed', { status: 405 });
+      }
+
+      let url = request.nextUrl.clone()
+      const hostname = url.pathname.startsWith("/relay-qesW/static/") ? 'us-assets.i.posthog.com' : 'us.i.posthog.com'
+      const requestHeaders = new Headers(request.headers)
+      
+      // Security: Remove potentially dangerous headers
+      requestHeaders.delete('x-forwarded-host');
+      requestHeaders.delete('x-forwarded-proto');
+      requestHeaders.delete('x-real-ip');
+      
+      // Set the correct host header
+      requestHeaders.set('host', hostname);
+
+      url.protocol = 'https'
+      url.hostname = hostname
+      url.port = '443'
+      url.pathname = url.pathname.replace(/^\/relay-qesW/, '');
+
+      return NextResponse.rewrite(url, {
+        headers: requestHeaders,
+      });
+    }
+
     const { supabase, response } = createClient(request)
     
     const session = await supabase.auth.getSession()
@@ -113,5 +142,8 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/((?!api|static|.*\\..*|_next).*)"
+  matcher: [
+    "/((?!api|static|.*\\..*|_next).*)",
+    "/relay-qesW/:path*"
+  ]
 }
