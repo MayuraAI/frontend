@@ -9,11 +9,9 @@ if (typeof window !== 'undefined') {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
     api_host: window.location.origin + "/relay-qesW",
     ui_host: "https://us.posthog.com",
-    capture_pageview: false, // Disable automatic pageview capture to avoid duplicates
-    capture_pageleave: true, // Capture when users leave pages
-    loaded: (posthog) => {
-      if (process.env.NODE_ENV === 'development') console.log('PostHog loaded')
-    }
+    debug: false,
+    enable_recording_console_log: false,
+    disable_session_recording: true,
   })
 }
 
