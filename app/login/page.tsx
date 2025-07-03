@@ -23,6 +23,7 @@ import {
   CheckCircle,
   RotateCcw
 } from "lucide-react"
+import posthog from "posthog-js"
 
 export default function Login() {
   const router = useRouter()
@@ -67,6 +68,7 @@ export default function Login() {
         setMessageType("destructive")
       }
     } else {
+      posthog.capture("sign_in_success")
       router.push("/chat")
     }
   }
@@ -102,6 +104,7 @@ export default function Login() {
       }
       return
     }
+    posthog.capture("sign_up_success")
     setMessage("Please check your email and click the verification link to complete your account setup.")
     setMessageType("success")
   }
@@ -141,6 +144,7 @@ export default function Login() {
       setMessage(error.message)
       setMessageType("destructive")
     } else {
+      posthog.capture("password_reset_success")
       setMessage("Password reset link has been sent to your email.")
       setMessageType("success")
     }
@@ -167,6 +171,7 @@ export default function Login() {
       setMessage(error.message)
       setMessageType("destructive")
     } else {
+      posthog.capture("verification_email_resent")
       setMessage("Verification email has been resent. Please check your inbox.")
       setMessageType("success")
     }

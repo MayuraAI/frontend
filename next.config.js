@@ -10,6 +10,8 @@ module.exports = withBundleAnalyzer(
   withPWA({
     reactStrictMode: true,
     output: 'standalone',
+    // This is required to support PostHog trailing slash API requests
+    skipTrailingSlashRedirect: true,
     images: {
       remotePatterns: [
         {
