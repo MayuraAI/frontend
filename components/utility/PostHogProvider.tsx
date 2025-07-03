@@ -13,6 +13,7 @@ if (typeof window !== 'undefined') {
     enable_recording_console_log: false,
     disable_session_recording: true,
   })
+  posthog.debug(false)
 }
 
 function PostHogPageView(): null {
