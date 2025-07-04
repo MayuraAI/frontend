@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useContext, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { 
   signInWithEmail, 
@@ -34,8 +34,18 @@ import {
   RotateCcw
 } from "lucide-react"
 import posthog from "posthog-js"
+import { getProfileByUserId } from "@/db/profile"
+import { MayuraContext } from "@/context/context"
 
-export default function Login() {
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginPageContent />
+    </Suspense>
+  )
+}
+
+function LoginPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
@@ -44,12 +54,30 @@ export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
+  const { setProfile } = useContext(MayuraContext)
+
   // On mount, check if user is already logged in
   useEffect(() => {
     const checkAuth = async () => {
       const user = getCurrentUser()
       if (user) {
-        await redirectAfterAuth(router)
+        // await redirectAfterAuth(router)
+        const profile = await getProfileByUserId(user.uid)
+        setProfile(profile)
+
+        if (profile && !profile.has_onboarded) {
+          console.log("🚀 Profile exists but not onboarded, redirecting to setup")
+          router.push("/setup")
+          return
+        }
+    
+        // If profile exists and user has completed onboarding
+        if (profile && profile.has_onboarded) {
+          console.log("🎉 Profile exists and onboarded, redirecting to chat")
+          router.push("/chat")
+          return
+        }
+        router.push("/setup")
       }
     }
     

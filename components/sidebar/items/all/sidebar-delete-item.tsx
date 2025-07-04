@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { MayuraContext } from "@/context/context"
 import { deleteChat } from "@/db/chats"
-import { Tables } from "@/supabase/types"
+import { Tables } from "@/types/database"
 import { FC, useContext, useState } from "react"
 
 interface SidebarDeleteItemProps {
@@ -46,7 +46,7 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
     const success = await deleteFunction(item.id)
 
     if (success) {
-      setChats(prevItems => updateFunction(prevItems))
+      // setChats(prevItems => updateFunction(prevItems))
     }
 
     setIsOpen(false)

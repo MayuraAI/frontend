@@ -1,43 +1,48 @@
-import { Database, Tables } from "@/supabase/types"
 import { VALID_ENV_KEYS } from "@/types/valid-keys"
-import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
+
+// API base URL for backend calls
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
 
 export async function getServerProfile() {
   const cookieStore = cookies()
-  const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
-        }
+  
+  // Get Firebase ID token from cookies
+  const firebaseToken = cookieStore.get('firebase-token')?.value
+  
+  if (!firebaseToken) {
+    throw new Error("Firebase token not found")
+  }
+
+  try {
+    // Call our backend API to get profile
+    const response = await fetch(`${API_BASE_URL}/v1/profiles/user/current`, {
+      headers: {
+        'Authorization': `Bearer ${firebaseToken}`,
+        'Content-Type': 'application/json'
       }
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch profile: ${response.statusText}`)
     }
-  )
 
-  const user = (await supabase.auth.getUser()).data.user
-  if (!user) {
-    throw new Error("User not found")
+    const profile = await response.json()
+    
+    if (!profile) {
+      throw new Error("Profile not found")
+    }
+
+    const profileWithKeys = addApiKeysToProfile(profile)
+
+    return profileWithKeys
+  } catch (error) {
+    console.error("Error fetching profile:", error)
+    throw new Error("Failed to fetch profile")
   }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("user_id", user.id)
-    .single()
-
-  if (!profile) {
-    throw new Error("Profile not found")
-  }
-
-  const profileWithKeys = addApiKeysToProfile(profile)
-
-  return profileWithKeys
 }
 
-function addApiKeysToProfile(profile: Tables<"profiles">) {
+function addApiKeysToProfile(profile: any) {
   const apiKeys = {
     [VALID_ENV_KEYS.OPENAI_API_KEY]: "openai_api_key",
     [VALID_ENV_KEYS.ANTHROPIC_API_KEY]: "anthropic_api_key",

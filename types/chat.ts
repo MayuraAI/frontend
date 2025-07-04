@@ -1,4 +1,4 @@
-import { Tables } from "@/supabase/types"
+import { Message } from "@/types/database"
 import { ChatMessage, ChatSettings } from "."
 
 export interface ChatPayload {
@@ -11,5 +11,5 @@ export interface ChatPayload {
 
 export interface ChatAPIPayload {
   chatSettings: ChatSettings
-  messages: Tables<"messages">[]
+  messages: Message[]
 }

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import { ContentType } from "@/types"
 import { IconChevronCompactRight, IconMenu2 } from "@tabler/icons-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { FC, ReactNode, useContext, useEffect, useState } from "react"
+import { FC, ReactNode, useContext, useEffect, useState, Suspense } from "react"
 import { Button } from "./button"
 import { Sidebar } from "../sidebar/sidebar"
 import useHotkey from "@/lib/hooks/use-hotkey"
@@ -21,6 +21,14 @@ interface DashboardProps {
 }
 
 export const Dashboard: FC<DashboardProps> = ({ children }) => {
+  return (
+    <Suspense fallback={<div className="bg-background flex h-screen w-full" />}>
+      <DashboardContent>{children}</DashboardContent>
+    </Suspense>
+  )
+}
+
+function DashboardContent({ children }: { children: React.ReactNode }) {
   useHotkey("s", () => setShowSidebar(prevState => !prevState))
 
   const pathname = usePathname()

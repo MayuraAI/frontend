@@ -1,7 +1,7 @@
 import { useContext, useCallback } from "react"
 import { MayuraContext } from "@/context/context"
 import { RateLimitService } from "@/lib/services/rate-limit"
-import { supabase } from "@/lib/supabase/browser-client"
+import { getIdToken } from "@/lib/firebase/auth"
 import { RateLimitStatus } from "@/types/rate-limit"
 
 export function useRateLimit() {
@@ -40,14 +40,12 @@ export function useRateLimit() {
 
   const fetchLatestStatus = useCallback(async () => {
     try {
-      const { data: session } = await supabase.auth.getSession()
-      if (!session.session?.access_token) {
+      const token = await getIdToken()
+      if (!token) {
         return null
       }
 
-      const status = await RateLimitService.getRateLimitStatus(
-        session.session.access_token
-      )
+      const status = await RateLimitService.getRateLimitStatus(token)
       setRateLimitStatus(status)
       return status
     } catch (error) {

@@ -1,4 +1,4 @@
-import { Tables } from "@/supabase/types"
+import { Tables } from "@/types/database"
 import { FC, useState, useContext, useRef, useEffect } from "react"
 import { Button } from "../ui/button"
 import { Textarea } from "../ui/textarea"
@@ -14,12 +14,13 @@ import { toast } from "sonner"
 import MarkdownContent from "../ui/markdown-content"
 import { useCopyToClipboard } from "@/lib/hooks/use-copy-to-clipboard"
 import { cn } from "@/lib/utils"
+import { ChatMessage } from "@/types"
 
 interface MessageProps {
-  message: Tables<"messages">
+  message: ChatMessage
   isEditing: boolean
   isLast: boolean
-  onStartEdit: (message: Tables<"messages">) => void
+  onStartEdit: (message: ChatMessage) => void
   onCancelEdit: () => void
   onSubmitEdit: (content: string, sequenceNumber: number) => void
 }

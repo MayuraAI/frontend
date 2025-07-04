@@ -43,7 +43,7 @@ export interface ModelProvider {
   name: string
 }
 
-// Legacy type aliases for backward compatibility
+// Type aliases for database entities
 export type Tables<T extends string> = T extends "profiles" ? Profile : 
                                         T extends "chats" ? Chat : 
                                         T extends "messages" ? Message : 

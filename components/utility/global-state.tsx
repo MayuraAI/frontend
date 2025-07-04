@@ -26,7 +26,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
     setIsGenerating,
     isMessageModalOpen,
     setIsMessageModalOpen,
-    setChatSettings
   } = useContext(MayuraContext)
 
   // Load initial data
@@ -83,14 +82,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
       setChatMessages([])
       setIsGenerating(false)
       setIsMessageModalOpen(false)
-      setChatSettings({
-        model: "gpt-4",
-        prompt: "You are a helpful AI assistant.",
-        temperature: 0.5,
-        contextLength: 4096,
-        includeProfileContext: true,
-        embeddingsProvider: "openai"
-      })
     }
 
     window.addEventListener("beforeunload", handleBeforeUnload)
@@ -105,7 +96,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
     setChatMessages,
     setIsGenerating,
     setIsMessageModalOpen,
-    setChatSettings
   ])
 
   return <>{children}</>

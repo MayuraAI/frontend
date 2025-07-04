@@ -5,13 +5,29 @@ import { useAuth } from "@/context/auth-context"
 import { getChatsByUserId } from "@/db/chats"
 import { getProfileByUserId } from "@/db/profile"
 import { useRouter, useSearchParams } from "next/navigation"
-import { ReactNode, useContext, useEffect, useState } from "react"
+import { ReactNode, useContext, useEffect, useState, Suspense } from "react"
 
 interface ChatLayoutProps {
   children: ReactNode
 }
 
-export default function ChatLayout({ children }: ChatLayoutProps) {
+export default function ChatLayout({
+  children
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ChatLayoutContent>{children}</ChatLayoutContent>
+    </Suspense>
+  )
+}
+
+function ChatLayoutContent({
+  children
+}: {
+  children: React.ReactNode
+}) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const chatId = searchParams.get("id")

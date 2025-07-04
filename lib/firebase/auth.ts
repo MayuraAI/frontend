@@ -7,11 +7,14 @@ import {
   sendPasswordResetEmail,
   sendEmailVerification,
   onAuthStateChanged,
+  updatePassword,
   User,
   UserCredential,
   AuthError
 } from 'firebase/auth'
 import { auth } from './config'
+import { MayuraContext } from '@/context/context'
+import { useContext } from 'react'
 
 // Google provider for OAuth
 const googleProvider = new GoogleAuthProvider()
@@ -77,6 +80,14 @@ export const getIdToken = async (): Promise<string | null> => {
 // Check if user's email is verified
 export const isEmailVerified = (): boolean => {
   return auth.currentUser?.emailVerified ?? false
+}
+
+// Update user password
+export const updateUserPassword = async (newPassword: string): Promise<void> => {
+  if (auth.currentUser) {
+    return await updatePassword(auth.currentUser, newPassword)
+  }
+  throw new Error('No user is currently signed in')
 }
 
 // Helper to format Firebase auth errors
