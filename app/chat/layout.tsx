@@ -6,7 +6,8 @@ import { getChatsByUserId } from "@/db/chats"
 import { getProfileByUserId } from "@/db/profile"
 import { Dashboard } from "@/components/ui/dashboard"
 import { useRouter, useSearchParams } from "next/navigation"
-import { ReactNode, useContext, useEffect, useState, Suspense } from "react"
+import { ReactNode, useContext, useEffect, useState, Suspense, useCallback } from "react"
+import { getCurrentUser } from "@/lib/firebase/auth"
 
 interface ChatLayoutProps {
   children: ReactNode
@@ -40,42 +41,7 @@ function ChatLayoutContent({
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const loadProfile = async () => {
-      if (!profile && user) {
-        setLoading(true)
-        try {
-          const profile = await getProfileByUserId(user.uid)
-          setProfile(profile)
-        } catch (error) {
-          console.error("Error loading profile:", error)
-        }
-      }
-    }
-    
-    if (authLoading) return
-    
-    if (!user) {
-      return router.push("/login")
-    }
-
-    loadProfile()
-
-    if (profile) {
-      fetchChatData(profile.user_id)
-    }
-  }, [profile, user, authLoading, router, setProfile])
-
-  useEffect(() => {
-    if (chatId && chats.length > 0) {
-      const chat = chats.find(c => c.id === chatId)
-      if (chat) {
-        setSelectedChat(chat)
-      }
-    }
-  }, [chatId, chats, setSelectedChat])
-
-  const fetchChatData = async (userId: string) => {
+  const fetchChatData = useCallback(async (userId: string) => {
     if (!setChats) {
       throw new Error("Required context functions are not available")
     }
@@ -91,7 +57,75 @@ function ChatLayoutContent({
       setChats([])
       setLoading(false)
     }
-  }
+  }, [setChats])
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      // Skip profile loading for anonymous users
+      if (user && user.isAnonymous) {
+        setLoading(false)
+        return
+      }
+      
+      if (!profile && user && !user.isAnonymous) {
+        setLoading(true)
+        try {
+          const userProfile = await getProfileByUserId(user.uid)
+          setProfile(userProfile)
+        } catch (error) {
+          console.error("Error loading profile:", error)
+        }
+      }
+    }
+    
+    if (authLoading) return
+    
+    // Only redirect to login if auth has fully loaded and there's definitely no user
+    if (!user && !authLoading) {
+      // Check one more time to avoid race conditions on reload
+      const currentUser = getCurrentUser()
+      if (!currentUser) {
+        router.push("/login")
+      }
+      return
+    }
+
+    loadProfile()
+
+    // Fetch chat data for all users (authenticated and anonymous)
+    if (user) {
+      if (user.isAnonymous) {
+        // For anonymous users, fetch chats using their Firebase anonymous UID
+        fetchChatData(user.uid)
+      } else if (profile) {
+        // For authenticated users with profiles, use profile user_id
+        fetchChatData(profile.user_id)
+      }
+    }
+  }, [profile, user, authLoading, router, setProfile, setChats, fetchChatData])
+
+  useEffect(() => {
+    if (chatId && chats.length > 0) {
+      const chat = chats.find(c => c.id === chatId)
+      if (chat) {
+        setSelectedChat(chat)
+      }
+    }
+  }, [chatId, chats, setSelectedChat])
+
+  // Function to refetch chats (useful when new chats are created)
+  const refetchChats = useCallback(() => {
+    if (user) {
+      if (user.isAnonymous) {
+        fetchChatData(user.uid)
+      } else if (profile) {
+        fetchChatData(profile.user_id)
+      }
+    }
+  }, [user, profile, fetchChatData])
+
+  // Add refetchChats to context (if needed)
+  // This can be used by chat handler when new chats are created
 
   if (authLoading || loading) {
     return (

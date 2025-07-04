@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid"
 export const validateChatSettings = (
   chatSettings: ChatSettings | null,
   modelData: any | undefined,
-  profile: Profile | null,
+  userOrProfile: string | Profile | null,
   messageContent: string
 ) => {
   if (!chatSettings) {
@@ -24,8 +24,8 @@ export const validateChatSettings = (
     throw new Error("Model not found")
   }
 
-  if (!profile) {
-    throw new Error("Profile not found")
+  if (!userOrProfile) {
+    throw new Error("User or profile not found")
   }
 
   if (!messageContent) {
@@ -66,13 +66,16 @@ export const fetchChatResponse = async (
 }
 
 export const handleCreateChat = async (
-  profile: Profile,
+  userIdOrProfile: string | Profile,
   messageContent: string,
   setSelectedChat: React.Dispatch<React.SetStateAction<Chat | null>>,
   setChats: React.Dispatch<React.SetStateAction<Chat[]>>
 ) => {
+  // Handle both anonymous users (string UID) and authenticated users (Profile object)
+  const user_id = typeof userIdOrProfile === 'string' ? userIdOrProfile : userIdOrProfile.user_id
+  
   const newChat = {
-    user_id: profile.user_id,
+    user_id,
     name: messageContent.slice(0, 100),
     sharing: "private"
   }
@@ -89,21 +92,24 @@ export const handleCreateMessages = async (
   modelName: string,
   isRegeneration: boolean,
   chatId: string,
-  profile: Profile,
+  userIdOrProfile: string | Profile,
   setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>
 ) => {
+  // Handle both anonymous users (string UID) and authenticated users (Profile object)
+  const user_id = typeof userIdOrProfile === 'string' ? userIdOrProfile : userIdOrProfile.user_id
+  
   const user_message = {
     chat_id: chatId,
     content: message.content,
     role: message.role,
-    user_id: profile.user_id,
+    user_id,
     model_name: modelName,
     sequence_number: message.sequence_number
   }
 
   const assistant_message = {
     chat_id: chatId,
-    user_id: profile.user_id,
+    user_id,
     content: generatedText,
     role: "assistant",
     model_name: modelName,

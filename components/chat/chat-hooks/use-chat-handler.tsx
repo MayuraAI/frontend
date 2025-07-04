@@ -8,6 +8,7 @@ import { useContext, useRef } from "react"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
 import { useRateLimit } from "@/lib/hooks/use-rate-limit"
+import { isAnonymousUser } from "@/lib/firebase/auth"
 
 // API base URL for backend calls
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
@@ -124,7 +125,7 @@ export const useChatHandler = () => {
         body: JSON.stringify({
           previous_messages: messagesToSend.slice(0, -1), // Don't send the placeholder assistant message
           prompt: messageContent,
-          profile_context: profile?.profile_context,
+          profile_context: (user && !isAnonymousUser()) ? profile?.profile_context : undefined,
           chat_id: selectedChat?.id || undefined // Let backend create chat if no chat_id
         }),
         signal: newAbortController.signal

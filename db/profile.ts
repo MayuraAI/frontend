@@ -28,7 +28,7 @@ export interface UpdateProfileData {
   has_onboarded?: boolean
 }
 
-export const getProfileByUserId = async (userId: string): Promise<Profile> => {
+export const getProfileByUserId = async (userId: string): Promise<Profile | null> => {
   const token = await getIdToken()
   if (!token) {
     throw new Error("No authentication token available")
@@ -43,44 +43,8 @@ export const getProfileByUserId = async (userId: string): Promise<Profile> => {
 
   if (!response.ok) {
     if (response.status === 404) {
-      // Auto-create profile if it doesn't exist
-      try {
-        // Generate a unique username
-        const baseUsername = `user_${userId.slice(0, 8)}`
-        let finalUsername = baseUsername
-        let counter = 0
-
-        // Ensure username is unique
-        while (counter < 100) {
-          const checkResponse = await fetch(`${API_BASE_URL}/v1/profiles/username-availability-check?username=${finalUsername}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          })
-
-          if (checkResponse.ok) {
-            const checkData = await checkResponse.json()
-            if (checkData.available) break
-          }
-
-          counter++
-          finalUsername = `${baseUsername}_${counter}`
-        }
-
-        const newProfile = await createProfile({
-          user_id: userId,
-          username: finalUsername,
-          display_name: "",
-          profile_context: "",
-          has_onboarded: false
-        })
-
-        return newProfile
-      } catch (createError) {
-        console.error("Error auto-creating profile:", createError)
-        throw new Error("Failed to create profile")
-      }
+      // Return null for 404 - don't auto-create profiles anymore
+      return null
     }
     throw new Error(`Failed to fetch profile: ${response.statusText}`)
   }

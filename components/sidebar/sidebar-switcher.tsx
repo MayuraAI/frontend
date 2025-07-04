@@ -14,6 +14,11 @@ import { TabsList } from "../ui/tabs"
 import { WithTooltip } from "../ui/with-tooltip"
 import { ProfileSettings } from "../utility/profile-settings"
 import { SidebarSwitchItem } from "./sidebar-switch-item"
+import { useAuth } from "@/context/auth-context"
+import { isAnonymousUser } from "@/lib/firebase/auth"
+import { Button } from "../ui/button"
+import { useRouter } from "next/navigation"
+import { UserPlus } from "lucide-react"
 
 export const SIDEBAR_ICON_SIZE = 28
 
@@ -24,6 +29,8 @@ interface SidebarSwitcherProps {
 export const SidebarSwitcher: FC<SidebarSwitcherProps> = ({
   onContentTypeChange
 }) => {
+  const { user } = useAuth()
+  const router = useRouter()
   return (
     <div className="flex flex-col justify-between border-r-2 pb-5">
       <TabsList className="bg-background grid h-[440px] grid-rows-7">
@@ -83,10 +90,29 @@ export const SidebarSwitcher: FC<SidebarSwitcherProps> = ({
         {/* TODO */}
         {/* <Alerts /> */}
 
-        <WithTooltip
-          display={<div>Profile Settings</div>}
-          trigger={<ProfileSettings />}
-        />
+        {user && !isAnonymousUser() ? (
+          /* Show profile settings for authenticated users */
+          <WithTooltip
+            display={<div>Profile Settings</div>}
+            trigger={<ProfileSettings />}
+          />
+        ) : user && isAnonymousUser() ? (
+          /* Show sign up button for anonymous users */
+          // <WithTooltip
+          //   display={}
+          //   trigger={
+              <Button
+                onClick={() => router.push("/login")}
+                size="icon"
+                variant="ghost"
+                className="rounded-lg"
+              >
+                <div>Sign Up for More Features</div>
+                {/* <UserPlus size={24} className="text-white" /> */}
+              </Button>
+            // }
+          // />
+        ) : null}
       </div>
     </div>
   )

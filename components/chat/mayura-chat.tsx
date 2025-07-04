@@ -11,12 +11,16 @@ import { ChatInput } from "./chat-input"
 import { ChatMessages } from "./chat-messages"
 import { Button } from "../ui/button"
 import { ChevronDown, Sparkles, Zap } from "lucide-react"
+import { useAuth } from "@/context/auth-context"
+import { isAnonymousUser } from "@/lib/firebase/auth"
+import { AnonymousBanner } from "./anonymous-banner"
 
 interface MayuraChatProps {}
 
 export const MayuraChat: FC<MayuraChatProps> = ({}) => {
-  const { setSelectedChat, chatMessages, setChatMessages, isGenerating, profile } =
+  const { setSelectedChat, chatMessages, setChatMessages, isGenerating, profile, rateLimitStatus } =
     useContext(MayuraContext)
+  const { user } = useAuth()
 
   const params = useParams()
   const { scrollToBottom, messagesStartRef, messagesEndRef, isUserScrolledUp, shouldAutoScroll } = useScroll()
@@ -88,6 +92,14 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
         <div className="h-16 md:hidden" />
         
         <div className="mx-auto max-w-4xl space-y-4">
+          {/* Anonymous User Banner */}
+          {user && isAnonymousUser() && rateLimitStatus && (
+            <AnonymousBanner 
+              requestsRemaining={rateLimitStatus.requests_remaining}
+              totalRequests={rateLimitStatus.daily_limit}
+            />
+          )}
+          
           <div ref={messagesStartRef} />
           <ChatMessages />
           <div ref={messagesEndRef} />
@@ -99,10 +111,15 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
               <div className="flex flex-col items-center justify-center">
                 <div className="max-w-2xl">
                   <p className="text-muted-foreground text-3xl font-medium sm:text-4xl md:text-5xl">
-                    Hey <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-400 bg-clip-text font-bold text-transparent">{profile?.display_name.split(" ")[0] || "there"}</span>,
+                    Hey <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-400 bg-clip-text font-bold text-transparent">
+                      {user && isAnonymousUser() ? "there" : (profile?.display_name.split(" ")[0] || "there")}
+                    </span>,
                   </p>
                   <p className="text-muted-foreground/80 pt-4 text-base sm:text-lg md:pt-6 md:text-xl">
-                    Let&apos;s see which AI model I pick for you today!
+                    {user && isAnonymousUser() ? 
+                      "Try Mayura for free! I'll pick the best AI model for each of your prompts." :
+                      "Let's see which AI model I pick for you today!"
+                    }
                   </p>
                 </div>
               </div>

@@ -44,6 +44,15 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
           return
         }
 
+        // Skip profile loading for anonymous users but load their chats
+        if (user.isAnonymous) {
+          console.log("👤 Anonymous user, skipping profile loading")
+          setProfile(null)
+          // Load chats for anonymous users using their Firebase anonymous UID
+          // This will be handled by the chat layout component
+          return
+        }
+
         // Only load profile if we don't have one yet
         if (!profile) {
           console.log("📡 Loading profile for user:", user.uid)
@@ -60,8 +69,13 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
                 return
               }
             } else {
-              console.log("⚠️ No profile found for user, should create one")
+              console.log("⚠️ No profile found for user, should create one or redirect to setup")
               setProfile(null)
+              // Only redirect to setup if user is not anonymous and not already on setup page
+              if (!user.isAnonymous && window.location.pathname !== "/setup") {
+                router.push("/setup")
+                return
+              }
             }
           } catch (error) {
             console.error("❌ Error loading profile in global state:", error)

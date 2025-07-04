@@ -22,21 +22,26 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth-context"
 import { AIRoutingAnimation } from "@/components/hero/ai-routing-animation"
+import { signInAnonymouslyUser, isAnonymousUser } from "@/lib/firebase/auth"
 
 export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const router = useRouter()
   const { user, loading } = useAuth()
 
-  // Check if user is authenticated and redirect accordingly
-  useEffect(() => {
-    if (!loading && user) {
-      router.push("/chat")
-    }
-  }, [user, loading, router])
+  // Don't auto-redirect - let users choose their path
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index)
+  }
+
+  const handleTryWithFreeRequests = async () => {
+    try {
+      await signInAnonymouslyUser()
+      router.push("/chat")
+    } catch (error) {
+      console.error("Error signing in anonymously:", error)
+    }
   }
 
   const faqs = [
@@ -121,11 +126,17 @@ export default function HomePage() {
             FAQ
           </Link>
         <div className="flex items-center gap-4">
-          <Button asChild className="bg-violet-600 text-white hover:bg-violet-700">
-            <Link href="/chat">
-            Try Mayura Now <ArrowRight className="ml-2 size-4" />
-            </Link>
-          </Button>
+          {!loading && user && !isAnonymousUser() ? (
+            // Authenticated user - show Go to Chat
+            <Button onClick={() => router.push("/chat")} className="bg-violet-600 text-white hover:bg-violet-700">
+              Go to Chat <ArrowRight className="ml-2 size-4" />
+            </Button>
+          ) : (
+            // Anonymous or no user - show Try Free Requests
+            <Button onClick={handleTryWithFreeRequests} className="bg-violet-600 text-white hover:bg-violet-700">
+              Try 5 Free Requests without Signing Up <ArrowRight className="ml-2 size-4" />
+            </Button>
+          )}
         </div>
         </nav>
       </header>
@@ -165,11 +176,17 @@ export default function HomePage() {
                   </p>
                 </div>
                 <div className="flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
-                  <Button size="lg" asChild className="bg-violet-600 text-white hover:bg-violet-700">
-                    <Link href="/chat">
-                      <Zap className="mr-2 size-5" /> Try Mayura Now
-                    </Link>
-                  </Button>
+                  {!loading && user && !isAnonymousUser() ? (
+                    // Authenticated user - show Go to Chat
+                    <Button size="lg" onClick={() => router.push("/chat")} className="bg-violet-600 text-white hover:bg-violet-700">
+                      <MessageSquare className="mr-2 size-5" /> Go to Chat
+                    </Button>
+                  ) : (
+                    // Anonymous or no user - show Try Free Requests
+                    <Button size="lg" onClick={handleTryWithFreeRequests} className="bg-violet-600 text-white hover:bg-violet-700">
+                      <Zap className="mr-2 size-5" /> Try 5 Free Requests
+                    </Button>
+                  )}
                   <Button size="lg" variant="outline" asChild className="border-violet-600 text-violet-400 hover:bg-violet-900/20">
                     <Link href="#how-it-works">
                       <Brain className="mr-2 size-5" /> Learn More

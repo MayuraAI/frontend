@@ -61,8 +61,9 @@ function LoginPageContent() {
   useEffect(() => {
     const checkAuth = async () => {
       const user = getCurrentUser()
-      if (user) {
-        console.log("🔄 User found on login page, redirecting...")
+      // Only redirect if user is authenticated (not anonymous)
+      if (user && !user.isAnonymous) {
+        console.log("🔄 Authenticated user found on login page, redirecting...")
         await redirectAfterAuth(router)
       }
     }
@@ -71,8 +72,9 @@ function LoginPageContent() {
 
     // Listen for auth state changes
     const unsubscribe = onAuthStateChange(async (user) => {
-      if (user) {
-        console.log("🔄 Auth state changed, user logged in, redirecting...")
+      // Only redirect if user is authenticated (not anonymous)
+      if (user && !user.isAnonymous) {
+        console.log("🔄 Auth state changed, authenticated user logged in, redirecting...")
         await redirectAfterAuth(router)
       }
     })

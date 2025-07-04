@@ -2,6 +2,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
+  signInAnonymously,
   GoogleAuthProvider,
   signOut,
   sendPasswordResetEmail,
@@ -39,6 +40,11 @@ export const signUpWithEmail = async (email: string, password: string): Promise<
 // Sign in with Google
 export const signInWithGoogle = async (): Promise<UserCredential> => {
   return await signInWithPopup(auth, googleProvider)
+}
+
+// Sign in anonymously
+export const signInAnonymouslyUser = async (): Promise<UserCredential> => {
+  return await signInAnonymously(auth)
 }
 
 // Sign out
@@ -101,6 +107,11 @@ export const isEmailVerified = (): boolean => {
   return auth.currentUser?.emailVerified ?? false
 }
 
+// Check if user is anonymous
+export const isAnonymousUser = (): boolean => {
+  return auth.currentUser?.isAnonymous ?? false
+}
+
 // Update user password
 export const updateUserPassword = async (newPassword: string): Promise<void> => {
   if (auth.currentUser) {
@@ -147,6 +158,14 @@ export const redirectAfterAuth = async (router: any) => {
     }
 
     console.log("✅ User found:", user.uid)
+    
+    // If user is anonymous, skip profile checks and go directly to chat
+    if (user.isAnonymous) {
+      console.log("👤 Anonymous user, redirecting directly to chat")
+      router.push("/chat")
+      return
+    }
+
     const token = await getIdToken()
     if (!token) {
       console.log("❌ No token found, redirecting to login")

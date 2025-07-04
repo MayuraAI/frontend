@@ -6,12 +6,15 @@ import { IconPlayerStop, IconSend } from "@tabler/icons-react"
 import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
 import { cn } from "@/lib/utils"
 import { Send, Square } from "lucide-react"
+import { useAuth } from "@/context/auth-context"
+import { isAnonymousUser } from "@/lib/firebase/auth"
 
 interface ChatInputProps {}
 
 export const ChatInput: FC<ChatInputProps> = () => {
   const { chatMessages, isGenerating, profile } = useContext(MayuraContext)
   const { handleSendMessage, handleStopMessage } = useChatHandler()
+  const { user } = useAuth()
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [inputValue, setInputValue] = useState("")
@@ -39,7 +42,9 @@ export const ChatInput: FC<ChatInputProps> = () => {
 
   const handleSubmit = useCallback(() => {
     const content = inputValue.trim()
-    if (!profile || !content || isGenerating) return
+    // Allow sending if user is anonymous OR has a profile
+    const canSendMessage = user && (isAnonymousUser() || profile)
+    if (!canSendMessage || !content || isGenerating) return
 
     setInputValue("")
     handleSendMessage(content, chatMessages, false)
@@ -48,7 +53,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
       textareaRef.current.style.height = "auto"
     }
     textareaRef.current?.focus()
-  }, [profile, inputValue, isGenerating, handleSendMessage, chatMessages])
+  }, [user, profile, inputValue, isGenerating, handleSendMessage, chatMessages])
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -69,7 +74,8 @@ export const ChatInput: FC<ChatInputProps> = () => {
   )
 
   const hasContent = inputValue.trim().length > 0
-  const canSend = hasContent && !isGenerating && profile
+  const canSendMessage = user && (isAnonymousUser() || profile)
+  const canSend = hasContent && !isGenerating && canSendMessage
 
   return (
     <div>

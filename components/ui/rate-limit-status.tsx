@@ -19,6 +19,8 @@ import {
 } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
 import { useRateLimit } from "@/lib/hooks/use-rate-limit"
+import { useAuth } from "@/context/auth-context"
+import { isAnonymousUser } from "@/lib/firebase/auth"
 
 interface RateLimitStatusProps {
   className?: string
@@ -33,6 +35,7 @@ export default function RateLimitStatus({
 }: RateLimitStatusProps) {
   const { profile, rateLimitRefreshTrigger } = useContext(MayuraContext)
   const { rateLimitStatus, fetchLatestStatus } = useRateLimit()
+  const { user } = useAuth()
   const [isExpanded, setIsExpanded] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -44,7 +47,8 @@ export default function RateLimitStatus({
   })
 
   const fetchStatus = useCallback(async () => {
-    if (!profile) return
+    // Allow fetching for both authenticated and anonymous users
+    if (!user) return
     setRateLimitState(prev => ({ ...prev, loading: true, error: null }))
     try {
       const status = await fetchLatestStatus()
@@ -64,7 +68,7 @@ export default function RateLimitStatus({
         error: err instanceof Error ? err.message : "Failed to fetch status"
       }))
     }
-  }, [profile, fetchLatestStatus, onStatusUpdate])
+  }, [user, fetchLatestStatus, onStatusUpdate])
 
   // Handle click outside to close expanded view
   useEffect(() => {
@@ -95,8 +99,8 @@ export default function RateLimitStatus({
   }, [rateLimitStatus])
 
   useEffect(() => {
-    if (profile && !rateLimitStatus) fetchStatus()
-  }, [profile, rateLimitStatus, fetchStatus])
+    if (user && !rateLimitStatus) fetchStatus()
+  }, [user, rateLimitStatus, fetchStatus])
 
   useEffect(() => {
     const interval = setInterval(fetchStatus, 60000)
@@ -114,7 +118,7 @@ export default function RateLimitStatus({
     }
   }, [rateLimitRefreshTrigger, fetchStatus])
 
-  if (!profile) return null
+  if (!user) return null
 
   const { status, loading, error, lastUpdated } = rateLimitState
   if (loading && !status) {
@@ -178,12 +182,14 @@ export default function RateLimitStatus({
   const timeUntilReset = RateLimitService.getTimeUntilReset(reset_time_unix)
 
   const getTag = () => {
+    const isAnonymous = user && isAnonymousUser()
+    
     if (isPro) {
       return (
         <div className="flex items-center space-x-2">
           <IconCheck size={18} className="text-violet-400" />
           <span className="ml-1">
-            {requests_used} / {daily_limit} Pro
+            {requests_used} / {daily_limit} {isAnonymous ? 'Free' : 'Pro'}
           </span>
         </div>
       )
@@ -191,7 +197,7 @@ export default function RateLimitStatus({
       return (
         <div className="flex items-center space-x-2">
           <IconBolt size={18} className="text-yellow-400" />
-          <span className="ml-1">Free mode active</span>
+          <span className="ml-1">{isAnonymous ? 'Free trial' : 'Free mode'} active</span>
         </div>
       )
     }
@@ -222,7 +228,7 @@ export default function RateLimitStatus({
               <IconCheck size={16} className="text-violet-400" />
             )}
             <span className="text-xs font-medium">
-              {isFree ? "Free tier" : "Pro" + " " + requests_remaining + " left"}
+              {isFree ? (user && isAnonymousUser() ? "Free trial" : "Free tier") : "Pro" + " " + requests_remaining + " left"}
             </span>
             {isExpanded ? (
               <IconChevronUp size={14} className="ml-1" />
@@ -267,7 +273,7 @@ export default function RateLimitStatus({
 
             <div className="flex items-center justify-between text-xs">
               <span className="text-slate-400">
-                {isPro ? "Pro Plan" : "Free Plan"}
+                {isPro ? (user && isAnonymousUser() ? "Free Trial" : "Pro Plan") : (user && isAnonymousUser() ? "Free Trial" : "Free Plan")}
               </span>
               <div className="flex items-center space-x-1 text-slate-400">
                 <IconClock size={12} />

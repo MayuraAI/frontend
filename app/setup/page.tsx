@@ -36,6 +36,12 @@ export default function SetupPage() {
           return router.push("/login")
         }
 
+        // Anonymous users don't need setup - redirect to chat
+        if (user.isAnonymous) {
+          console.log("👤 Anonymous user accessing setup page, redirecting to chat")
+          return router.push("/chat")
+        }
+
         const token = await getToken()
         if (!token) {
           return router.push("/login")
