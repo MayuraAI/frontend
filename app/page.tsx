@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import {
   ArrowRight,
   Brain,
@@ -15,7 +16,8 @@ import {
   Lightbulb,
   DollarSign as DollarSignIcon,
   MessageSquare,
-  Route
+  Route,
+  Send
 } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
@@ -28,6 +30,8 @@ const FREE_PROMPTS_COUNT = 5
 
 export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [heroPrompt, setHeroPrompt] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
   const { user, loading } = useAuth()
 
@@ -43,6 +47,33 @@ export default function HomePage() {
       router.push("/chat")
     } catch (error) {
       console.error("Error signing in anonymously:", error)
+    }
+  }
+
+  const handleHeroPromptSubmit = async (e?: React.FormEvent, promptText?: string) => {
+    if (e) {
+      e.preventDefault()
+    }
+    
+    const promptToSubmit = promptText || heroPrompt.trim()
+    if (!promptToSubmit || isSubmitting) return
+
+    setIsSubmitting(true)
+    try {
+      // Sign in anonymously if not already signed in
+      if (!user) {
+        await signInAnonymouslyUser()
+      }
+      
+      // Store the prompt in localStorage to be picked up by the chat page
+      localStorage.setItem('heroPrompt', promptToSubmit)
+      
+      // Navigate to chat
+      router.push("/chat")
+    } catch (error) {
+      console.error("Error handling hero prompt:", error)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -184,10 +215,77 @@ export default function HomePage() {
                       <MessageSquare className="mr-2 size-5" /> Go to Chat
                     </Button>
                   ) : (
-                    // Anonymous or no user - show Try Free Requests
-                    <Button size="lg" onClick={handleTryWithFreeRequests} className="bg-violet-600 text-white hover:bg-violet-700">
-                      <Zap className="mr-2 size-5" /> Try {FREE_PROMPTS_COUNT} Free Prompts
-                    </Button>
+                    // Anonymous or no user - show beautiful chat input
+                    <div className="w-full max-w-2xl">
+                      {/* Free Messages Badge */}
+                      <div className="mb-4 flex items-center justify-center gap-2">
+                        <div className="flex items-center gap-2 rounded-full bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 px-4 py-2">
+                          <Zap className="size-4 text-green-400" />
+                          <span className="text-sm font-medium text-green-300">
+                            {FREE_PROMPTS_COUNT} Free Messages • No Signup Required
+                          </span>
+                        </div>
+                      </div>
+                      
+                      {/* Beautiful Input Form */}
+                      <form onSubmit={handleHeroPromptSubmit} className="relative">
+                        <div className="relative group">
+                          {/* Gradient Border Effect */}
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                          
+                          {/* Input Container */}
+                          <div className="relative bg-black/50 backdrop-blur-sm rounded-2xl border border-slate-600/50 p-1">
+                            <div className="flex items-center gap-2">
+                              <Input
+                                value={heroPrompt}
+                                onChange={(e) => setHeroPrompt(e.target.value)}
+                                placeholder="Ask me anything... (coding, writing, analysis, creative tasks)"
+                                className="flex-1 border-0 bg-transparent text-white placeholder:text-slate-400 focus:ring-0 focus:border-0 text-lg h-14 px-6"
+                                disabled={isSubmitting}
+                              />
+                              <Button 
+                                type="submit" 
+                                size="lg" 
+                                disabled={!heroPrompt.trim() || isSubmitting}
+                                className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white rounded-xl px-6 h-12 font-medium transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                              >
+                                {isSubmitting ? (
+                                  <div className="flex items-center gap-2">
+                                    <div className="size-4 animate-spin rounded-full border-2 border-white/20 border-t-white"></div>
+                                    <span>Starting...</span>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center gap-2">
+                                    <Send className="size-4" />
+                                    <span>Try Free</span>
+                                  </div>
+                                )}
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                      
+                      {/* Popular Prompts */}
+                      <div className="mt-6">
+                        <div className="flex flex-wrap gap-2 justify-center">
+                          {[
+                            "Write a Python script to analyze data",
+                            "Explain quantum computing simply",
+                            "Create a marketing strategy",
+                            "Debug my JavaScript code"
+                          ].map((prompt, index) => (
+                            <button
+                              key={index}
+                              onClick={() => handleHeroPromptSubmit(undefined, prompt)}
+                              className="px-3 py-1.5 text-xs bg-slate-800/50 hover:bg-slate-700/50 border border-slate-600/50 rounded-full text-slate-300 hover:text-white transition-colors duration-200"
+                            >
+                              {prompt}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>

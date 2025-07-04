@@ -47,8 +47,8 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   const [isMobile, setIsMobile] = useState(false)
 
   // Check if user is anonymous - if so, don't show sidebar
-  const isAnonymous = user && isAnonymousUser()
-  const shouldShowSidebar = !isAnonymous && showSidebar
+  const isAnonymous = isAnonymousUser()
+  const shouldShowSidebar = showSidebar
 
   // Detect mobile screen size
   useEffect(() => {
@@ -65,15 +65,12 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     const saved = localStorage.getItem("showSidebar")
     // On mobile, default to closed sidebar
     // For anonymous users, always keep sidebar closed
-    const defaultOpen = isAnonymous ? false : (isMobile ? false : true)
+    const defaultOpen = (isMobile ? false : true)
     setShowSidebar(saved !== null ? saved === "true" : defaultOpen)
     setIsLoaded(true)
-  }, [isMobile, isAnonymous])
+  }, [isMobile])
 
   const handleToggleSidebar = () => {
-    // Don't allow toggling sidebar for anonymous users
-    if (isAnonymous) return
-    
     setShowSidebar(prevState => !prevState)
     localStorage.setItem("showSidebar", String(!showSidebar))
   }
@@ -94,7 +91,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   return (
     <div className="bg-background flex h-screen w-full overflow-hidden">
       {/* Responsive Sidebar - Hidden for anonymous users */}
-      {!isAnonymous && (
+      {(
         <aside
           className={cn(
             "bg-sidebar fixed z-20 h-full border-r shadow-lg transition-all duration-300 ease-in-out",
@@ -126,7 +123,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         {/* Mobile Header */}
         <header className="bg-sidebar border-sidebar-border fixed top-0 left-0 z-20 flex h-16 w-full items-center justify-between border-b p-3 shadow-sm md:hidden">
           {/* Only show menu button for non-anonymous users */}
-          {!isAnonymous && (
+          {(
             <Button
               variant="outline"
               size="icon"
@@ -155,7 +152,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         </section>
 
         {/* Desktop Sidebar Toggle Button - Hidden for anonymous users */}
-        {!isAnonymous && (
+        {(
           <Button
             className={cn(
               "bg-sidebar hover:bg-sidebar-muted border-sidebar-border absolute left-1 top-1/2 z-50 size-8 rounded-lg border shadow-md transition-all duration-300",
@@ -176,7 +173,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
       </main>
 
       {/* Mobile Sidebar Overlay - Hidden for anonymous users */}
-      {!isAnonymous && shouldShowSidebar && (
+      {shouldShowSidebar && (
         <div
           className="fixed inset-0 z-10 bg-black/50 backdrop-blur-sm md:hidden"
           onClick={handleToggleSidebar}

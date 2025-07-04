@@ -20,6 +20,7 @@ export const ChatInput: FC<ChatInputProps> = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [inputValue, setInputValue] = useState("")
   const [isFocused, setIsFocused] = useState(false)
+  const [hasProcessedHeroPrompt, setHasProcessedHeroPrompt] = useState(false)
 
   // Auto-resize textarea height based on content
   useEffect(() => {
@@ -33,6 +34,31 @@ export const ChatInput: FC<ChatInputProps> = () => {
   useEffect(() => {
     textareaRef.current?.focus()
   }, [])
+
+  // Check for hero prompt from localStorage and auto-submit it
+  useEffect(() => {
+    const canSendMessage = user && (isAnonymousUser() || profile)
+    
+    if (canSendMessage && !hasProcessedHeroPrompt && !isGenerating && chatMessages.length === 0) {
+      const heroPrompt = localStorage.getItem('heroPrompt')
+      if (heroPrompt) {
+        // Clear the hero prompt from localStorage
+        localStorage.removeItem('heroPrompt')
+        setHasProcessedHeroPrompt(true)
+        
+        // Set the input value and submit the message
+        setInputValue(heroPrompt)
+        
+        // Submit the message after a small delay to ensure state is updated
+        setTimeout(() => {
+          handleSendMessage(heroPrompt, chatMessages, false)
+          setInputValue("")
+        }, 100)
+      } else {
+        setHasProcessedHeroPrompt(true)
+      }
+    }
+  }, [user, profile, hasProcessedHeroPrompt, isGenerating, chatMessages, handleSendMessage])
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {

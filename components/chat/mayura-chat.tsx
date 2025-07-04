@@ -79,28 +79,37 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
   }
 
   return (
-    <div className="flex h-full flex-col bg-background">
+    <div className="relative flex h-full flex-col bg-background">
       {/* Chat Messages Area */}
+      {/* Anonymous User Banner - Absolute positioned within messages container */}
+      {user && isAnonymousUser() && rateLimitStatus && (
+        <div className="absolute top-4 left-0 right-0 z-50 max-w-4xl mx-auto">
+          <div className="shadow-lg">
+            <AnonymousBanner
+              requestsRemaining={rateLimitStatus.requests_remaining}
+              totalRequests={rateLimitStatus.daily_limit}
+            />
+          </div>
+        </div>
+      )}
       <section
-        className="flex-1 overflow-y-auto bg-background px-3 pt-4 pb-4 sm:px-4 md:px-6 md:pt-6 md:pb-6"
+        className="flex-1 overflow-y-auto bg-background px-3 pb-4 sm:px-4 md:px-6 md:pt-6 md:pb-6"
         role="log"
         aria-live="polite"
         aria-label="Chat messages"
-        style={{ paddingTop: "calc(1rem + env(safe-area-inset-top))" }}
       >
         {/* Add top spacing for mobile header on mobile only */}
         <div className="h-16 md:hidden" />
         
-        <div className="mx-auto max-w-4xl space-y-4">
-          {/* Anonymous User Banner */}
-          {user && isAnonymousUser() && rateLimitStatus && (
-            <AnonymousBanner 
-              requestsRemaining={rateLimitStatus.requests_remaining}
-              totalRequests={rateLimitStatus.daily_limit}
-            />
-          )}
-          
-          <div ref={messagesStartRef} />
+        <div className="mx-auto max-w-4xl space-y-4 relative">
+
+          <div ref={messagesStartRef} 
+          style={{ 
+          paddingTop: user && isAnonymousUser() 
+            ? "calc(1rem + env(safe-area-inset-top) + 5rem)" // Add space for anonymous banner
+            : "calc(1rem + env(safe-area-inset-top))"
+          }}
+          />
           <ChatMessages />
           <div ref={messagesEndRef} />
 
