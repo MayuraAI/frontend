@@ -98,28 +98,6 @@ export const createChat = async (chat: CreateChatData): Promise<Chat> => {
   return await response.json()
 }
 
-export const createChats = async (chats: CreateChatData[]): Promise<Chat[]> => {
-  const token = await getIdToken()
-  if (!token) {
-    throw new Error("No authentication token available")
-  }
-
-  const response = await fetch(`${API_BASE_URL}/v1/chats/batch`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ chats })
-  })
-
-  if (!response.ok) {
-    throw new Error(`Failed to create chats: ${response.statusText}`)
-  }
-
-  return await response.json()
-}
-
 export const updateChat = async (
   chatId: string,
   chat: UpdateChatData

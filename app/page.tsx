@@ -24,6 +24,8 @@ import { useAuth } from "@/context/auth-context"
 import { AIRoutingAnimation } from "@/components/hero/ai-routing-animation"
 import { signInAnonymouslyUser, isAnonymousUser } from "@/lib/firebase/auth"
 
+const FREE_PROMPTS_COUNT = 2
+
 export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const router = useRouter()
@@ -88,9 +90,9 @@ export default function HomePage() {
   ]
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-black via-slate-900 to-black">
+    <div className="min-h-screen w-full">
       {/* Header */}
-      <header className="flex w-full items-center justify-between border-b border-slate-700 bg-black/20 p-6 shadow-sm backdrop-blur-sm">
+      <header className="flex w-full items-center justify-between border-b border-slate-700 bg-transparent p-6 shadow-sm backdrop-blur-sm">
           <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <img 
@@ -134,7 +136,7 @@ export default function HomePage() {
           ) : (
             // Anonymous or no user - show Try Free Requests
             <Button onClick={handleTryWithFreeRequests} className="bg-violet-600 text-white hover:bg-violet-700">
-              Try 5 Free Requests without Signing Up <ArrowRight className="ml-2 size-4" />
+              Try {FREE_PROMPTS_COUNT} Free Prompts<ArrowRight className="ml-2 size-4" />
             </Button>
           )}
         </div>
@@ -184,14 +186,9 @@ export default function HomePage() {
                   ) : (
                     // Anonymous or no user - show Try Free Requests
                     <Button size="lg" onClick={handleTryWithFreeRequests} className="bg-violet-600 text-white hover:bg-violet-700">
-                      <Zap className="mr-2 size-5" /> Try 5 Free Requests
+                      <Zap className="mr-2 size-5" /> Try {FREE_PROMPTS_COUNT} Free Prompts
                     </Button>
                   )}
-                  <Button size="lg" variant="outline" asChild className="border-violet-600 text-violet-400 hover:bg-violet-900/20">
-                    <Link href="#how-it-works">
-                      <Brain className="mr-2 size-5" /> Learn More
-                    </Link>
-                  </Button>
                 </div>
               </div>
               {/* Right: Animation */}
@@ -215,7 +212,7 @@ export default function HomePage() {
             </div>
             <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
               {/* Step 1 */}
-              <Card className="flex flex-col items-center border-slate-700 bg-black/30 p-6 text-center shadow-sm backdrop-blur-sm">
+              <Card className="flex flex-col items-center border-slate-700 bg-black/10 p-6 text-center shadow-sm backdrop-blur-sm">
                 <CardHeader className="flex flex-col items-center pb-4">
                   <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-violet-600 text-white">
                     <MessageSquare className="size-7" />
@@ -231,7 +228,7 @@ export default function HomePage() {
                 </CardContent>
               </Card>
               {/* Step 2 */}
-              <Card className="flex flex-col items-center border-slate-700 bg-black/30 p-6 text-center shadow-sm backdrop-blur-sm">
+              <Card className="flex flex-col items-center border-slate-700 bg-black/10 p-6 text-center shadow-sm backdrop-blur-sm">
                 <CardHeader className="flex flex-col items-center pb-4">
                   <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-violet-600 text-white">
                     <Route className="size-7" />
@@ -250,7 +247,7 @@ export default function HomePage() {
                 </CardContent>
               </Card>
               {/* Step 3 */}
-              <Card className="flex flex-col items-center border-slate-700 bg-black/30 p-6 text-center shadow-sm backdrop-blur-sm">
+              <Card className="flex flex-col items-center border-slate-700 bg-black/10 p-6 text-center shadow-sm backdrop-blur-sm">
                 <CardHeader className="flex flex-col items-center pb-4">
                   <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-violet-600 text-white">
                     <Lightbulb className="size-7" />
@@ -281,7 +278,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2 lg:grid-cols-3">
-              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <Star className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Higher Quality Results</CardTitle>
@@ -293,7 +290,7 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <Clock className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Faster Responses</CardTitle>
@@ -305,7 +302,7 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <DollarSignIcon className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Lower Costs</CardTitle>
@@ -317,7 +314,7 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <Zap className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Simplified Workflow</CardTitle>
@@ -329,7 +326,7 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <Rocket className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Future-Proof</CardTitle>
@@ -341,7 +338,7 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <Brain className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Focus on Your Work</CardTitle>
@@ -411,7 +408,7 @@ export default function HomePage() {
             </div>
             <div className="mx-auto grid max-w-4xl items-start gap-8 md:grid-cols-2">
               {/* Free Plan */}
-              <Card className="flex h-full flex-col border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="flex h-full flex-col border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-2xl font-bold text-white">Free</h3>
@@ -466,7 +463,7 @@ export default function HomePage() {
               </Card>
 
               {/* Pro Plan */}
-              <Card className="relative flex h-full flex-col border-2 border-slate-600 bg-black/20 opacity-80 shadow-sm backdrop-blur-sm">
+              <Card className="relative flex h-full flex-col border-2 border-slate-600 bg-black/10 opacity-80 shadow-sm backdrop-blur-sm">
                 <div className="absolute -top-4 left-1/2 w-fit -translate-x-1/2 rounded-full bg-slate-600 px-4 py-1 text-sm font-medium text-slate-300">
                   Coming Soon
                 </div>
@@ -617,7 +614,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="w-full border-t border-slate-700 bg-black/30 py-12 backdrop-blur-sm">
+      <footer className="w-full border-t border-slate-700 bg-transparent py-12 backdrop-blur-sm">
   <div className="container mx-auto space-y-16 px-6">
     
     {/* Row 1: Branding + Navigation */}

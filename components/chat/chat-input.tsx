@@ -8,12 +8,13 @@ import { cn } from "@/lib/utils"
 import { Send, Square } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
 import { isAnonymousUser } from "@/lib/firebase/auth"
+import { SignupPromptModal } from "@/components/ui/signup-prompt-modal"
 
 interface ChatInputProps {}
 
 export const ChatInput: FC<ChatInputProps> = () => {
   const { chatMessages, isGenerating, profile } = useContext(MayuraContext)
-  const { handleSendMessage, handleStopMessage } = useChatHandler()
+  const { handleSendMessage, handleStopMessage, showSignupPrompt, setShowSignupPrompt } = useChatHandler()
   const { user } = useAuth()
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -73,67 +74,81 @@ export const ChatInput: FC<ChatInputProps> = () => {
     [handleSubmit]
   )
 
-  const hasContent = inputValue.trim().length > 0
   const canSendMessage = user && (isAnonymousUser() || profile)
-  const canSend = hasContent && !isGenerating && canSendMessage
+  const isDisabled = !canSendMessage || !inputValue.trim() || isGenerating
 
   return (
-    <div>
-      <div className="mx-auto max-w-4xl">
-        <form onSubmit={handleFormSubmit} className="relative">
-          <div
+    <>
+      <form onSubmit={handleFormSubmit} className="w-full">
+        <div className="relative">
+          <Textarea
+            ref={textareaRef}
+            placeholder={
+              !user
+                ? "Please sign in to start chatting..."
+                : !canSendMessage
+                ? "Please complete your profile setup..."
+                : "Type your message here..."
+            }
+            value={inputValue}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            disabled={!canSendMessage}
             className={cn(
-              "flex items-start rounded-lg border border-slate-600 bg-black transition-all duration-200",
-              isFocused && "border-violet-500"
+              "min-h-[60px] max-h-[200px] resize-none rounded-xl border-2 pr-12 text-base leading-relaxed transition-all duration-200 focus:border-violet-500 focus:ring-0",
+              "placeholder:text-muted-foreground/60",
+              isFocused && "shadow-lg",
+              !canSendMessage && "opacity-50 cursor-not-allowed"
             )}
-          >
-            <textarea
-              ref={textareaRef}
-              value={inputValue}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              placeholder={
-                isGenerating ? "AI is thinking..." : "Type your message here..."
-              }
-              disabled={isGenerating}
-              className="w-full resize-none p-4 text-sm leading-relaxed text-white sm:p-5 sm:text-base md:p-6"
-              rows={1}
-              style={{
-                maxHeight: "200px",
-                overflowY:
-                  inputValue.split("\n").length > 6 ? "scroll" : "hidden"
-              }}
-            />
+            rows={1}
+          />
 
-            <div className="flex shrink-0 items-start px-2 py-3 sm:py-4">
-              {isGenerating ? (
-                <Button
-                  type="button"
-                  onClick={handleStopMessage}
-                  variant="destructive"
-                  size="sm"
-                  className="flex h-8 items-center gap-1 px-2 sm:h-9 sm:gap-2 sm:px-3"
-                >
-                  <Square size={14} className="sm:size-4" />
-                  <span className="text-xs font-bold sm:text-sm">Stop</span>
-                </Button>
-              ) : (
-                <Button
-                  type="submit"
-                  disabled={!canSend}
-                  size="sm"
-                  className="flex h-8 items-center gap-1 bg-violet-600 px-2 text-white hover:bg-violet-700 sm:h-9 sm:gap-2 sm:px-3"
-                >
-                  <Send size={14} className="sm:size-4" />
-                  <span className="text-xs font-bold sm:text-sm">Send</span>
-                </Button>
-              )}
-            </div>
+          <div className="absolute bottom-2 right-2 flex items-center gap-2">
+            {isGenerating ? (
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                onClick={handleStopMessage}
+                className="size-8 rounded-lg bg-red-500 p-0 text-white hover:bg-red-600"
+                title="Stop generating"
+              >
+                <Square className="size-4" />
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                size="sm"
+                disabled={isDisabled}
+                className={cn(
+                  "size-8 rounded-lg p-0 transition-all duration-200",
+                  isDisabled
+                    ? "bg-muted text-muted-foreground cursor-not-allowed"
+                    : "bg-violet-600 text-white hover:bg-violet-700 hover:scale-105"
+                )}
+                title="Send message"
+              >
+                <Send className="size-4" />
+              </Button>
+            )}
           </div>
-        </form>
-      </div>
-    </div>
+        </div>
+
+        {/* Helper text for anonymous users */}
+        {user && isAnonymousUser() && (
+          <div className="mt-2 text-xs text-slate-400 text-center">
+            You&apos;re using Mayura anonymously. Sign up to save your chat history and get more requests!
+          </div>
+        )}
+      </form>
+
+      {/* Signup Prompt Modal */}
+      <SignupPromptModal
+        isOpen={showSignupPrompt}
+        onClose={() => setShowSignupPrompt(false)}
+      />
+    </>
   )
 }

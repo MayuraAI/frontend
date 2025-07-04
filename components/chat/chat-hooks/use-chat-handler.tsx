@@ -4,11 +4,12 @@ import { useAuth } from "@/context/auth-context"
 import { MayuraContext } from "@/context/context"
 import { ChatMessage } from "@/types"
 import { useRouter } from "next/navigation"
-import { useContext, useRef } from "react"
+import { useContext, useRef, useState } from "react"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
 import { useRateLimit } from "@/lib/hooks/use-rate-limit"
 import { isAnonymousUser } from "@/lib/firebase/auth"
+import { SignupPromptModal } from "@/components/ui/signup-prompt-modal"
 
 // API base URL for backend calls
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
@@ -17,6 +18,7 @@ export const useChatHandler = () => {
   const router = useRouter()
   const { user, getToken } = useAuth()
   const { refreshRateLimit, updateFromHeaders } = useRateLimit()
+  const [showSignupPrompt, setShowSignupPrompt] = useState(false)
 
   const {
     userInput,
@@ -32,7 +34,8 @@ export const useChatHandler = () => {
     abortController,
     setAbortController,
     chats,
-    setChats
+    setChats,
+    rateLimitStatus
   } = useContext(MayuraContext)
 
   const chatInputRef = useRef<HTMLTextAreaElement>(null)
@@ -54,6 +57,14 @@ export const useChatHandler = () => {
     chatMessages: ChatMessage[],
     isRegeneration: boolean = false
   ) => {
+    // Check if anonymous user has exhausted their quota
+    if (user && isAnonymousUser() && rateLimitStatus) {
+      if (rateLimitStatus.requests_remaining <= 0) {
+        setShowSignupPrompt(true)
+        return
+      }
+    }
+
     const startingInput = messageContent
     setUserInput("")
     setIsGenerating(true)
@@ -143,6 +154,13 @@ export const useChatHandler = () => {
           return
         }
 
+        if (response.status === 429) {
+          setShowSignupPrompt(true)
+          // remove the placeholder messages
+          setChatMessages(chatMessages)
+          return
+        }
+
         const errorData = await response.json()
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
       }
@@ -151,80 +169,98 @@ export const useChatHandler = () => {
       const decoder = new TextDecoder()
 
       let fullGeneratedText = ""
+      let hasReceivedFirstToken = false
 
-      // Handle the streaming response
-      while (true) {
-        const { done, value } = await reader!.read()
-        if (done) break
+      if (reader) {
+        try {
+          let modelName = "Mayura"
+          while (true) {
+            const { done, value } = await reader.read()
 
-        const chunk = decoder.decode(value, { stream: true })
-        const lines = chunk.split('\n')
+            if (done) {
+              break
+            }
 
-        for (const line of lines) {
-          if (line.trim() === '') continue
-          
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6)
-            if (data === '[DONE]') continue
-            
-            try {
-              const parsed = JSON.parse(data)
-              if (parsed.message) {
-                fullGeneratedText += parsed.message
-                
-                if (!firstTokenReceived) {
-                  setFirstTokenReceived(true)
+            const chunk = decoder.decode(value)
+            const lines = chunk.split("\n")
+
+            for (const line of lines) {
+              if (line.startsWith("data: ")) {
+                const data = line.slice(6)
+
+                if (data === "[DONE]") {
+                  break
                 }
 
-                // Update the assistant message with the new content
-                setChatMessages(prev => {
-                  const updated = [...prev]
-                  updated[updated.length - 1] = {
-                    ...updated[updated.length - 1],
-                    content: fullGeneratedText,
-                    model_name: parsed.model || "unknown"
+                try {
+                  const parsed = JSON.parse(data)
+
+                  if (parsed.error) {
+                    throw new Error(parsed.error)
                   }
-                  return updated
-                })
+                  if (parsed.model) {
+                    modelName = parsed.model
+                    continue
+                  }
+
+                  if (parsed.message) {
+                    if (!hasReceivedFirstToken) {
+                      setFirstTokenReceived(true)
+                      hasReceivedFirstToken = true
+                    }
+
+                    fullGeneratedText += parsed.message
+
+                    // Update the assistant message in real-time
+                    setChatMessages(prevMessages => {
+                      const updatedMessages = [...prevMessages]
+                      const lastMessage = updatedMessages[updatedMessages.length - 1]
+                      if (lastMessage && lastMessage.role === "assistant") {
+                        lastMessage.content = fullGeneratedText
+                        lastMessage.model_name = modelName
+                      }
+                      return updatedMessages
+                    })
+                  }
+                } catch (parseError) {
+                  // Ignore parsing errors for non-JSON lines
+                }
               }
-            } catch (e) {
-              // Skip invalid JSON
             }
           }
+        } catch (error) {
+          if (error instanceof Error && error.name === "AbortError") {
+            console.log("Request was aborted")
+          } else {
+            throw error
+          }
+        } finally {
+          reader.releaseLock()
         }
       }
 
-      // Final message processing
-      setChatMessages(prev => {
-        const updated = [...prev]
-        updated[updated.length - 1] = {
-          ...updated[updated.length - 1],
-          content: fullGeneratedText
+      // Refresh chat list after successful message
+      if (user) {
+        try {
+          // We'll let the chat layout handle refreshing the chat list
+          console.log("Message sent successfully")
+        } catch (error) {
+          console.error("Error refreshing chat list:", error)
         }
-        return updated
-      })
-
-      // If this was a new chat (no selectedChat), we need to refetch the chats to get the new one
-      if (!selectedChat) {
-        // The backend created a new chat, so we need to refresh the chat list
-        // We'll get the chat info from the response headers or handle it differently
-        // For now, just let the layout component handle the refresh
-        console.log("New chat was created by backend, chat list will be refreshed by layout component")
       }
-
     } catch (error: any) {
-      if (error.name === "AbortError") {
-        toast.error("Request was cancelled")
-      } else {
-        console.error("Error in handleSendMessage:", error)
-        toast.error(error.message || "An error occurred while sending the message")
-      }
+      console.error("Error sending message:", error)
 
-      // Remove the placeholder messages on error
-      setChatMessages(prev => prev.slice(0, -2))
+      if (error.name === "AbortError") {
+        console.log("Request was aborted by user")
+      } else {
+        // Remove the placeholder messages on error
+        setChatMessages(chatMessages)
+        toast.error(error.message || "Failed to send message. Please try again.")
+      }
     } finally {
       setIsGenerating(false)
-      setUserInput(startingInput)
+      setFirstTokenReceived(false)
       setAbortController(null)
     }
   }
@@ -235,13 +271,16 @@ export const useChatHandler = () => {
       setAbortController(null)
     }
     setIsGenerating(false)
+    setFirstTokenReceived(false)
   }
 
   return {
     chatInputRef,
     handleNewChat,
     handleSendMessage,
+    handleStopMessage,
     handleFocusChatInput,
-    handleStopMessage
+    showSignupPrompt,
+    setShowSignupPrompt
   }
 }

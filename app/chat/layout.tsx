@@ -7,7 +7,7 @@ import { getProfileByUserId } from "@/db/profile"
 import { Dashboard } from "@/components/ui/dashboard"
 import { useRouter, useSearchParams } from "next/navigation"
 import { ReactNode, useContext, useEffect, useState, Suspense, useCallback } from "react"
-import { getCurrentUser } from "@/lib/firebase/auth"
+import { getCurrentUser, signInAnonymouslyUser } from "@/lib/firebase/auth"
 
 interface ChatLayoutProps {
   children: ReactNode
@@ -40,6 +40,7 @@ function ChatLayoutContent({
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isSigningInAnonymously, setIsSigningInAnonymously] = useState(false)
 
   const fetchChatData = useCallback(async (userId: string) => {
     if (!setChats) {
@@ -78,14 +79,26 @@ function ChatLayoutContent({
       }
     }
     
-    if (authLoading) return
+    if (authLoading || isSigningInAnonymously) return
     
-    // Only redirect to login if auth has fully loaded and there's definitely no user
+    // Sign in anonymously if no user is found
     if (!user && !authLoading) {
       // Check one more time to avoid race conditions on reload
       const currentUser = getCurrentUser()
       if (!currentUser) {
-        router.push("/login")
+        console.log("👤 No user found, signing in anonymously...")
+        setIsSigningInAnonymously(true)
+        signInAnonymouslyUser()
+          .then(() => {
+            console.log("✅ Successfully signed in anonymously")
+            setIsSigningInAnonymously(false)
+          })
+          .catch((error) => {
+            console.error("❌ Error signing in anonymously:", error)
+            setIsSigningInAnonymously(false)
+            // Fallback to login page if anonymous sign-in fails
+            router.push("/login")
+          })
       }
       return
     }
@@ -102,7 +115,7 @@ function ChatLayoutContent({
         fetchChatData(profile.user_id)
       }
     }
-  }, [profile, user, authLoading, router, setProfile, setChats, fetchChatData])
+  }, [profile, user, authLoading, router, setProfile, setChats, fetchChatData, isSigningInAnonymously])
 
   useEffect(() => {
     if (chatId && chats.length > 0) {
@@ -127,11 +140,13 @@ function ChatLayoutContent({
   // Add refetchChats to context (if needed)
   // This can be used by chat handler when new chats are created
 
-  if (authLoading || loading) {
+  if (authLoading || loading || isSigningInAnonymously) {
     return (
       <div className="flex h-full items-center justify-center bg-black">
         <div className="flex flex-col items-center space-y-4">
-          <div className="text-xl font-semibold text-white">Loading...</div>
+          <div className="text-xl font-semibold text-white">
+            {isSigningInAnonymously ? "Setting up anonymous session..." : "Loading..."}
+          </div>
           <div className="size-8 animate-spin rounded-full border-y-2 border-violet-500"></div>
         </div>
       </div>

@@ -45,11 +45,11 @@ export async function middleware(request: NextRequest) {
       '/help',       // Help page
       '/about',      // About page (if exists)
       '/contact',    // Contact page (if exists)
+      '/chat',       // Chat pages (handles anonymous sign-in automatically)
     ]
     
     // Define protected routes that require authentication
     const protectedRoutes = [
-      '/chat',       // Chat pages
       '/setup',      // Setup page
       '/profile',    // Profile pages
     ]
