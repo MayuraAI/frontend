@@ -135,8 +135,8 @@ export default function HomePage() {
             </Button>
           ) : (
             // Anonymous or no user - show Try Free Requests
-            <Button onClick={handleTryWithFreeRequests} className="bg-violet-600 text-white hover:bg-violet-700">
-              Try {FREE_PROMPTS_COUNT} Free Prompts<ArrowRight className="ml-2 size-4" />
+            <Button onClick={() => router.push("/login")} className="bg-violet-600 text-white hover:bg-violet-700">
+              Sign In<ArrowRight className="ml-2 size-4" />
             </Button>
           )}
         </div>
