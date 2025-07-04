@@ -30,11 +30,11 @@ export function AnonymousBanner({ requestsRemaining, totalRequests }: AnonymousB
             <div>
               {isQuotaExhausted ? (
                 <>
-                  <p className="text-sm font-medium text-white">
-                    You&apos;ve used all {totalRequests} requests for today!
+                  <p className="text-md font-medium text-white">
+                    You&apos;ve used all {totalRequests} requests!
                   </p>
-                  <p className="text-xs text-slate-400">
-                    Sign up now to get 10 pro requests daily + unlimited free requests
+                  <p className="text-md text-slate-400">
+                    Sign up now to get unlimited requests
                   </p>
                 </>
               ) : (
