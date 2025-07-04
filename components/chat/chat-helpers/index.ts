@@ -2,17 +2,18 @@
 
 import { createChat } from "@/db/chats"
 import { createMessages } from "@/db/messages"
-import { Tables } from "@/supabase/types"
+import { Profile } from "@/db/profile"
+import { Chat } from "@/db/chats"
 import { ChatMessage } from "@/types"
-import { ChatSettings, LLM, TablesInsert } from "@/types"
+import { ChatSettings } from "@/types"
 import React from "react"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
 
 export const validateChatSettings = (
   chatSettings: ChatSettings | null,
-  modelData: LLM | undefined,
-  profile: Tables<"profiles"> | null,
+  modelData: any | undefined,
+  profile: Profile | null,
   messageContent: string
 ) => {
   if (!chatSettings) {
@@ -65,12 +66,12 @@ export const fetchChatResponse = async (
 }
 
 export const handleCreateChat = async (
-  profile: Tables<"profiles">,
+  profile: Profile,
   messageContent: string,
-  setSelectedChat: React.Dispatch<React.SetStateAction<Tables<"chats"> | null>>,
-  setChats: React.Dispatch<React.SetStateAction<Tables<"chats">[]>>
+  setSelectedChat: React.Dispatch<React.SetStateAction<Chat | null>>,
+  setChats: React.Dispatch<React.SetStateAction<Chat[]>>
 ) => {
-  const newChat: TablesInsert<"chats"> = {
+  const newChat = {
     user_id: profile.user_id,
     name: messageContent.slice(0, 100),
     sharing: "private"
@@ -88,33 +89,25 @@ export const handleCreateMessages = async (
   modelName: string,
   isRegeneration: boolean,
   chatId: string,
-  profile: Tables<"profiles">,
+  profile: Profile,
   setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>
 ) => {
-  const now = new Date().toISOString()
-
-  const user_message: TablesInsert<"messages"> = {
-    id: uuidv4(),
+  const user_message = {
     chat_id: chatId,
     content: message.content,
     role: message.role,
     user_id: profile.user_id,
     model_name: modelName,
-    sequence_number: message.sequence_number,
-    created_at: now,
-    updated_at: null
+    sequence_number: message.sequence_number
   }
 
-  const assistant_message: TablesInsert<"messages"> = {
-    id: uuidv4(),
+  const assistant_message = {
     chat_id: chatId,
     user_id: profile.user_id,
     content: generatedText,
     role: "assistant",
     model_name: modelName,
-    sequence_number: message.sequence_number + 1,
-    created_at: now,
-    updated_at: null
+    sequence_number: message.sequence_number + 1
   }
 
   await createMessages([user_message, assistant_message])

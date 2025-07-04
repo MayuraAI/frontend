@@ -1,80 +1,156 @@
-import { supabase } from "@/lib/supabase/browser-client"
-import { TablesInsert, TablesUpdate } from "@/supabase/types"
+import { getIdToken } from "@/lib/firebase/auth"
 
-export const getChatById = async (chatId: string) => {
-  const { data: chat } = await supabase
-    .from("chats")
-    .select("*")
-    .eq("id", chatId)
-    .maybeSingle()
+// API base URL for backend calls
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
 
-  return chat
+export interface Chat {
+  id: string
+  user_id: string
+  name: string
+  sharing: string
+  created_at: string
+  updated_at: string | null
 }
 
-export const getChatsByUserId = async (userId: string) => {
-  const { data: chats, error } = await supabase
-    .from("chats")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false })
-
-  if (!chats) {
-    throw new Error(error.message)
-  }
-
-  return chats
+export interface CreateChatData {
+  user_id: string
+  name: string
+  sharing?: string
 }
 
-export const createChat = async (chat: TablesInsert<"chats">) => {
-  const { data: createdChat, error } = await supabase
-    .from("chats")
-    .insert([chat])
-    .select("*")
-    .single()
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  return createdChat
+export interface UpdateChatData {
+  name?: string
+  sharing?: string
 }
 
-export const createChats = async (chats: TablesInsert<"chats">[]) => {
-  const { data: createdChats, error } = await supabase
-    .from("chats")
-    .insert(chats)
-    .select("*")
-
-  if (error) {
-    throw new Error(error.message)
+export const getChatById = async (chatId: string): Promise<Chat | null> => {
+  const token = await getIdToken()
+  if (!token) {
+    throw new Error("No authentication token available")
   }
 
-  return createdChats
+  const response = await fetch(`${API_BASE_URL}/v1/chats/${chatId}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      return null
+    }
+    throw new Error(`Failed to fetch chat: ${response.statusText}`)
+  }
+
+  return await response.json()
+}
+
+export const getChatsByUserId = async (userId: string): Promise<Chat[]> => {
+  const token = await getIdToken()
+  if (!token) {
+    throw new Error("No authentication token available")
+  }
+
+  const response = await fetch(`${API_BASE_URL}/v1/chats/user/${userId}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch chats: ${response.statusText}`)
+  }
+
+  return await response.json()
+}
+
+export const createChat = async (chat: CreateChatData): Promise<Chat> => {
+  const token = await getIdToken()
+  if (!token) {
+    throw new Error("No authentication token available")
+  }
+
+  const response = await fetch(`${API_BASE_URL}/v1/chats`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(chat)
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to create chat: ${response.statusText}`)
+  }
+
+  return await response.json()
+}
+
+export const createChats = async (chats: CreateChatData[]): Promise<Chat[]> => {
+  const token = await getIdToken()
+  if (!token) {
+    throw new Error("No authentication token available")
+  }
+
+  const response = await fetch(`${API_BASE_URL}/v1/chats/batch`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ chats })
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to create chats: ${response.statusText}`)
+  }
+
+  return await response.json()
 }
 
 export const updateChat = async (
   chatId: string,
-  chat: TablesUpdate<"chats">
-) => {
-  const { data: updatedChat, error } = await supabase
-    .from("chats")
-    .update(chat)
-    .eq("id", chatId)
-    .select("*")
-    .single()
-
-  if (error) {
-    throw new Error(error.message)
+  chat: UpdateChatData
+): Promise<Chat> => {
+  const token = await getIdToken()
+  if (!token) {
+    throw new Error("No authentication token available")
   }
 
-  return updatedChat
+  const response = await fetch(`${API_BASE_URL}/v1/chats/${chatId}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(chat)
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to update chat: ${response.statusText}`)
+  }
+
+  return await response.json()
 }
 
-export const deleteChat = async (chatId: string) => {
-  const { error } = await supabase.from("chats").delete().eq("id", chatId)
+export const deleteChat = async (chatId: string): Promise<boolean> => {
+  const token = await getIdToken()
+  if (!token) {
+    throw new Error("No authentication token available")
+  }
 
-  if (error) {
-    throw new Error(error.message)
+  const response = await fetch(`${API_BASE_URL}/v1/chats/${chatId}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete chat: ${response.statusText}`)
   }
 
   return true

@@ -1,8 +1,11 @@
 "use client"
 
-import { supabase } from "@/lib/supabase/browser-client"
+import { getCurrentUser, onAuthStateChange, getIdToken } from "@/lib/firebase/auth"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+
+// API base URL for backend calls
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
 
 interface ProfileStatus {
   isAuthenticated: boolean
@@ -24,11 +27,9 @@ export function useProfileStatus(): ProfileStatus {
   useEffect(() => {
     const checkProfileStatus = async () => {
       try {
-        const {
-          data: { session }
-        } = await supabase.auth.getSession()
+        const user = getCurrentUser()
 
-        if (!session) {
+        if (!user) {
           setStatus({
             isAuthenticated: false,
             hasProfile: false,
@@ -38,16 +39,10 @@ export function useProfileStatus(): ProfileStatus {
           return
         }
 
-        const { data: profile, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("user_id", session.user.id)
-          .single()
-
-        if (error && error.code === "PGRST116") {
-          // No profile exists
+        const token = await getIdToken()
+        if (!token) {
           setStatus({
-            isAuthenticated: true,
+            isAuthenticated: false,
             hasProfile: false,
             hasOnboarded: false,
             loading: false
@@ -55,13 +50,47 @@ export function useProfileStatus(): ProfileStatus {
           return
         }
 
-        setStatus({
-          isAuthenticated: true,
-          hasProfile: !!profile,
-          hasOnboarded: profile?.has_onboarded || false,
-          loading: false,
-          profile
-        })
+        try {
+          // Call our backend API to get profile
+          const response = await fetch(`${API_BASE_URL}/v1/profiles/user/${user.uid}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          })
+
+          if (!response.ok) {
+            if (response.status === 404) {
+              // No profile exists
+              setStatus({
+                isAuthenticated: true,
+                hasProfile: false,
+                hasOnboarded: false,
+                loading: false
+              })
+              return
+            }
+            throw new Error(`Failed to fetch profile: ${response.statusText}`)
+          }
+
+          const profile = await response.json()
+
+          setStatus({
+            isAuthenticated: true,
+            hasProfile: !!profile,
+            hasOnboarded: profile?.has_onboarded || false,
+            loading: false,
+            profile
+          })
+        } catch (error) {
+          console.error("Error fetching profile:", error)
+          setStatus({
+            isAuthenticated: true,
+            hasProfile: false,
+            hasOnboarded: false,
+            loading: false
+          })
+        }
       } catch (error) {
         console.error("Error checking profile status:", error)
         setStatus({
@@ -76,20 +105,21 @@ export function useProfileStatus(): ProfileStatus {
     checkProfileStatus()
 
     // Listen for auth changes
-    const {
-      data: { subscription }
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (
-        event === "SIGNED_IN" ||
-        event === "SIGNED_OUT" ||
-        event === "TOKEN_REFRESHED"
-      ) {
+    const unsubscribe = onAuthStateChange((user) => {
+      if (user) {
         checkProfileStatus()
+      } else {
+        setStatus({
+          isAuthenticated: false,
+          hasProfile: false,
+          hasOnboarded: false,
+          loading: false
+        })
       }
     })
 
     return () => {
-      subscription.unsubscribe()
+      unsubscribe()
     }
   }, [])
 

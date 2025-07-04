@@ -53,6 +53,7 @@
     "ai": "^2.2.31",
     "class-variance-authority": "^0.7.0",
     "cmdk": "^0.2.0",
+    "firebase": "^11.10.0",
     "highlight.js": "^11.11.1",
     "i18next": "^23.7.16",
     "lucide-react": "^0.292.0",

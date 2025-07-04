@@ -6,7 +6,8 @@ import {
   PROFILE_USERNAME_MIN
 } from "@/db/limits"
 import { updateProfile } from "@/db/profile"
-import { supabase } from "@/lib/supabase/browser-client"
+import { useAuth } from "@/context/auth-context"
+import { getIdToken, signOutUser } from "@/lib/firebase/auth"
 import {
   IconCircleCheckFilled,
   IconCircleXFilled,
@@ -31,6 +32,9 @@ import {
 import { TextareaAutosize } from "../ui/textarea-autosize"
 import { WithTooltip } from "../ui/with-tooltip"
 
+// API base URL for backend calls
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
+
 interface ProfileSettingsProps {}
 
 export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
@@ -48,7 +52,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
   )
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
+    await signOutUser()
     router.push("/login")
     router.refresh()
     return
@@ -57,8 +61,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
   const handleSave = async () => {
     if (!profile) return
 
-    const updatedProfile = await updateProfile(profile.id, {
-      ...profile,
+    const updatedProfile = await updateProfile(profile.user_id, {
       display_name: displayName,
       username,
       profile_context: profileInstructions
@@ -99,18 +102,32 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
 
       setLoadingUsername(true)
 
-      const { data: profiles, error } = await supabase
-        .from("profiles")
-        .select("username")
-        .eq("username", username)
-        .neq("id", profile?.id || "")
+      try {
+        const token = await getIdToken()
+        if (!token) {
+          setUsernameAvailable(false)
+          setLoadingUsername(false)
+          return
+        }
 
-      if (error) {
+        const response = await fetch(`${API_BASE_URL}/v1/profiles/username/check/${username}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setUsernameAvailable(data.available)
+        } else {
+          setUsernameAvailable(false)
+        }
+      } catch (error) {
+        console.error("Error checking username availability:", error)
         setUsernameAvailable(false)
-        return
       }
 
-      setUsernameAvailable(profiles.length === 0)
       setLoadingUsername(false)
     }, 500),
     [profile]

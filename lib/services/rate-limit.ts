@@ -1,12 +1,11 @@
 import { RateLimitStatus } from "@/types/rate-limit"
 
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
 
 export class RateLimitService {
   static async getRateLimitStatus(token: string): Promise<RateLimitStatus> {
     try {
-      const response = await fetch(`/api/rate-limit-status`, {
+      const response = await fetch(`${API_BASE_URL}/v1/rate-limit-status`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

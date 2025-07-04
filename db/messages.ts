@@ -1,83 +1,167 @@
-import { supabase } from "@/lib/supabase/browser-client"
-import { TablesInsert, TablesUpdate } from "@/supabase/types"
+import { getIdToken } from "@/lib/firebase/auth"
 
-export const getMessageById = async (messageId: string) => {
-  const { data: message } = await supabase
-    .from("messages")
-    .select("*")
-    .eq("id", messageId)
-    .single()
+// API base URL for backend calls
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
 
-  if (!message) {
-    throw new Error("Message not found")
-  }
-
-  return message
+export interface Message {
+  id: string
+  chat_id: string
+  user_id: string
+  content: string
+  model_name: string
+  role: string
+  sequence_number: number
+  created_at: string
+  updated_at: string
 }
 
-export const getMessagesByChatId = async (chatId: string) => {
-  const { data: messages } = await supabase
-    .from("messages")
-    .select("*")
-    .eq("chat_id", chatId)
-
-  if (!messages) {
-    throw new Error("Messages not found")
-  }
-
-  return messages
+export interface CreateMessageData {
+  chat_id: string
+  user_id: string
+  content: string
+  model_name: string
+  role: string
+  sequence_number: number
 }
 
-export const createMessage = async (message: TablesInsert<"messages">) => {
-  const { data: createdMessage, error } = await supabase
-    .from("messages")
-    .insert([message])
-    .select("*")
-    .single()
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  return createdMessage
+export interface UpdateMessageData {
+  content?: string
+  model_name?: string
+  role?: string
+  sequence_number?: number
 }
 
-export const createMessages = async (messages: TablesInsert<"messages">[]) => {
-  const { data: createdMessages, error } = await supabase
-    .from("messages")
-    .insert(messages)
-    .select("*")
-
-  if (error) {
-    throw new Error(error.message)
+export const getMessageById = async (messageId: string): Promise<Message> => {
+  const token = await getIdToken()
+  if (!token) {
+    throw new Error("No authentication token available")
   }
 
-  return createdMessages
+  const response = await fetch(`${API_BASE_URL}/v1/messages/${messageId}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error("Message not found")
+    }
+    throw new Error(`Failed to fetch message: ${response.statusText}`)
+  }
+
+  return await response.json()
+}
+
+export const getMessagesByChatId = async (chatId: string): Promise<Message[]> => {
+  const token = await getIdToken()
+  if (!token) {
+    throw new Error("No authentication token available")
+  }
+
+  const response = await fetch(`${API_BASE_URL}/v1/messages/chat/${chatId}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      return []
+    }
+    throw new Error(`Failed to fetch messages: ${response.statusText}`)
+  }
+
+  return await response.json()
+}
+
+export const createMessage = async (message: CreateMessageData): Promise<Message> => {
+  const token = await getIdToken()
+  if (!token) {
+    throw new Error("No authentication token available")
+  }
+
+  const response = await fetch(`${API_BASE_URL}/v1/messages`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(message)
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to create message: ${response.statusText}`)
+  }
+
+  return await response.json()
+}
+
+export const createMessages = async (messages: CreateMessageData[]): Promise<Message[]> => {
+  const token = await getIdToken()
+  if (!token) {
+    throw new Error("No authentication token available")
+  }
+
+  const response = await fetch(`${API_BASE_URL}/v1/messages/batch`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ messages })
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to create messages: ${response.statusText}`)
+  }
+
+  return await response.json()
 }
 
 export const updateMessage = async (
   messageId: string,
-  message: TablesUpdate<"messages">
-) => {
-  const { data: updatedMessage, error } = await supabase
-    .from("messages")
-    .update(message)
-    .eq("id", messageId)
-    .select("*")
-    .single()
-
-  if (error) {
-    throw new Error(error.message)
+  message: UpdateMessageData
+): Promise<Message> => {
+  const token = await getIdToken()
+  if (!token) {
+    throw new Error("No authentication token available")
   }
 
-  return updatedMessage
+  const response = await fetch(`${API_BASE_URL}/v1/messages/${messageId}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(message)
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to update message: ${response.statusText}`)
+  }
+
+  return await response.json()
 }
 
-export const deleteMessage = async (messageId: string) => {
-  const { error } = await supabase.from("messages").delete().eq("id", messageId)
+export const deleteMessage = async (messageId: string): Promise<boolean> => {
+  const token = await getIdToken()
+  if (!token) {
+    throw new Error("No authentication token available")
+  }
 
-  if (error) {
-    throw new Error(error.message)
+  const response = await fetch(`${API_BASE_URL}/v1/messages/${messageId}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete message: ${response.statusText}`)
   }
 
   return true
@@ -87,14 +171,26 @@ export async function deleteMessagesIncludingAndAfter(
   userId: string,
   chatId: string,
   sequenceNumber: number
-) {
-  const { error } = await supabase.rpc("delete_messages_including_and_after", {
-    p_user_id: userId,
-    p_chat_id: chatId,
-    p_sequence_number: sequenceNumber
+): Promise<boolean | { error: string }> {
+  const token = await getIdToken()
+  if (!token) {
+    throw new Error("No authentication token available")
+  }
+
+  const response = await fetch(`${API_BASE_URL}/v1/messages/delete-from-sequence`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      user_id: userId,
+      chat_id: chatId,
+      sequence_number: sequenceNumber
+    })
   })
 
-  if (error) {
+  if (!response.ok) {
     return {
       error: "Failed to delete messages."
     }

@@ -1,11 +1,9 @@
 import { Toaster } from "@/components/ui/sonner"
 import { GlobalState } from "@/components/utility/global-state"
 import { Providers } from "@/components/utility/providers"
-import { Database } from "@/supabase/types"
-import { createServerClient } from "@supabase/ssr"
+import { AuthProvider } from "@/context/auth-context"
 import { Metadata, Viewport } from "next"
 import { DM_Sans } from "next/font/google"
-import { cookies } from "next/headers"
 import { ReactNode } from "react"
 import { generateStructuredData } from "@/lib/seo/structured-data"
 import "./globals.css"
@@ -180,71 +178,29 @@ export const viewport: Viewport = {
 export default async function RootLayout({
   children
 }: RootLayoutProps) {
-  const cookieStore = cookies()
-  const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
-        }
-      }
-    }
-  )
-  const session = (await supabase.auth.getSession()).data.session
   const structuredData = generateStructuredData()
 
   return (
     <html lang="en" className="dark">
       <head>
-        {/* Explicit Twitter Card Meta Tags */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@MayuraAI" />
-        <meta name="twitter:creator" content="@MayuraAI" />
-        <meta name="twitter:title" content={APP_DEFAULT_TITLE} />
-        <meta name="twitter:description" content={APP_DESCRIPTION} />
-        <meta name="twitter:image" content={`${APP_URL}/preview.png`} />
-        <meta name="twitter:image:alt" content="Mayura - A Mixture of Models" />
-        
-        {/* Explicit Open Graph Meta Tags */}
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Mayura" />
-        <meta property="og:title" content={APP_DEFAULT_TITLE} />
-        <meta property="og:description" content={APP_DESCRIPTION} />
-        <meta property="og:image" content={`${APP_URL}/preview.png`} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="Mayura - A Mixture of Models" />
-        <meta property="og:url" content={APP_URL} />
-        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(structuredData)
           }}
         />
-        
-        {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGJ0GQYWM8"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-EGJ0GQYWM8');
-            `
-          }}
-        />
       </head>
-      <body className={`${dmSans.variable} font-sans antialiased`} style={{backgroundColor: '#0F0F0F', color: '#F5F5F5'}}>
-        <Providers>
-          <Toaster richColors position="top-center" duration={3000} />
-          <div className="flex min-h-screen w-full flex-col" style={{backgroundColor: '#0F0F0F', color: '#F5F5F5'}}>
-            {session ? <GlobalState>{children}</GlobalState> : children}
-          </div>
-        </Providers>
+      <body className={`${dmSans.variable} font-sans antialiased`}>
+        <AuthProvider>
+          <Providers>
+            <GlobalState>
+              <Toaster richColors closeButton />
+              <div className="flex h-screen flex-col">
+                {children}
+              </div>
+            </GlobalState>
+          </Providers>
+        </AuthProvider>
       </body>
     </html>
   )

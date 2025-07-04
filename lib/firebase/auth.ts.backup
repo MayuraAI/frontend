@@ -1,0 +1,104 @@
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+  sendPasswordResetEmail,
+  sendEmailVerification,
+  onAuthStateChanged,
+  User,
+  UserCredential,
+  AuthError
+} from 'firebase/auth'
+import { auth } from './config'
+
+// Google provider for OAuth
+const googleProvider = new GoogleAuthProvider()
+
+// Sign in with email and password
+export const signInWithEmail = async (email: string, password: string): Promise<UserCredential> => {
+  return await signInWithEmailAndPassword(auth, email, password)
+}
+
+// Sign up with email and password
+export const signUpWithEmail = async (email: string, password: string): Promise<UserCredential> => {
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+  
+  // Send email verification
+  if (userCredential.user) {
+    await sendEmailVerification(userCredential.user)
+  }
+  
+  return userCredential
+}
+
+// Sign in with Google
+export const signInWithGoogle = async (): Promise<UserCredential> => {
+  return await signInWithPopup(auth, googleProvider)
+}
+
+// Sign out
+export const signOutUser = async (): Promise<void> => {
+  return await signOut(auth)
+}
+
+// Reset password
+export const resetPassword = async (email: string): Promise<void> => {
+  return await sendPasswordResetEmail(auth, email)
+}
+
+// Resend email verification
+export const resendEmailVerification = async (): Promise<void> => {
+  if (auth.currentUser) {
+    return await sendEmailVerification(auth.currentUser)
+  }
+  throw new Error('No user is currently signed in')
+}
+
+// Get current user
+export const getCurrentUser = (): User | null => {
+  return auth.currentUser
+}
+
+// Listen to auth state changes
+export const onAuthStateChange = (callback: (user: User | null) => void) => {
+  return onAuthStateChanged(auth, callback)
+}
+
+// Get ID token for API calls
+export const getIdToken = async (): Promise<string | null> => {
+  if (auth.currentUser) {
+    return await auth.currentUser.getIdToken()
+  }
+  return null
+}
+
+// Check if user's email is verified
+export const isEmailVerified = (): boolean => {
+  return auth.currentUser?.emailVerified ?? false
+}
+
+// Helper to format Firebase auth errors
+export const formatAuthError = (error: AuthError): string => {
+  switch (error.code) {
+    case 'auth/user-not-found':
+    case 'auth/wrong-password':
+    case 'auth/invalid-credential':
+      return 'Invalid email or password. Please check your credentials and try again.'
+    case 'auth/email-already-in-use':
+      return 'An account with this email already exists. Please sign in instead.'
+    case 'auth/weak-password':
+      return 'Password is too weak. Please choose a stronger password.'
+    case 'auth/invalid-email':
+      return 'Please enter a valid email address.'
+    case 'auth/user-disabled':
+      return 'This account has been disabled. Please contact support.'
+    case 'auth/too-many-requests':
+      return 'Too many failed attempts. Please try again later.'
+    case 'auth/network-request-failed':
+      return 'Network error. Please check your connection and try again.'
+    default:
+      return error.message || 'An unexpected error occurred. Please try again.'
+  }
+} 

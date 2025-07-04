@@ -1,4 +1,4 @@
-import { Tables } from "@/supabase/types"
+import { Profile } from "@/db/profile"
 import { ChatMessage, ChatSettings } from "@/types"
 
 interface BuildPromptPayload {
@@ -27,7 +27,7 @@ export const buildPrompt = (
 
 export const buildFinalMessages = async (
   payload: BuildPromptPayload,
-  profile: Tables<"profiles">,
+  profile: Profile,
   assistantMessage: ChatMessage
 ) => {
   const systemMessage = {

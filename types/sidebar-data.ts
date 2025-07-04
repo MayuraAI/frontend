@@ -1,16 +1,16 @@
-import { Tables } from "@/supabase/types"
+import { Chat } from "@/db/chats"
 
-export type DataListType = Tables<"chats">[]
+export type DataListType = Chat[]
 
-export type DataItemType = Tables<"chats">
+export type DataItemType = Chat
 
 export type DataUpdateFunctions = {
   chats: (
     id: string,
-    data: Partial<Tables<"chats">>
-  ) => Promise<Tables<"chats">>
+    data: Partial<Chat>
+  ) => Promise<Chat>
 }
 
 export type DataStateUpdateFunctions = {
-  chats: React.Dispatch<React.SetStateAction<Tables<"chats">[]>>
+  chats: React.Dispatch<React.SetStateAction<Chat[]>>
 }

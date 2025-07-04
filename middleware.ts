@@ -1,5 +1,7 @@
-import { createClient } from "@/lib/supabase/middleware"
 import { NextResponse, type NextRequest } from "next/server"
+
+// API base URL for backend calls
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
 
 export async function middleware(request: NextRequest) {
   try {
@@ -32,17 +34,13 @@ export async function middleware(request: NextRequest) {
       });
     }
 
-    const { supabase, response } = createClient(request)
-    
-    const session = await supabase.auth.getSession()
-    const user = session.data.session?.user
     const pathname = request.nextUrl.pathname
 
     // Define public routes that don't require authentication
     const publicRoutes = [
       '/',           // Home page
       '/login',      // Login page
-      '/auth',       // Auth callbacks
+      '/auth',       // Auth callbacks (Firebase will handle this differently)
       '/api',        // API routes
       '/help',       // Help page
       '/about',      // About page (if exists)
@@ -66,84 +64,98 @@ export async function middleware(request: NextRequest) {
 
     // Allow access to public routes regardless of auth status
     if (isPublicRoute && !isProtectedRoute) {
-      return response
+      return NextResponse.next()
     }
 
-    // For protected routes, check authentication
+    // For protected routes, check authentication via Firebase token
     if (isProtectedRoute) {
-      // If user is not logged in, redirect to login
-      if (!user) {
+      // Get Firebase ID token from cookies or Authorization header
+      const authHeader = request.headers.get('authorization')
+      const firebaseToken = request.cookies.get('firebase-token')?.value || 
+                           (authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null)
+
+      // If no token, redirect to login
+      if (!firebaseToken) {
         return NextResponse.redirect(new URL('/login', request.url))
       }
 
-      // If user is logged in, check profile setup status
-      const { data: profile, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("user_id", user.id)
-        .single()
+      try {
+        // Verify token with Firebase Admin (we'll implement this verification later)
+        // For now, we'll assume the token is valid if it exists
+        // In production, you should verify the token with Firebase Admin SDK
+        
+        // Try to get user profile from backend
+        const profileResponse = await fetch(`${API_BASE_URL}/v1/profiles/user/${firebaseToken}`, {
+          headers: {
+            'Authorization': `Bearer ${firebaseToken}`,
+            'Content-Type': 'application/json'
+          }
+        }).catch(() => null)
 
-      // If no profile exists, redirect to setup
-      if (error && error.code === "PGRST116") {
+        // If we can't reach the backend or get profile, let the client handle it
+        if (!profileResponse) {
+          return NextResponse.next()
+        }
+
+        if (profileResponse.status === 404) {
+          // No profile exists, redirect to setup
+          if (pathname !== '/setup') {
+            return NextResponse.redirect(new URL('/setup', request.url))
+          }
+          return NextResponse.next()
+        }
+
+        if (profileResponse.ok) {
+          const profile = await profileResponse.json()
+          
+          // If profile exists but user hasn't completed onboarding
+          if (profile && !profile.has_onboarded) {
+            if (pathname !== '/setup') {
+              return NextResponse.redirect(new URL('/setup', request.url))
+            }
+            return NextResponse.next()
+          }
+
+          // If profile exists and user has completed onboarding
+          if (profile && profile.has_onboarded) {
+            // Don't allow access to setup page for completed users
+            if (pathname === '/setup') {
+              return NextResponse.redirect(new URL('/chat', request.url))
+            }
+            return NextResponse.next()
+          }
+        }
+
+        // If we can't determine profile status, redirect to setup to be safe
         if (pathname !== '/setup') {
           return NextResponse.redirect(new URL('/setup', request.url))
         }
-        return response
-      }
-
-      // If profile exists but user hasn't completed onboarding
-      if (profile && !profile.has_onboarded) {
-        if (pathname !== '/setup') {
-          return NextResponse.redirect(new URL('/setup', request.url))
-        }
-        return response
-      }
-
-      // If profile exists and user has completed onboarding
-      if (profile && profile.has_onboarded) {
-        // Don't allow access to setup page for completed users
-        if (pathname === '/setup') {
-          return NextResponse.redirect(new URL('/chat', request.url))
-        }
-        return response
-      }
-
-      // If we can't determine profile status, redirect to setup to be safe
-      if (pathname !== '/setup') {
-        return NextResponse.redirect(new URL('/setup', request.url))
+        
+        return NextResponse.next()
+      } catch (error) {
+        console.error('Auth middleware error:', error)
+        // On error, redirect to login
+        return NextResponse.redirect(new URL('/login', request.url))
       }
     }
 
-    // For logged-in users visiting root, redirect to chat
-    if (user && pathname === '/') {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("user_id", user.id)
-        .single()
-
-      if (profile && profile.has_onboarded) {
-        return NextResponse.redirect(new URL('/chat', request.url))
-      } else {
-        return NextResponse.redirect(new URL('/setup', request.url))
-      }
-    }
-
-    return response
-  } catch (e) {
-    console.error("Middleware error:", e)
-    // On error, allow the request to continue but log it
-    return NextResponse.next({
-      request: {
-        headers: request.headers
-      }
-    })
+    // Default: allow access
+    return NextResponse.next()
+  } catch (error) {
+    console.error('Middleware error:', error)
+    return NextResponse.next()
   }
 }
 
 export const config = {
   matcher: [
-    "/((?!api|static|.*\\..*|_next).*)",
-    "/relay-qesW/:path*"
-  ]
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 }

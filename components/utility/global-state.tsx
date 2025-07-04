@@ -2,8 +2,8 @@
 
 import { FC, ReactNode, useContext, useEffect } from "react"
 import { MayuraContext } from "@/context/context"
+import { useAuth } from "@/context/auth-context"
 import { getProfileByUserId } from "@/db/profile"
-import { supabase } from "@/lib/supabase/browser-client"
 import { useRouter } from "next/navigation"
 
 interface GlobalStateProps {
@@ -12,6 +12,7 @@ interface GlobalStateProps {
 
 export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const router = useRouter()
+  const { user, loading: authLoading } = useAuth()
   const {
     profile,
     setProfile,
@@ -32,24 +33,46 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        const session = (await supabase.auth.getSession()).data.session
-        if (!session) {
-          console.log("No session found, redirecting to login")
-          return router.push("/login")
+        if (authLoading) {
+          console.log("🔄 Auth still loading...")
+          return
         }
 
-        // Load profile
-        const profile = await getProfileByUserId(session.user.id)
-        if (profile) {
-          setProfile(profile)
+        if (!user) {
+          console.log("❌ No user found in global state")
+          setProfile(null)
+          return
+        }
+
+        // Only load profile if we don't have one yet
+        if (!profile) {
+          console.log("📡 Loading profile for user:", user.uid)
+          try {
+            const userProfile = await getProfileByUserId(user.uid)
+            if (userProfile) {
+              console.log("✅ Profile loaded in global state:", userProfile)
+              setProfile(userProfile)
+              
+              // If profile exists but user hasn't onboarded, they should be on setup page
+              if (!userProfile.has_onboarded && window.location.pathname !== "/setup") {
+                console.log("🚀 User hasn't onboarded, should be on setup page")
+                router.push("/setup")
+                return
+              }
+            }
+          } catch (error) {
+            console.error("❌ Error loading profile in global state:", error)
+          }
+        } else {
+          console.log("✅ Profile already loaded:", profile.username)
         }
       } catch (error) {
-        console.error("Error loading initial data:", error)
+        console.error("❌ Error in global state loadInitialData:", error)
       }
     }
 
     loadInitialData()
-  }, [router, setProfile])
+  }, [user, authLoading, router, setProfile, profile])
 
   // Clear state on page unload
   useEffect(() => {
