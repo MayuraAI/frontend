@@ -4,6 +4,7 @@ import { MayuraContext } from "@/context/context"
 import { useAuth } from "@/context/auth-context"
 import { getChatsByUserId } from "@/db/chats"
 import { getProfileByUserId } from "@/db/profile"
+import { Dashboard } from "@/components/ui/dashboard"
 import { useRouter, useSearchParams } from "next/navigation"
 import { ReactNode, useContext, useEffect, useState, Suspense } from "react"
 
@@ -82,12 +83,12 @@ function ChatLayoutContent({
     setLoading(true)
     try {
       const chats = await getChatsByUserId(userId)
-      setChats(chats)
-
+      setChats(Array.isArray(chats) ? chats : [])
       setLoading(false)
     } catch (error) {
       console.error("Error fetching chat data:", error)
       setError(error instanceof Error ? error.message : "Unknown error")
+      setChats([])
       setLoading(false)
     }
   }
@@ -111,5 +112,9 @@ function ChatLayoutContent({
     )
   }
 
-  return <>{children}</>
+  return (
+    <Dashboard>
+      {children}
+    </Dashboard>
+  )
 }

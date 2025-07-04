@@ -6,7 +6,7 @@ import {
   RateLimitStatus as RateLimitStatusType,
   RateLimitState
 } from "@/types/rate-limit"
-import { RateLimitService } from "@/lib/services/rate-limit"
+import { getRateLimitStatus, RateLimitService } from "@/lib/services/rate-limit"
 import { MayuraContext } from "@/context/context"
 import {
   IconRefresh,

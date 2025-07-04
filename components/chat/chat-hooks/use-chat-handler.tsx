@@ -2,8 +2,6 @@
 
 import { useAuth } from "@/context/auth-context"
 import { MayuraContext } from "@/context/context"
-import { createChat } from "@/db/chats"
-import { createMessage } from "@/db/messages"
 import { ChatMessage } from "@/types"
 import { useRouter } from "next/navigation"
 import { useContext, useRef } from "react"
@@ -78,7 +76,7 @@ export const useChatHandler = () => {
         messagesToSend = chatMessages.slice(0, lastUserMessageIndex + 1)
       }
     } else {
-      // For new messages, add the user message
+      // For new messages, add the user message to the UI immediately
       const userMessage: ChatMessage = {
         id: uuidv4(),
         chat_id: selectedChat?.id || "",
@@ -94,7 +92,7 @@ export const useChatHandler = () => {
       messagesToSend = [...chatMessages, userMessage]
     }
 
-    // Add placeholder assistant message
+    // Add placeholder assistant message to UI
     const assistantMessage: ChatMessage = {
       id: uuidv4(),
       chat_id: selectedChat?.id || "",
@@ -116,6 +114,7 @@ export const useChatHandler = () => {
         throw new Error("No authentication token available")
       }
 
+      // Send request to backend - backend will handle chat creation and message saving
       const response = await fetch(`${API_BASE_URL}/v1/complete`, {
         method: "POST",
         headers: {
@@ -123,9 +122,10 @@ export const useChatHandler = () => {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          previous_messages: messagesToSend,
+          previous_messages: messagesToSend.slice(0, -1), // Don't send the placeholder assistant message
           prompt: messageContent,
-          profile_context: profile?.profile_context
+          profile_context: profile?.profile_context,
+          chat_id: selectedChat?.id || undefined // Let backend create chat if no chat_id
         }),
         signal: newAbortController.signal
       })
@@ -168,8 +168,8 @@ export const useChatHandler = () => {
             
             try {
               const parsed = JSON.parse(data)
-              if (parsed.content) {
-                fullGeneratedText += parsed.content
+              if (parsed.message) {
+                fullGeneratedText += parsed.message
                 
                 if (!firstTokenReceived) {
                   setFirstTokenReceived(true)
@@ -203,49 +203,12 @@ export const useChatHandler = () => {
         return updated
       })
 
-      // Create or update chat if needed
-      let currentChat = selectedChat
-      if (!currentChat) {
-        const newChat = await createChat({
-          user_id: user!.uid,
-          name: messageContent.slice(0, 100),
-          sharing: "private"
-        })
-        setSelectedChat(newChat)
-        setChats(prev => [newChat, ...prev])
-        currentChat = newChat
-
-        // Update the message chat_ids
-        setChatMessages(prev => prev.map(msg => ({ ...msg, chat_id: newChat.id })))
-      }
-
-      // Save messages to database
-      if (currentChat && !isRegeneration) {
-        try {
-          const userMessageToSave = {
-            chat_id: currentChat.id,
-            user_id: user!.uid,
-            content: messageContent,
-            role: "user" as const,
-            model_name: "",
-            sequence_number: messagesToSend.length
-          }
-
-          const assistantMessageToSave = {
-            chat_id: currentChat.id,
-            user_id: user!.uid,
-            content: fullGeneratedText,
-            role: "assistant" as const,
-            model_name: "gpt-4", // You might want to get this from the response
-            sequence_number: messagesToSend.length + 1
-          }
-
-          await createMessage(userMessageToSave)
-          await createMessage(assistantMessageToSave)
-        } catch (error) {
-          console.error("Error saving messages:", error)
-          toast.error("Failed to save messages")
-        }
+      // If this was a new chat (no selectedChat), we need to refetch the chats to get the new one
+      if (!selectedChat) {
+        // The backend created a new chat, so we need to refresh the chat list
+        // We'll get the chat info from the response headers or handle it differently
+        // For now, just let the layout component handle the refresh
+        console.log("New chat was created by backend, chat list will be refreshed by layout component")
       }
 
     } catch (error: any) {

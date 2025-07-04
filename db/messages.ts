@@ -60,21 +60,28 @@ export const getMessagesByChatId = async (chatId: string): Promise<Message[]> =>
     throw new Error("No authentication token available")
   }
 
-  const response = await fetch(`${API_BASE_URL}/v1/messages/chat/${chatId}`, {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    }
-  })
+  try {
+    const response = await fetch(`${API_BASE_URL}/v1/messages/by-chat-id/${chatId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
 
-  if (!response.ok) {
-    if (response.status === 404) {
-      return []
+    if (!response.ok) {
+      if (response.status === 404) {
+        return [] // Return empty array for 404 (no messages found)
+      }
+      throw new Error(`Failed to fetch messages: ${response.statusText}`)
     }
-    throw new Error(`Failed to fetch messages: ${response.statusText}`)
+
+    const data = await response.json()
+    // Handle null or undefined response from backend
+    return Array.isArray(data) ? data : []
+  } catch (error) {
+    console.error("Error fetching messages:", error)
+    return [] // Return empty array on error
   }
-
-  return await response.json()
 }
 
 export const createMessage = async (message: CreateMessageData): Promise<Message> => {
@@ -105,7 +112,7 @@ export const createMessages = async (messages: CreateMessageData[]): Promise<Mes
     throw new Error("No authentication token available")
   }
 
-  const response = await fetch(`${API_BASE_URL}/v1/messages/batch`, {
+  const response = await fetch(`${API_BASE_URL}/v1/messages/batch-operations`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,

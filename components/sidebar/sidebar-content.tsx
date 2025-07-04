@@ -14,8 +14,11 @@ export const SidebarContent: FC<SidebarContentProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("")
 
-  const filteredData: any = data.filter(item =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // Handle null or undefined data by providing an empty array fallback
+  const safeData = Array.isArray(data) ? data : []
+  
+  const filteredData: any = safeData.filter(item =>
+    item?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   return (
@@ -23,7 +26,7 @@ export const SidebarContent: FC<SidebarContentProps> = ({
       <div className="flex items-center">
         <SidebarCreateButtons
           contentType={contentType}
-          hasData={data.length > 0}
+          hasData={safeData.length > 0}
         />
       </div>
 

@@ -52,18 +52,28 @@ export const getChatsByUserId = async (userId: string): Promise<Chat[]> => {
     throw new Error("No authentication token available")
   }
 
-  const response = await fetch(`${API_BASE_URL}/v1/chats/user/${userId}`, {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+  try {
+    const response = await fetch(`${API_BASE_URL}/v1/chats/by-user-id/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return [] // Return empty array for 404 (no chats found)
+      }
+      throw new Error(`Failed to fetch chats: ${response.statusText}`)
     }
-  })
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch chats: ${response.statusText}`)
+    const data = await response.json()
+    // Handle null or undefined response from backend
+    return Array.isArray(data) ? data : []
+  } catch (error) {
+    console.error("Error fetching chats:", error)
+    return [] // Return empty array on error
   }
-
-  return await response.json()
 }
 
 export const createChat = async (chat: CreateChatData): Promise<Chat> => {

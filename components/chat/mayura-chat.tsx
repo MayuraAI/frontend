@@ -27,19 +27,31 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
     if (params.chatid) {
       const fetchMessages = async () => {
         setLoading(true)
-        const dbMessages = await getMessagesByChatId(params.chatid as string)
-        if (!dbMessages) return
-
-        setChatMessages(dbMessages)
-        setLoading(false)
-        setIsReady(true)
+        try {
+          const dbMessages = await getMessagesByChatId(params.chatid as string)
+          // Ensure messages is always an array, even if backend returns null
+          const safeMessages = Array.isArray(dbMessages) ? dbMessages : []
+          setChatMessages(safeMessages)
+          setLoading(false)
+          setIsReady(true)
+        } catch (error) {
+          console.error("Error fetching messages:", error)
+          // Set empty array on error to prevent null reference issues
+          setChatMessages([])
+          setLoading(false)
+          setIsReady(true)
+        }
       }
 
       const fetchChat = async () => {
-        const chat = await getChatById(params.chatid as string)
-        if (!chat) return
-
-        setSelectedChat(chat)
+        try {
+          const chat = await getChatById(params.chatid as string)
+          if (chat) {
+            setSelectedChat(chat)
+          }
+        } catch (error) {
+          console.error("Error fetching chat:", error)
+        }
       }
 
       fetchChat()
@@ -63,22 +75,26 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
   }
 
   return (
-    <div className="relative flex h-full flex-col bg-background">
+    <div className="flex h-full flex-col bg-background">
       {/* Chat Messages Area */}
       <section
-        className="flex-1 overflow-y-auto bg-background px-3 pt-20 pb-32 sm:px-4 md:pt-6 md:pb-6 lg:px-8"
+        className="flex-1 overflow-y-auto bg-background px-3 pt-4 pb-4 sm:px-4 md:px-6 md:pt-6 md:pb-6"
         role="log"
         aria-live="polite"
         aria-label="Chat messages"
+        style={{ paddingTop: "calc(1rem + env(safe-area-inset-top))" }}
       >
-        <div className="bg-background mx-auto max-w-4xl space-y-4">
+        {/* Add top spacing for mobile header on mobile only */}
+        <div className="h-16 md:hidden" />
+        
+        <div className="mx-auto max-w-4xl space-y-4">
           <div ref={messagesStartRef} />
           <ChatMessages />
           <div ref={messagesEndRef} />
 
           {/* Responsive Welcome Message for New Chats */}
           {(!chatMessages || chatMessages.length === 0) && !isGenerating && (
-            <div className="bg-background flex h-full min-h-[400px] flex-col items-center justify-center px-4 text-center sm:min-h-[500px]">
+            <div className="flex h-full min-h-[400px] flex-col items-center justify-center px-4 text-center sm:min-h-[500px]">
               {/* Welcome Header */}
               <div className="flex flex-col items-center justify-center">
                 <div className="max-w-2xl">
@@ -96,7 +112,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
 
         {/* Floating Scroll to Bottom Button */}
         {isUserScrolledUp && chatMessages.length > 0 && (
-          <div className="fixed bottom-16 right-4 z-50 sm:bottom-20 sm:right-6">
+          <div className="fixed bottom-32 right-4 z-50 md:bottom-20 md:right-6">
             <Button
               onClick={scrollToBottom}
               size="sm"
@@ -117,7 +133,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
       </section>
 
       {/* Chat Input Area */}
-      <footer className="fixed bottom-0 left-0 z-10 w-full border-t border-border bg-background/95 p-3 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:p-4 md:relative md:p-6">
+      <footer className="shrink-0 border-t border-border bg-background p-3 sm:p-4 md:p-6">
         <div className="mx-auto max-w-4xl">
           <ChatInput />
         </div>

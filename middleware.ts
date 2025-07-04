@@ -79,64 +79,9 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/login', request.url))
       }
 
-      try {
-        // Verify token with Firebase Admin (we'll implement this verification later)
-        // For now, we'll assume the token is valid if it exists
-        // In production, you should verify the token with Firebase Admin SDK
-        
-        // Try to get user profile from backend
-        const profileResponse = await fetch(`${API_BASE_URL}/v1/profiles/user/${firebaseToken}`, {
-          headers: {
-            'Authorization': `Bearer ${firebaseToken}`,
-            'Content-Type': 'application/json'
-          }
-        }).catch(() => null)
-
-        // If we can't reach the backend or get profile, let the client handle it
-        if (!profileResponse) {
-          return NextResponse.next()
-        }
-
-        if (profileResponse.status === 404) {
-          // No profile exists, redirect to setup
-          if (pathname !== '/setup') {
-            return NextResponse.redirect(new URL('/setup', request.url))
-          }
-          return NextResponse.next()
-        }
-
-        if (profileResponse.ok) {
-          const profile = await profileResponse.json()
-          
-          // If profile exists but user hasn't completed onboarding
-          if (profile && !profile.has_onboarded) {
-            if (pathname !== '/setup') {
-              return NextResponse.redirect(new URL('/setup', request.url))
-            }
-            return NextResponse.next()
-          }
-
-          // If profile exists and user has completed onboarding
-          if (profile && profile.has_onboarded) {
-            // Don't allow access to setup page for completed users
-            if (pathname === '/setup') {
-              return NextResponse.redirect(new URL('/chat', request.url))
-            }
-            return NextResponse.next()
-          }
-        }
-
-        // If we can't determine profile status, redirect to setup to be safe
-        if (pathname !== '/setup') {
-          return NextResponse.redirect(new URL('/setup', request.url))
-        }
-        
-        return NextResponse.next()
-      } catch (error) {
-        console.error('Auth middleware error:', error)
-        // On error, redirect to login
-        return NextResponse.redirect(new URL('/login', request.url))
-      }
+      // For now, if we have a token, let the client-side handle the routing
+      // This is simpler and avoids the complexity of JWT decoding in middleware
+      return NextResponse.next()
     }
 
     // Default: allow access

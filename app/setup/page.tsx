@@ -43,7 +43,7 @@ export default function SetupPage() {
 
         try {
           // Get profile from backend
-          const response = await fetch(`${API_BASE_URL}/v1/profiles/user/${user.uid}`, {
+          const response = await fetch(`${API_BASE_URL}/v1/profiles/by-user-id/${user.uid}`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'

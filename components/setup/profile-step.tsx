@@ -88,7 +88,7 @@ export const ProfileStep: FC<ProfileStepProps> = ({
         }
 
         // Use our backend API to check username availability
-        const response = await fetch(`${API_BASE_URL}/v1/profiles/username/check/${username}?exclude_user_id=${currentUserId || ''}`, {
+        const response = await fetch(`${API_BASE_URL}/v1/profiles/username-availability-check?username=${username}&exclude_user_id=${currentUserId || ''}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

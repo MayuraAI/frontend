@@ -40,6 +40,7 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         if (!user) {
           console.log("❌ No user found in global state")
           setProfile(null)
+          setChats([]) // Ensure chats are empty array when no user
           return
         }
 
@@ -58,20 +59,27 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
                 router.push("/setup")
                 return
               }
+            } else {
+              console.log("⚠️ No profile found for user, should create one")
+              setProfile(null)
             }
           } catch (error) {
             console.error("❌ Error loading profile in global state:", error)
+            setProfile(null)
           }
         } else {
           console.log("✅ Profile already loaded:", profile.username)
         }
       } catch (error) {
         console.error("❌ Error in global state loadInitialData:", error)
+        // Ensure clean state on error
+        setProfile(null)
+        setChats([])
       }
     }
 
     loadInitialData()
-  }, [user, authLoading, router, setProfile, profile])
+  }, [user, authLoading, router, setProfile, setChats, profile])
 
   // Clear state on page unload
   useEffect(() => {

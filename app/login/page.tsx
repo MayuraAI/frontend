@@ -10,7 +10,8 @@ import {
   getCurrentUser,
   onAuthStateChange,
   formatAuthError,
-  redirectAfterAuth
+  redirectAfterAuth,
+  setTokenInCookies
 } from "@/lib/firebase/auth"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -61,23 +62,8 @@ function LoginPageContent() {
     const checkAuth = async () => {
       const user = getCurrentUser()
       if (user) {
-        // await redirectAfterAuth(router)
-        const profile = await getProfileByUserId(user.uid)
-        setProfile(profile)
-
-        if (profile && !profile.has_onboarded) {
-          console.log("🚀 Profile exists but not onboarded, redirecting to setup")
-          router.push("/setup")
-          return
-        }
-    
-        // If profile exists and user has completed onboarding
-        if (profile && profile.has_onboarded) {
-          console.log("🎉 Profile exists and onboarded, redirecting to chat")
-          router.push("/chat")
-          return
-        }
-        router.push("/setup")
+        console.log("🔄 User found on login page, redirecting...")
+        await redirectAfterAuth(router)
       }
     }
     
@@ -86,6 +72,7 @@ function LoginPageContent() {
     // Listen for auth state changes
     const unsubscribe = onAuthStateChange(async (user) => {
       if (user) {
+        console.log("🔄 Auth state changed, user logged in, redirecting...")
         await redirectAfterAuth(router)
       }
     })
@@ -107,6 +94,7 @@ function LoginPageContent() {
 
     try {
       await signInWithEmail(email, password)
+      await setTokenInCookies()
       posthog.capture("sign_in_success")
       await redirectAfterAuth(router)
     } catch (error: any) {
@@ -160,6 +148,7 @@ function LoginPageContent() {
 
     try {
       await signInWithGoogle()
+      await setTokenInCookies()
       posthog.capture("google_sign_in_success")
       await redirectAfterAuth(router)
     } catch (error: any) {

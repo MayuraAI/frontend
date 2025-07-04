@@ -34,7 +34,7 @@ export const getProfileByUserId = async (userId: string): Promise<Profile> => {
     throw new Error("No authentication token available")
   }
 
-  const response = await fetch(`${API_BASE_URL}/v1/profiles/user/${userId}`, {
+  const response = await fetch(`${API_BASE_URL}/v1/profiles/by-user-id/${userId}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
@@ -52,7 +52,7 @@ export const getProfileByUserId = async (userId: string): Promise<Profile> => {
 
         // Ensure username is unique
         while (counter < 100) {
-          const checkResponse = await fetch(`${API_BASE_URL}/v1/profiles/username/check/${finalUsername}`, {
+          const checkResponse = await fetch(`${API_BASE_URL}/v1/profiles/username-availability-check?username=${finalUsername}`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
@@ -78,23 +78,8 @@ export const getProfileByUserId = async (userId: string): Promise<Profile> => {
 
         return newProfile
       } catch (createError) {
-        console.error("Error creating profile:", createError)
-
-        // Fallback: try with timestamp-based username
-        try {
-          const fallbackProfile = await createProfile({
-            user_id: userId,
-            username: `user${Date.now()}`,
-            display_name: "",
-            profile_context: "",
-            has_onboarded: false
-          })
-
-          return fallbackProfile
-        } catch (fallbackError) {
-          console.error("Fallback profile creation failed:", fallbackError)
-          throw new Error(`Failed to create profile: ${fallbackError}`)
-        }
+        console.error("Error auto-creating profile:", createError)
+        throw new Error("Failed to create profile")
       }
     }
     throw new Error(`Failed to fetch profile: ${response.statusText}`)
@@ -109,18 +94,28 @@ export const getProfilesByUserId = async (userId: string): Promise<Profile[]> =>
     throw new Error("No authentication token available")
   }
 
-  const response = await fetch(`${API_BASE_URL}/v1/profiles/users/${userId}`, {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+  try {
+    const response = await fetch(`${API_BASE_URL}/v1/profiles/users/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return [] // Return empty array for 404 (no profiles found)
+      }
+      throw new Error(`Failed to fetch profiles: ${response.statusText}`)
     }
-  })
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch profiles: ${response.statusText}`)
+    const data = await response.json()
+    // Handle null or undefined response from backend
+    return Array.isArray(data) ? data : []
+  } catch (error) {
+    console.error("Error fetching profiles:", error)
+    return [] // Return empty array on error
   }
-
-  return await response.json()
 }
 
 export const createProfile = async (profile: CreateProfileData): Promise<Profile> => {

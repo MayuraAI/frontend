@@ -1,7 +1,6 @@
 import { useContext, useCallback } from "react"
 import { MayuraContext } from "@/context/context"
-import { RateLimitService } from "@/lib/services/rate-limit"
-import { getIdToken } from "@/lib/firebase/auth"
+import { getRateLimitStatus, RateLimitService } from "@/lib/services/rate-limit"
 import { RateLimitStatus } from "@/types/rate-limit"
 
 export function useRateLimit() {
@@ -40,13 +39,10 @@ export function useRateLimit() {
 
   const fetchLatestStatus = useCallback(async () => {
     try {
-      const token = await getIdToken()
-      if (!token) {
-        return null
+      const status = await getRateLimitStatus()
+      if (status) {
+        setRateLimitStatus(status)
       }
-
-      const status = await RateLimitService.getRateLimitStatus(token)
-      setRateLimitStatus(status)
       return status
     } catch (error) {
       console.error("Error fetching latest rate limit status:", error)

@@ -51,8 +51,8 @@ export function useProfileStatus(): ProfileStatus {
         }
 
         try {
-          // Call our backend API to get profile
-          const response = await fetch(`${API_BASE_URL}/v1/profiles/user/${user.uid}`, {
+          // Call our backend API to get profile using the new route structure
+          const response = await fetch(`${API_BASE_URL}/v1/profiles/by-user-id/${user.uid}`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'

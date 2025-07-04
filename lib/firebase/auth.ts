@@ -43,6 +43,7 @@ export const signInWithGoogle = async (): Promise<UserCredential> => {
 
 // Sign out
 export const signOutUser = async (): Promise<void> => {
+  removeTokenFromCookies()
   return await signOut(auth)
 }
 
@@ -72,9 +73,27 @@ export const onAuthStateChange = (callback: (user: User | null) => void) => {
 // Get ID token for API calls
 export const getIdToken = async (): Promise<string | null> => {
   if (auth.currentUser) {
-    return await auth.currentUser.getIdToken()
+    const token = await auth.currentUser.getIdToken()
+    // Set the token in cookies for middleware access
+    if (token) {
+      document.cookie = `firebase-token=${token}; path=/; max-age=3600; secure; samesite=strict`
+    }
+    return token
   }
   return null
+}
+
+// Set Firebase token in cookies
+export const setTokenInCookies = async (): Promise<void> => {
+  const token = await getIdToken()
+  if (token) {
+    document.cookie = `firebase-token=${token}; path=/; max-age=3600; secure; samesite=strict`
+  }
+}
+
+// Remove Firebase token from cookies
+export const removeTokenFromCookies = (): void => {
+  document.cookie = 'firebase-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
 }
 
 // Check if user's email is verified
@@ -137,7 +156,7 @@ export const redirectAfterAuth = async (router: any) => {
 
     console.log("✅ Token obtained, checking profile in backend...")
     // Check if profile exists in backend
-    const response = await fetch(`${API_BASE_URL}/v1/profiles/user/${user.uid}`, {
+    const response = await fetch(`${API_BASE_URL}/v1/profiles/by-user-id/${user.uid}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'

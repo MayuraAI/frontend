@@ -110,7 +110,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
           return
         }
 
-        const response = await fetch(`${API_BASE_URL}/v1/profiles/username/check/${username}`, {
+        const response = await fetch(`${API_BASE_URL}/v1/profiles/username-availability-check?username=${username}&exclude_user_id=${profile?.user_id || ''}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
