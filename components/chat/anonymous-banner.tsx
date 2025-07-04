@@ -12,19 +12,11 @@ interface AnonymousBannerProps {
 }
 
 export function AnonymousBanner({ requestsRemaining, totalRequests }: AnonymousBannerProps) {
-  const [isVisible, setIsVisible] = useState(true)
   const router = useRouter()
-
-  if (!isVisible) return null
 
   const handleSignUp = () => {
     router.push("/login")
   }
-
-  const handleDismiss = () => {
-    setIsVisible(false)
-  }
-
   const isQuotaExhausted = requestsRemaining <= 0
 
   return (
@@ -39,7 +31,7 @@ export function AnonymousBanner({ requestsRemaining, totalRequests }: AnonymousB
               {isQuotaExhausted ? (
                 <>
                   <p className="text-sm font-medium text-white">
-                    You&apos;ve used all {totalRequests} free requests for today!
+                    You&apos;ve used all {totalRequests} requests for today!
                   </p>
                   <p className="text-xs text-slate-400">
                     Sign up now to get 10 pro requests daily + unlimited free requests
@@ -47,11 +39,11 @@ export function AnonymousBanner({ requestsRemaining, totalRequests }: AnonymousB
                 </>
               ) : (
                 <>
-                  <p className="text-sm font-medium text-white">
-                    You have {requestsRemaining} of {totalRequests} free requests remaining
+                  <p className="text-md font-medium text-white">
+                    You have {requestsRemaining} of {totalRequests} requests remaining
                   </p>
-                  <p className="text-xs text-slate-400">
-                    Sign up to get 10 pro requests daily + unlimited free requests
+                  <p className="text-md text-slate-400">
+                    Sign up to get unlimited requests
                   </p>
                 </>
               )}

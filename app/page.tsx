@@ -24,7 +24,7 @@ import { useAuth } from "@/context/auth-context"
 import { AIRoutingAnimation } from "@/components/hero/ai-routing-animation"
 import { signInAnonymouslyUser, isAnonymousUser } from "@/lib/firebase/auth"
 
-const FREE_PROMPTS_COUNT = 2
+const FREE_PROMPTS_COUNT = 5
 
 export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)

@@ -141,12 +141,12 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
           {isAnonymous && <div className="size-9" />}
           
           <h1 className="text-sidebar-foreground text-lg font-semibold">MAYURA</h1>
-          <RateLimitStatus compact className="ml-2" />
+          <RateLimitStatus compact className={cn("ml-2", isAnonymous && "opacity-0")} />
         </header>
 
         {/* Desktop Rate Limit Status - Top Right Corner */}
         <div className="absolute right-4 top-4 z-50 hidden md:block">
-          <RateLimitStatus compact />
+          <RateLimitStatus compact className={cn("ml-2", isAnonymous && "opacity-0")}/>
         </div>
 
         {/* Chat Content Area */}
