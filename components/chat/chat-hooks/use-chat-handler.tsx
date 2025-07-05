@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from "uuid"
 import { useRateLimit } from "@/lib/hooks/use-rate-limit"
 import { isAnonymousUser } from "@/lib/firebase/auth"
 import { SignupPromptModal } from "@/components/ui/signup-prompt-modal"
+import { getChatsByUserId } from "@/db/chats"
 
 // API base URL for backend calls
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
@@ -57,6 +58,9 @@ export const useChatHandler = () => {
     chatMessages: ChatMessage[],
     isRegeneration: boolean = false
   ) => {
+    // Check if this is a new chat (no selectedChat initially)
+    const isNewChat = !selectedChat?.id && !isRegeneration
+
     // Check if anonymous user has exhausted their quota
     if (user && isAnonymousUser() && rateLimitStatus) {
       if (rateLimitStatus.requests_remaining <= 0) {
@@ -239,13 +243,40 @@ export const useChatHandler = () => {
         }
       }
 
-      // Refresh chat list after successful message
-      if (user) {
+      // If this was a new chat and we successfully sent a message, 
+      // fetch the updated chat list and navigate to the new chat
+      if (isNewChat && user && fullGeneratedText) {
         try {
-          // We'll let the chat layout handle refreshing the chat list
-          console.log("Message sent successfully")
+          const userId = user.isAnonymous ? user.uid : profile?.user_id
+          if (userId) {
+            const updatedChats = await getChatsByUserId(userId)
+            if (Array.isArray(updatedChats)) {
+              setChats(updatedChats)
+              
+              // Find the most recent chat (should be the newly created one)
+              const newestChat = updatedChats.reduce((latest, chat) => {
+                return new Date(chat.created_at) > new Date(latest.created_at) ? chat : latest
+              })
+              
+              if (newestChat) {
+                setSelectedChat(newestChat)
+                // Navigate to the specific chat ID route
+                router.push(`/chat/${newestChat.id}`)
+              }
+            }
+          }
         } catch (error) {
-          console.error("Error refreshing chat list:", error)
+          console.error("Error fetching updated chats:", error)
+        }
+      } else {
+        // Refresh chat list after successful message for existing chats
+        if (user) {
+          try {
+            // We'll let the chat layout handle refreshing the chat list
+            console.log("Message sent successfully")
+          } catch (error) {
+            console.error("Error refreshing chat list:", error)
+          }
         }
       }
     } catch (error: any) {
