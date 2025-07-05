@@ -55,16 +55,11 @@ export default function HomePage() {
       e.preventDefault()
     }
     
-    const promptToSubmit = promptText || heroPrompt.trim()
+    const promptToSubmit = samplePromptsMap[promptText as keyof typeof samplePromptsMap] || heroPrompt.trim()
     if (!promptToSubmit || isSubmitting) return
 
     setIsSubmitting(true)
     try {
-      // Sign in anonymously if not already signed in
-      if (!user) {
-        await signInAnonymouslyUser()
-      }
-      
       // Store the prompt in localStorage to be picked up by the chat page
       localStorage.setItem('heroPrompt', promptToSubmit)
       
@@ -119,6 +114,24 @@ export default function HomePage() {
         "Yes, Mayura is currently in public beta. The Free tier is fully available now. The Pro tier with manual model selection and additional features will launch after the beta period."
     }
   ]
+
+  const samplePromptsMap = {
+    "Debug my code": `
+    Debug my code
+
+    def say_hello():
+      print("Hello" + name + ", Welcome to Mayura!")
+    `,
+    "Create a website": `
+    Create a beautiful landing page for a chatbot using html and css.
+    `,
+    "Write an email": `
+    Write an email to the devs of Mayura to appreciate their product.
+    `,
+    "Explain a concept": `
+    Explain a concept of prompt routing.
+    `
+  }
 
   return (
     <div className="min-h-screen w-full">
@@ -176,122 +189,100 @@ export default function HomePage() {
 
       <main className="w-full flex-1">
         {/* Hero Section */}
-        <section className="w-full px-6 py-16 md:py-24 lg:py-32">
-          <div className="container mx-auto py-12">
-            <div className="mx-auto flex flex-col items-center gap-12 md:flex-row md:items-stretch md:gap-20">
-              {/* Left: Hero Text */}
-              <div className="flex flex-1 flex-col justify-center space-y-6 text-center md:items-start md:justify-center md:text-left">
-                <div className="space-y-4">
-                  <h1
-                    className="relative select-text bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text pb-2 text-4xl font-bold text-transparent sm:text-5xl md:text-6xl lg:text-7xl"
-                  >
-                    <span className="hero-select-hide">One Prompt</span>{" "}<br />
-                    <span
-                      className="hero-select-show bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-500 bg-clip-text text-transparent drop-shadow-lg"
-                    >
-                      {"{ "}Right Model{" }"}
-                    </span><br />
-                    <span className="hero-select-hide bg-clip-text text-transparent">Every Time</span>
-                    <style jsx>{`
-                      .hero-select-hide::selection {
-                        color: white !important;
-                        background: white !important;
-                      }
-                      .hero-select-show::selection {
-                        color: #a21caf !important;
-                        background: white !important;
-                        -webkit-text-fill-color: #a21caf !important;
-                      }
-                    `}</style>
-                  </h1>
-                  <p className="mx-auto max-w-2xl text-lg text-slate-300 md:mx-0 md:text-lg lg:text-lg">
-                    Shoot your prompt, we&apos;ll route your prompt.
-                  </p>
-                </div>
-                <div className="flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
+        <section className="w-full px-6 py-24 md:py-32 lg:py-40">
+          <div className="container mx-auto max-w-7xl">
+            <div className="flex flex-col items-center gap-16 lg:flex-row lg:items-center lg:gap-24">
+              {/* Left: Hero Content */}
+              <div className="flex flex-1 flex-col items-center text-center lg:items-start lg:text-left">
+                {/* Main Headline */}
+                <h1 className="mb-6 text-4xl font-medium text-white sm:text-5xl lg:text-6xl xl:text-7xl leading-tight tracking-tight">
+                  What do you want to ask?
+                  <br />
+                  <span className="bg-gradient-to-r from-violet-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">We&apos;ll route it to the best AI.</span>
+                </h1>
+
+                {/* Input Section */}
+                <div className="w-full max-w-xl mb-8">
                   {!loading && user && !isAnonymousUser() ? (
                     // Authenticated user - show Go to Chat
-                    <Button size="lg" onClick={() => router.push("/chat")} className="bg-violet-600 text-white hover:bg-violet-700">
-                      <MessageSquare className="mr-2 size-5" /> Go to Chat
+                    <Button 
+                      size="lg" 
+                      onClick={() => router.push("/chat")} 
+                      className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium text-lg py-4 h-auto rounded-xl"
+                    >
+                      Go to Chat
                     </Button>
                   ) : (
-                    // Anonymous or no user - show beautiful chat input
-                    <div className="w-full max-w-2xl">
-                      {/* Free Messages Badge */}
-                      <div className="mb-4 flex items-center justify-center gap-2">
-                        <div className="flex items-center gap-2 rounded-full bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 px-4 py-2">
+                    <div className="space-y-4">
+                      {/* Label */}
+                      <div className="text-center lg:text-left">
+                        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-full px-4 py-2 mb-4">
                           <Zap className="size-4 text-green-400" />
                           <span className="text-sm font-medium text-green-300">
-                            {FREE_PROMPTS_COUNT} Free Messages • No Signup Required
+                            Try now • <span className="font-bold uppercase">No signup required</span>
                           </span>
                         </div>
                       </div>
-                      
-                      {/* Beautiful Input Form */}
+
+                      {/* Input Form */}
                       <form onSubmit={handleHeroPromptSubmit} className="relative">
                         <div className="relative group">
                           {/* Gradient Border Effect */}
-                          <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                          <div className="absolute -inset-1 bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
                           
                           {/* Input Container */}
-                          <div className="relative bg-black/50 backdrop-blur-sm rounded-2xl border border-slate-600/50 p-1">
-                            <div className="flex items-center gap-2">
-                              <Input
-                                value={heroPrompt}
-                                onChange={(e) => setHeroPrompt(e.target.value)}
-                                placeholder="Ask me anything... (coding, writing, analysis, creative tasks)"
-                                className="flex-1 border-0 bg-transparent text-white placeholder:text-slate-400 focus:ring-0 focus:border-0 text-lg h-14 px-6"
-                                disabled={isSubmitting}
-                              />
-                              <Button 
-                                type="submit" 
-                                size="lg" 
-                                disabled={!heroPrompt.trim() || isSubmitting}
-                                className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white rounded-xl px-6 h-12 font-medium transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
-                              >
-                                {isSubmitting ? (
-                                  <div className="flex items-center gap-2">
-                                    <div className="size-4 animate-spin rounded-full border-2 border-white/20 border-t-white"></div>
-                                    <span>Starting...</span>
-                                  </div>
-                                ) : (
-                                  <div className="flex items-center gap-2">
-                                    <Send className="size-4" />
-                                    <span>Try Free</span>
-                                  </div>
-                                )}
-                              </Button>
-                            </div>
+                          <div className="relative bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-600/50 shadow-xl">
+                            <Input
+                              value={heroPrompt}
+                              onChange={(e) => setHeroPrompt(e.target.value)}
+                              placeholder="Type your idea and we will bring it to life"
+                              className="w-full bg-transparent border-0 text-white placeholder:text-slate-400 text-lg py-8 px-8 pr-20 rounded-2xl focus:ring-0 h-auto"
+                              disabled={isSubmitting}
+                            />
+                            <Button 
+                              type="submit" 
+                              disabled={!heroPrompt.trim() || isSubmitting}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium px-4 py-3 rounded-xl h-auto disabled:opacity-50 transition-all duration-200"
+                            >
+                              {isSubmitting ? (
+                                <div className="flex items-center">
+                                  <div className="size-4 animate-spin rounded-full border-2 border-white/20 border-t-white"></div>
+                                </div>
+                              ) : (
+                                <ArrowRight className="size-4" />
+                              )}
+                            </Button>
                           </div>
                         </div>
                       </form>
-                      
-                      {/* Popular Prompts */}
-                      <div className="mt-6">
-                        <div className="flex flex-wrap gap-2 justify-center">
-                          {[
-                            "Write a Python script to analyze data",
-                            "Explain quantum computing simply",
-                            "Create a marketing strategy",
-                            "Debug my JavaScript code"
-                          ].map((prompt, index) => (
-                            <button
-                              key={index}
-                              onClick={() => handleHeroPromptSubmit(undefined, prompt)}
-                              className="px-3 py-1.5 text-xs bg-slate-800/50 hover:bg-slate-700/50 border border-slate-600/50 rounded-full text-slate-300 hover:text-white transition-colors duration-200"
-                            >
-                              {prompt}
-                            </button>
-                          ))}
-                        </div>
+
+                      {/* Sample Prompts */}
+                      <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+                        {[
+                          "Debug my code",
+                          "Create a website",
+                          "Write an email",
+                          "Explain a concept"
+                        ].map((prompt, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleHeroPromptSubmit(undefined, prompt)}
+                            className="px-3 py-1.5 text-sm text-slate-400 hover:text-white transition-colors border border-slate-700 rounded-full hover:border-slate-600"
+                          >
+                            {prompt}
+                          </button>
+                        ))}
                       </div>
                     </div>
                   )}
                 </div>
               </div>
+
               {/* Right: Animation */}
-              <div className="flex min-w-[340px] flex-1 items-center justify-center">
-                <AIRoutingAnimation />
+              <div className="flex flex-1 items-center justify-center lg:justify-end scale-110">
+                <div className="w-full max-w-md">
+                  <AIRoutingAnimation />
+                </div>
               </div>
             </div>
           </div>

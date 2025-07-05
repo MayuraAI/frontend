@@ -187,17 +187,16 @@ export const redirectAfterAuth = async (router: any) => {
     if (!response.ok) {
       if (response.status === 404) {
         console.log("📝 No profile exists, redirecting to setup")
-        router.push("/setup")
+        router.push("/login")
         return
       }
       throw new Error(`Failed to check profile: ${response.statusText}`)
     }
 
     const profile = await response.json()
-    console.log("✅ Profile found:", profile)
     
     // If profile exists but user hasn't completed onboarding
-    if (profile && !profile.has_onboarded) {
+    if (profile && !profile.has_onboarded && getCurrentUser()?.emailVerified) {
       console.log("🚀 Profile exists but not onboarded, redirecting to setup")
       router.push("/setup")
       return
@@ -212,10 +211,10 @@ export const redirectAfterAuth = async (router: any) => {
 
     // Fallback to setup if we can't determine status
     console.log("⚠️ Unknown profile status, redirecting to setup")
-    router.push("/setup")
+    router.push("/login")
   } catch (error) {
     console.error("❌ Error checking profile status:", error)
     // On error, redirect to setup to be safe
-    router.push("/setup")
+    router.push("/login")
   }
 }

@@ -34,7 +34,7 @@ export function AnonymousBanner({ requestsRemaining, totalRequests }: AnonymousB
                     You&apos;ve used all {totalRequests} requests!
                   </p>
                   <p className="text-md text-slate-400">
-                    Sign up now to get unlimited requests
+                    Sign up now to get unlimited requests for FREE!
                   </p>
                 </>
               ) : (
@@ -43,7 +43,7 @@ export function AnonymousBanner({ requestsRemaining, totalRequests }: AnonymousB
                     You have {requestsRemaining} of {totalRequests} requests remaining
                   </p>
                   <p className="text-md text-slate-400">
-                    Sign up to get unlimited requests
+                    Sign up to get unlimited requests for FREE!
                   </p>
                 </>
               )}

@@ -98,13 +98,23 @@ function LoginPageContent() {
       await signInWithEmail(email, password)
       await setTokenInCookies()
       posthog.capture("sign_in_success")
-      await redirectAfterAuth(router)
+      if(getCurrentUser()?.emailVerified) {
+        await redirectAfterAuth(router)
+      } else {
+        setMessage("Please check your email and click the verification link to complete your account setup.")
+        setMessageType("info")
+      }
     } catch (error: any) {
       const errorMessage = formatAuthError(error)
+      console.log("🚀 Error message:", errorMessage)
       if (error.code === "auth/invalid-email" || !getCurrentUser()?.emailVerified) {
-        setMessage("Please check your email and click the verification link before signing in.")
+        setMessage(errorMessage)
         setMessageType("info")
-      } else {
+      } else if (error.code == "auth/user-not-found" || error.code == "auth/wrong-password" || error.code == "auth/invalid-credential") {
+        setMessage(errorMessage)
+        setMessageType("destructive")
+      }
+      else {
         setMessage(errorMessage)
         setMessageType("destructive")
       }
@@ -321,7 +331,7 @@ function LoginPageContent() {
               >
                 {loading ? (
                   <div className="flex items-center space-x-2">
-                    <div className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                    {/* <div className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div> */}
                     <span>Signing in...</span>
                   </div>
                 ) : (
@@ -341,7 +351,7 @@ function LoginPageContent() {
               >
                 {loading ? (
                   <div className="flex items-center space-x-2">
-                    <div className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+                    {/* <div className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div> */}
                     <span>Creating...</span>
                   </div>
                 ) : (
@@ -374,7 +384,7 @@ function LoginPageContent() {
           >
             {loading ? (
               <div className="flex items-center space-x-2">
-                <div className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+                {/* <div className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div> */}
                 <span>Signing in...</span>
               </div>
             ) : (

@@ -5,35 +5,6 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
 
 export async function middleware(request: NextRequest) {
   try {
-    // Handle PostHog proxy requests first
-    if (request.nextUrl.pathname.startsWith('/relay-qesW')) {
-      // Security: Validate request method (PostHog uses GET and POST)
-      if (!['GET', 'POST', 'HEAD'].includes(request.method)) {
-        return new NextResponse('Method not allowed', { status: 405 });
-      }
-
-      let url = request.nextUrl.clone()
-      const hostname = url.pathname.startsWith("/relay-qesW/static/") ? 'us-assets.i.posthog.com' : 'us.i.posthog.com'
-      const requestHeaders = new Headers(request.headers)
-      
-      // Security: Remove potentially dangerous headers
-      requestHeaders.delete('x-forwarded-host');
-      requestHeaders.delete('x-forwarded-proto');
-      requestHeaders.delete('x-real-ip');
-      
-      // Set the correct host header
-      requestHeaders.set('host', hostname);
-
-      url.protocol = 'https'
-      url.hostname = hostname
-      url.port = '443'
-      url.pathname = url.pathname.replace(/^\/relay-qesW/, '');
-
-      return NextResponse.rewrite(url, {
-        headers: requestHeaders,
-      });
-    }
-
     const pathname = request.nextUrl.pathname
 
     // Define public routes that don't require authentication
@@ -46,6 +17,7 @@ export async function middleware(request: NextRequest) {
       '/about',      // About page (if exists)
       '/contact',    // Contact page (if exists)
       '/chat',       // Chat pages (handles anonymous sign-in automatically)
+      '/resqW',     // PostHog proxy endpoint
     ]
     
     // Define protected routes that require authentication

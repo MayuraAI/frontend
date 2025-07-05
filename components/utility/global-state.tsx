@@ -5,6 +5,7 @@ import { MayuraContext } from "@/context/context"
 import { useAuth } from "@/context/auth-context"
 import { getProfileByUserId } from "@/db/profile"
 import { useRouter } from "next/navigation"
+import { getCurrentUser } from "@/lib/firebase/auth"
 
 interface GlobalStateProps {
   children: ReactNode
@@ -63,7 +64,7 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
               setProfile(userProfile)
               
               // If profile exists but user hasn't onboarded, they should be on setup page
-              if (!userProfile.has_onboarded && window.location.pathname !== "/setup") {
+              if (!userProfile.has_onboarded && window.location.pathname !== "/setup" && getCurrentUser()?.emailVerified) {
                 console.log("🚀 User hasn't onboarded, should be on setup page")
                 router.push("/setup")
                 return
@@ -72,7 +73,8 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
               console.log("⚠️ No profile found for user, should create one or redirect to setup")
               setProfile(null)
               // Only redirect to setup if user is not anonymous and not already on setup page
-              if (!user.isAnonymous && window.location.pathname !== "/setup") {
+              if (!user.isAnonymous && window.location.pathname !== "/setup" && getCurrentUser()?.emailVerified) {
+                console.log("🚀 Redirecting to setup user profile slgdjoahg")
                 router.push("/setup")
                 return
               }
