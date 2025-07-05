@@ -6,6 +6,7 @@ import { Metadata, Viewport } from "next"
 import { DM_Sans } from "next/font/google"
 import { ReactNode } from "react"
 import { generateStructuredData } from "@/lib/seo/structured-data"
+import Script from "next/script"
 import "./globals.css"
 
 const dmSans = DM_Sans({
@@ -53,12 +54,6 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
-  },
-  verification: {
-    // Add your verification codes here when available
-    // google: "your-google-verification-code",
-    // yandex: "your-yandex-verification-code",
-    // yahoo: "your-yahoo-verification-code",
   },
   alternates: {
     canonical: APP_URL,
@@ -128,9 +123,7 @@ export const metadata: Metadata = {
         alt: `${APP_NAME} Logo`,
         type: "image/png"
       }
-    ],
-    videos: [],
-    audio: []
+    ]
   },
   twitter: {
     card: "summary_large_image",
@@ -148,9 +141,6 @@ export const metadata: Metadata = {
     ]
   },
   other: {
-    "mobile-web-app-capable": "yes",
-    "apple-mobile-web-app-capable": "yes",
-    "apple-mobile-web-app-status-bar-style": "black-translucent",
     "msapplication-TileColor": "#9B59B6",
     "msapplication-TileImage": "/logo_192.png",
     "msapplication-navbutton-color": "#9B59B6",
@@ -185,12 +175,25 @@ export default async function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData)
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
+
       <body className={`${dmSans.variable} font-sans antialiased`}>
+        {/* Google Analytics */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-EGJ0GQYWM8"
+        />
+        <Script id="google-analytics">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-EGJ0GQYWM8');
+          `}
+        </Script>
+
         <AuthProvider>
           <Providers>
             <GlobalState>
