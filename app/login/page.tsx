@@ -195,30 +195,6 @@ function LoginPageContent() {
     }
   }
 
-  // Resend verification email
-  const handleResendVerification = async () => {
-    if (!email) {
-      setMessage("Please enter your email address first.")
-      setMessageType("destructive")
-      return
-    }
-    
-    setLoading(true)
-    setMessage(null)
-    
-    try {
-      await resendEmailVerification()
-      posthog.capture("verification_email_resent")
-      setMessage("Verification email has been resent. Please check your inbox.")
-      setMessageType("success")
-    } catch (error: any) {
-      setMessage(formatAuthError(error))
-      setMessageType("destructive")
-    } finally {
-      setLoading(false)
-    }
-  }
-
   // UI helpers
   const getAlertVariant = (type?: string) => {
     switch (type) {
@@ -228,6 +204,8 @@ function LoginPageContent() {
         return "info" as const
       case "warning":
         return "warning" as const
+      case "existing":
+        return "info" as const // Use info variant for existing user messages
       default:
         return "destructive" as const
     }
@@ -236,39 +214,14 @@ function LoginPageContent() {
   const getAlertIcon = (type?: string) => {
     switch (type) {
       case "success":
-        return <CheckCircle className="size-4 text-green-600" />
+        return <CheckCircle className="size-4" />
       case "info":
-        return <AlertCircle className="size-4 text-blue-600" />
+      case "existing":
+        return <AlertCircle className="size-4" />
       case "warning":
-        return <AlertCircle className="size-4 text-yellow-600" />
+        return <AlertCircle className="size-4" />
       default:
-        return <AlertCircle className="size-4 text-red-600" />
-    }
-  }
-
-  const getAlertBgClass = (type?: string) => {
-    switch (type) {
-      case "success":
-        return "bg-green-50 border-green-200"
-      case "info":
-        return "bg-blue-50 border-blue-200"
-      case "warning":
-        return "bg-yellow-50 border-yellow-200"
-      default:
-        return "bg-red-50 border-red-200"
-    }
-  }
-
-  const getAlertTextClass = (type?: string) => {
-    switch (type) {
-      case "success":
-        return "text-green-800"
-      case "info":
-        return "text-blue-800"
-      case "warning":
-        return "text-yellow-800"
-      default:
-        return "text-red-800"
+        return <AlertCircle className="size-4" />
     }
   }
 
@@ -286,9 +239,9 @@ function LoginPageContent() {
         </CardHeader>
         <CardContent className="space-y-4">
           {message && (
-            <Alert className={getAlertBgClass(messageType)}>
+            <Alert variant={getAlertVariant(messageType)}>
               {getAlertIcon(messageType)}
-              <AlertDescription className={getAlertTextClass(messageType)}>
+              <AlertDescription>
                 {message}
               </AlertDescription>
             </Alert>
@@ -406,19 +359,6 @@ function LoginPageContent() {
               <KeyRound className="size-3 mr-1" />
               Forgot your password?
             </Button>
-
-            {messageType === "info" && (
-              <Button
-                type="button"
-                variant="link"
-                onClick={handleResendVerification}
-                disabled={loading || !email}
-                className="p-0 h-auto text-xs text-muted-foreground hover:text-primary"
-              >
-                <RotateCcw className="size-3 mr-1" />
-                Resend verification email
-              </Button>
-            )}
           </div>
         </CardContent>
       </Card>
