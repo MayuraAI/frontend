@@ -63,7 +63,7 @@ function LoginPageContent() {
       const user = getCurrentUser()
       // Only redirect if user is authenticated (not anonymous)
       if (user && !user.isAnonymous) {
-        console.log("🔄 Authenticated user found on login page, redirecting...")
+        // console.log("🔄 Authenticated user found on login page, redirecting...")
         await redirectAfterAuth(router)
       }
     }
@@ -74,7 +74,7 @@ function LoginPageContent() {
     const unsubscribe = onAuthStateChange(async (user) => {
       // Only redirect if user is authenticated (not anonymous)
       if (user && !user.isAnonymous) {
-        console.log("🔄 Auth state changed, authenticated user logged in, redirecting...")
+        // console.log("🔄 Auth state changed, authenticated user logged in, redirecting...")
         await redirectAfterAuth(router)
       }
     })
@@ -106,7 +106,7 @@ function LoginPageContent() {
       }
     } catch (error: any) {
       const errorMessage = formatAuthError(error)
-      console.log("🚀 Error message:", errorMessage)
+      // console.log("🚀 Error message:", errorMessage)
       if (error.code === "auth/invalid-email" || !getCurrentUser()?.emailVerified) {
         setMessage(errorMessage)
         setMessageType("info")

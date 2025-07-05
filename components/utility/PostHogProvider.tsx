@@ -18,7 +18,7 @@ if (typeof window !== 'undefined') {
     },
     loaded: function (posthog) {
       if (process.env.NODE_ENV === 'development') {
-        console.log('PostHog loaded successfully')
+        // console.log('PostHog loaded successfully')
       }
     }
   })

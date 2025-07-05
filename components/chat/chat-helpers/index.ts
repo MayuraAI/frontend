@@ -211,7 +211,7 @@ export const processResponse = async (
 
   } catch (error) {
     if (error instanceof Error && error.name === "AbortError") {
-      console.log("Stream aborted by user")
+      // console.log("Stream aborted by user")
     } else {
       console.error("Error processing stream:", error)
       throw error

@@ -234,7 +234,7 @@ export const useChatHandler = () => {
           }
         } catch (error) {
           if (error instanceof Error && error.name === "AbortError") {
-            console.log("Request was aborted")
+            // console.log("Request was aborted")
           } else {
             throw error
           }
@@ -273,7 +273,7 @@ export const useChatHandler = () => {
         if (user) {
           try {
             // We'll let the chat layout handle refreshing the chat list
-            console.log("Message sent successfully")
+            // console.log("Message sent successfully")
           } catch (error) {
             console.error("Error refreshing chat list:", error)
           }
@@ -283,7 +283,7 @@ export const useChatHandler = () => {
       console.error("Error sending message:", error)
 
       if (error.name === "AbortError") {
-        console.log("Request was aborted by user")
+        // console.log("Request was aborted by user")
       } else {
         // Remove the placeholder messages on error
         setChatMessages(chatMessages)

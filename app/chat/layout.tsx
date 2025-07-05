@@ -83,11 +83,11 @@ function ChatLayoutContent({
     
     // Sign in anonymously only after we are sure there's no user and auth has fully initialized
     if (!user && !authLoading && !isSigningInAnonymously) {
-      console.log("👤 No user found after auth loading. Signing in anonymously...")
+      // console.log("👤 No user found after auth loading. Signing in anonymously...")
       setIsSigningInAnonymously(true)
       signInAnonymouslyUser()
         .then(() => {
-          console.log("✅ Successfully signed in anonymously")
+          // console.log("✅ Successfully signed in anonymously")
           setIsSigningInAnonymously(false)
         })
         .catch((error) => {

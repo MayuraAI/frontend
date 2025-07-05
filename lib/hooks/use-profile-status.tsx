@@ -133,7 +133,7 @@ export function useRequireCompleteProfile() {
   useEffect(() => {
     if (!status.loading && status.isAuthenticated && getCurrentUser()?.emailVerified) {
       if (!status.hasProfile || !status.hasOnboarded) {
-        console.log("🚀 Redirecting to setup user profile")
+        // console.log("🚀 Redirecting to setup user profile")
         router.push("/setup")
       }
     }

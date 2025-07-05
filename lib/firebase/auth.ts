@@ -149,31 +149,31 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
 // Check profile status and redirect appropriately after authentication
 export const redirectAfterAuth = async (router: any) => {
   try {
-    console.log("🔄 Checking profile status after authentication...")
+    // console.log("🔄 Checking profile status after authentication...")
     const user = getCurrentUser()
     if (!user) {
-      console.log("❌ No user found, redirecting to login")
+      // console.log("❌ No user found, redirecting to login")
       router.push("/login")
       return
     }
 
-    console.log("✅ User found:", user.uid)
+    // console.log("✅ User found:", user.uid)
     
     // If user is anonymous, skip profile checks and go directly to chat
     if (user.isAnonymous) {
-      console.log("👤 Anonymous user, redirecting directly to chat")
+      // console.log("👤 Anonymous user, redirecting directly to chat")
       router.push("/chat")
       return
     }
 
     const token = await getIdToken()
     if (!token) {
-      console.log("❌ No token found, redirecting to login")
+      // console.log("❌ No token found, redirecting to login")
       router.push("/login")
       return
     }
 
-    console.log("✅ Token obtained, checking profile in backend...")
+    // console.log("✅ Token obtained, checking profile in backend...")
     // Check if profile exists in backend
     const response = await fetch(`${API_BASE_URL}/v1/profiles/by-user-id/${user.uid}`, {
       headers: {
@@ -182,11 +182,11 @@ export const redirectAfterAuth = async (router: any) => {
       }
     })
 
-    console.log("📡 Backend response status:", response.status)
+    // console.log("📡 Backend response status:", response.status)
 
     if (!response.ok) {
       if (response.status === 404) {
-        console.log("📝 No profile exists, redirecting to setup")
+        // console.log("📝 No profile exists, redirecting to setup")
         router.push("/login")
         return
       }
@@ -197,20 +197,20 @@ export const redirectAfterAuth = async (router: any) => {
     
     // If profile exists but user hasn't completed onboarding
     if (profile && !profile.has_onboarded && getCurrentUser()?.emailVerified) {
-      console.log("🚀 Profile exists but not onboarded, redirecting to setup")
+      // console.log("🚀 Profile exists but not onboarded, redirecting to setup")
       router.push("/setup")
       return
     }
 
     // If profile exists and user has completed onboarding
     if (profile && profile.has_onboarded) {
-      console.log("🎉 Profile exists and onboarded, redirecting to chat")
+      // console.log("🎉 Profile exists and onboarded, redirecting to chat")
       router.push("/chat")
       return
     }
 
     // Fallback to setup if we can't determine status
-    console.log("⚠️ Unknown profile status, redirecting to setup")
+    // console.log("⚠️ Unknown profile status, redirecting to setup")
     router.push("/login")
   } catch (error) {
     console.error("❌ Error checking profile status:", error)
