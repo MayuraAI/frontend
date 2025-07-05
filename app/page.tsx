@@ -81,7 +81,7 @@ export default function HomePage() {
     {
       question: "What models are available in the Free tier?",
       answer:
-        "The Free tier includes access to high-quality models including Llama 3.3 70B, DeepSeek R1, Qwen 3 32B, Gemma 2 9B, and more. You get unlimited access to these standard models plus 10 Pro requests daily for premium models."
+        "The Free tier includes access to high-quality models including Llama 3.3 70B, DeepSeek R1, Qwen 3 32B, Gemma 2 9B, and more. You get unlimited access to these standard models plus 5 Pro requests daily for premium models."
     },
     {
       question: "What premium models are available with Pro requests?",
@@ -524,7 +524,7 @@ export default function HomePage() {
                       <li className="flex items-start gap-3">
                         <CheckCircle className="size-5 shrink-0 text-violet-400" />
                         <div>
-                          <strong className="text-white">10 Pro Requests / day</strong>
+                          <strong className="text-white">5 Pro Requests / day</strong>
                           <p className="text-xs text-slate-400">
                             Access premium models like Gemini 2.5 Pro, Gemini 2.5 Flash Preview
                           </p>
