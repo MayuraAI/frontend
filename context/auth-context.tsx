@@ -1,8 +1,13 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react"
-import { User } from "firebase/auth"
-import { getCurrentUser, onAuthStateChange, getIdToken, setTokenInCookies, removeTokenFromCookies } from "@/lib/firebase/auth"
+import { User, onAuthStateChanged } from "firebase/auth"
+import {
+  getIdToken,
+  setTokenInCookies,
+  removeTokenFromCookies
+} from "@/lib/firebase/auth"
+import { auth } from "@/lib/firebase/config"
 
 interface AuthContextType {
   user: User | null
@@ -17,26 +22,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Check if user is already logged in
-    const currentUser = getCurrentUser()
-    setUser(currentUser)
-    setLoading(false)
-
-    // Set token in cookies if user is logged in
-    if (currentUser) {
-      setTokenInCookies()
-    }
-
-    // Listen for auth state changes
-    const unsubscribe = onAuthStateChange(async (user) => {
-      setUser(user)
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setUser(firebaseUser)
       setLoading(false)
-      
-      if (user) {
-        // User logged in, set token in cookies
+
+      if (firebaseUser) {
         await setTokenInCookies()
       } else {
-        // User logged out, remove token from cookies
         removeTokenFromCookies()
       }
     })
@@ -48,14 +40,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return await getIdToken()
   }
 
-  const value = {
-    user,
-    loading,
-    getToken
-  }
-
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ user, loading, getToken }}>
       {children}
     </AuthContext.Provider>
   )
@@ -63,8 +49,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext)
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useAuth must be used within an AuthProvider")
   }
   return context
-} 
+}

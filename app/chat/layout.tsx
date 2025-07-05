@@ -81,27 +81,22 @@ function ChatLayoutContent({
     
     if (authLoading || isSigningInAnonymously) return
     
-    // Sign in anonymously if no user is found
-    if (!user && !authLoading) {
-      // Check one more time to avoid race conditions on reload
-      const currentUser = getCurrentUser()
-      if (!currentUser) {
-        console.log("👤 No user found, signing in anonymously...")
-        setIsSigningInAnonymously(true)
-        signInAnonymouslyUser()
-          .then(() => {
-            console.log("✅ Successfully signed in anonymously")
-            setIsSigningInAnonymously(false)
-          })
-          .catch((error) => {
-            console.error("❌ Error signing in anonymously:", error)
-            setIsSigningInAnonymously(false)
-            // Fallback to login page if anonymous sign-in fails
-            router.push("/login")
-          })
-      }
-      return
+    // Sign in anonymously only after we are sure there's no user and auth has fully initialized
+    if (!user && !authLoading && !isSigningInAnonymously) {
+      console.log("👤 No user found after auth loading. Signing in anonymously...")
+      setIsSigningInAnonymously(true)
+      signInAnonymouslyUser()
+        .then(() => {
+          console.log("✅ Successfully signed in anonymously")
+          setIsSigningInAnonymously(false)
+        })
+        .catch((error) => {
+          console.error("❌ Error signing in anonymously:", error)
+          setIsSigningInAnonymously(false)
+          router.push("/login")
+        })
     }
+
 
     loadProfile()
 
