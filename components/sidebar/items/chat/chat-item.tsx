@@ -1,6 +1,6 @@
 import { MayuraContext } from "@/context/context"
 import { cn } from "@/lib/utils"
-import { Tables } from "@/supabase/types"
+import { Tables } from "@/types/database"
 import { useParams, useRouter } from "next/navigation"
 import { FC, useContext, useRef } from "react"
 import { DeleteChat } from "./delete-chat"

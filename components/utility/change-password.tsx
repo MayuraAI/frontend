@@ -1,6 +1,6 @@
 "use client"
 
-import { supabase } from "@/lib/supabase/browser-client"
+import { updateUserPassword } from "@/lib/firebase/auth"
 import { useRouter } from "next/navigation"
 import { FC, useState } from "react"
 import { Button } from "../ui/button"
@@ -36,19 +36,19 @@ export const ChangePassword: FC<ChangePasswordProps> = () => {
     }
 
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword
-      })
-
-      if (error) {
-        return toast.error(error.message)
-      }
+      // Note: Firebase updatePassword requires the user to be recently authenticated
+      // For a more complete implementation, you might want to require re-authentication
+      await updateUserPassword(newPassword)
 
       toast.success("Password changed successfully.")
       return router.push("/login")
-    } catch (error) {
+    } catch (error: any) {
       console.error(error)
-      toast.error("Failed to change password. Please try again.")
+      if (error.code === 'auth/requires-recent-login') {
+        toast.error("Please log out and log back in to change your password.")
+      } else {
+        toast.error("Failed to change password. Please try again.")
+      }
     }
   }
 

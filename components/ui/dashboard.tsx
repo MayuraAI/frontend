@@ -6,27 +6,38 @@ import { cn } from "@/lib/utils"
 import { ContentType } from "@/types"
 import { IconChevronCompactRight, IconMenu2 } from "@tabler/icons-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { FC, ReactNode, useContext, useEffect, useState } from "react"
+import { FC, ReactNode, useContext, useEffect, useState, Suspense } from "react"
 import { Button } from "./button"
 import { Sidebar } from "../sidebar/sidebar"
 import useHotkey from "@/lib/hooks/use-hotkey"
 import RateLimitStatus from "./rate-limit-status"
+import { useAuth } from "@/context/auth-context"
+import { isAnonymousUser } from "@/lib/firebase/auth"
 
 // Responsive sidebar widths
 export const SIDEBAR_WIDTH_MOBILE = 280 // Slightly smaller for mobile
 export const SIDEBAR_WIDTH_DESKTOP = 320 // Optimal for desktop
 
 interface DashboardProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export const Dashboard: FC<DashboardProps> = ({ children }) => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DashboardContent>{children}</DashboardContent>
+    </Suspense>
+  )
+}
+
+function DashboardContent({ children }: { children: React.ReactNode }) {
   useHotkey("s", () => setShowSidebar(prevState => !prevState))
 
   const pathname = usePathname()
   const router = useRouter()
   const searchParams = useSearchParams()
   const tabValue = searchParams.get("tab") || "chats"
+  const { user } = useAuth()
 
   const [contentType, setContentType] = useState<ContentType>(
     tabValue as ContentType
@@ -34,6 +45,10 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+
+  // Check if user is anonymous - if so, don't show sidebar
+  const isAnonymous = isAnonymousUser()
+  const shouldShowSidebar = showSidebar
 
   // Detect mobile screen size
   useEffect(() => {
@@ -49,7 +64,8 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
   useEffect(() => {
     const saved = localStorage.getItem("showSidebar")
     // On mobile, default to closed sidebar
-    const defaultOpen = isMobile ? false : true
+    // For anonymous users, always keep sidebar closed
+    const defaultOpen = (isMobile ? false : true)
     setShowSidebar(saved !== null ? saved === "true" : defaultOpen)
     setIsLoaded(true)
   }, [isMobile])
@@ -74,52 +90,60 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
 
   return (
     <div className="bg-background flex h-screen w-full overflow-hidden">
-      {/* Responsive Sidebar */}
-      <aside
-        className={cn(
-          "bg-sidebar fixed z-20 h-full border-r shadow-lg transition-all duration-300 ease-in-out",
-          "md:relative md:shadow-none",
-          showSidebar
-            ? "translate-x-0"
-            : "-translate-x-full"
-        )}
-        style={{ width: showSidebar ? `${sidebarWidth}px` : "0px" }}
-        aria-label="Navigation sidebar"
-      >
-        {showSidebar && (
-          <Tabs
-            className="flex h-full flex-col"
-            value={contentType}
-            onValueChange={tabValue => {
-              setContentType(tabValue as ContentType)
-              router.push(`${pathname}?tab=${tabValue}`)
-            }}
-          >
-            <Sidebar contentType={contentType} showSidebar={showSidebar} />
-          </Tabs>
-        )}
-      </aside>
+      {/* Responsive Sidebar - Hidden for anonymous users */}
+      {(
+        <aside
+          className={cn(
+            "bg-sidebar fixed z-20 h-full border-r shadow-lg transition-all duration-300 ease-in-out",
+            "md:relative md:shadow-none",
+            shouldShowSidebar
+              ? "translate-x-0"
+              : "-translate-x-full"
+          )}
+          style={{ width: shouldShowSidebar ? `${sidebarWidth}px` : "0px" }}
+          aria-label="Navigation sidebar"
+        >
+          {shouldShowSidebar && (
+            <Tabs
+              className="flex h-full flex-col"
+              value={contentType}
+              onValueChange={tabValue => {
+                setContentType(tabValue as ContentType)
+                router.push(`${pathname}?tab=${tabValue}`)
+              }}
+            >
+              <Sidebar contentType={contentType} showSidebar={shouldShowSidebar} />
+            </Tabs>
+          )}
+        </aside>
+      )}
 
       {/* Main Content Area */}
       <main className="bg-background flex min-w-0 flex-1 flex-col">
         {/* Mobile Header */}
         <header className="bg-sidebar border-sidebar-border fixed top-0 left-0 z-20 flex h-16 w-full items-center justify-between border-b p-3 shadow-sm md:hidden">
-          <Button
-            variant="outline"
-            size="icon"
-            className="size-9 rounded-lg border shadow-sm"
-            onClick={handleToggleSidebar}
-            aria-label="Toggle navigation menu"
-          >
-            <IconMenu2 size={20} />
-          </Button>
+          {/* Only show menu button for non-anonymous users */}
+          {(
+            <Button
+              variant="outline"
+              size="icon"
+              className="size-9 rounded-lg border shadow-sm"
+              onClick={handleToggleSidebar}
+              aria-label="Toggle navigation menu"
+            >
+              <IconMenu2 size={20} />
+            </Button>
+          )}
+          {/* For anonymous users, show empty div to maintain layout */}
+          {isAnonymous && <div className="size-9" />}
+          
           <h1 className="text-sidebar-foreground text-lg font-semibold">MAYURA</h1>
-          <RateLimitStatus compact className="ml-2" />
+          <RateLimitStatus compact className={cn("ml-2", isAnonymous && "opacity-0")} />
         </header>
 
         {/* Desktop Rate Limit Status - Top Right Corner */}
         <div className="absolute right-4 top-4 z-50 hidden md:block">
-          <RateLimitStatus compact />
+          <RateLimitStatus compact className={cn("ml-2", isAnonymous && "opacity-0")}/>
         </div>
 
         {/* Chat Content Area */}
@@ -127,27 +151,29 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
           {children}
         </section>
 
-        {/* Desktop Sidebar Toggle Button */}
-        <Button
-          className={cn(
-            "bg-sidebar hover:bg-sidebar-muted border-sidebar-border absolute left-1 top-1/2 z-50 size-8 rounded-lg border shadow-md transition-all duration-300",
-            "hidden md:flex"
-          )}
-          style={{
-            transform: `translateY(-50%) ${showSidebar ? "rotate(180deg)" : "rotate(0deg)"}`,
-            left: showSidebar ? `${sidebarWidth + 8}px` : "8px"
-          }}
-          variant="outline"
-          size="icon"
-          onClick={handleToggleSidebar}
-          aria-label={showSidebar ? "Hide sidebar" : "Show sidebar"}
-        >
-          <IconChevronCompactRight size={20} className="text-sidebar-foreground" />
-        </Button>
+        {/* Desktop Sidebar Toggle Button - Hidden for anonymous users */}
+        {(
+          <Button
+            className={cn(
+              "bg-sidebar hover:bg-sidebar-muted border-sidebar-border absolute left-1 top-1/2 z-50 size-8 rounded-lg border shadow-md transition-all duration-300",
+              "hidden md:flex"
+            )}
+            style={{
+              transform: `translateY(-50%) ${shouldShowSidebar ? "rotate(180deg)" : "rotate(0deg)"}`,
+              left: shouldShowSidebar ? `${sidebarWidth + 8}px` : "8px"
+            }}
+            variant="outline"
+            size="icon"
+            onClick={handleToggleSidebar}
+            aria-label={shouldShowSidebar ? "Hide sidebar" : "Show sidebar"}
+          >
+            <IconChevronCompactRight size={20} className="text-sidebar-foreground" />
+          </Button>
+        )}
       </main>
 
-      {/* Mobile Sidebar Overlay */}
-      {showSidebar && (
+      {/* Mobile Sidebar Overlay - Hidden for anonymous users */}
+      {shouldShowSidebar && (
         <div
           className="fixed inset-0 z-10 bg-black/50 backdrop-blur-sm md:hidden"
           onClick={handleToggleSidebar}

@@ -1,4 +1,6 @@
-import { Database, Tables } from "@/supabase/types"
+import { Profile } from "@/db/profile"
+import { Chat } from "@/db/chats"
+import { Message } from "@/db/messages"
 
 export interface ChatMessage {
   id: string
@@ -18,38 +20,49 @@ export interface ChatSettings {
   temperature: number
   contextLength: number
   includeProfileContext: boolean
-  embeddingsProvider: "openai" | "local"
+  embeddingsProvider: string
 }
 
-export interface ChatRequest {
+export interface ChatPayload {
+  chatSettings: ChatSettings
   messages: ChatMessage[]
-  profile_context?: string
 }
 
-export interface LLM {
+export interface ChatAPIPayload {
+  chatSettings: ChatSettings
+  messages: ChatMessage[]
+}
+
+export interface LLMProvider {
   id: string
   name: string
-  provider: string
-  hostedId: string
-  displayName: string
-  contextWindow: number
-  maxOutputTokens: number
-  price: number
-  defaultPrompt: string
-  defaultTemperature: number
-  hidden: boolean
 }
+
+export interface ModelProvider {
+  id: string
+  name: string
+}
+
+// Type aliases for database entities
+export type Tables<T extends string> = T extends "profiles" ? Profile : 
+                                        T extends "chats" ? Chat : 
+                                        T extends "messages" ? Message : 
+                                        never
+
+export type TablesInsert<T extends string> = T extends "profiles" ? Omit<Profile, "created_at" | "updated_at"> : 
+                                              T extends "chats" ? Omit<Chat, "id" | "created_at" | "updated_at"> : 
+                                              T extends "messages" ? Omit<Message, "id" | "created_at" | "updated_at"> : 
+                                              never
+
+export type TablesUpdate<T extends string> = T extends "profiles" ? Partial<Omit<Profile, "user_id" | "created_at">> : 
+                                              T extends "chats" ? Partial<Omit<Chat, "id" | "user_id" | "created_at">> : 
+                                              T extends "messages" ? Partial<Omit<Message, "id" | "created_at">> : 
+                                              never
+
+export type TablesRow<T extends string> = Tables<T>
 
 // Available content types in the sidebar
 export type ContentType = "chats"
-
-// Database table types
-export type TablesInsert<T extends keyof Database["public"]["Tables"]> =
-  Database["public"]["Tables"][T]["Insert"]
-export type TablesUpdate<T extends keyof Database["public"]["Tables"]> =
-  Database["public"]["Tables"][T]["Update"]
-export type TablesRow<T extends keyof Database["public"]["Tables"]> =
-  Database["public"]["Tables"][T]["Row"]
 
 // Data types for sidebar items
 export type DataItemType = Tables<"chats">

@@ -1,17 +1,18 @@
-import { Tables } from "@/supabase/types"
+import { Profile } from "@/db/profile"
+import { Chat } from "@/db/chats"
 import { ChatMessage, ChatSettings } from "@/types"
 import { RateLimitStatus } from "@/types/rate-limit"
 import { Dispatch, SetStateAction, createContext, useState } from "react"
 
 export interface MayuraContextProps {
-  profile: Tables<"profiles"> | null
-  setProfile: React.Dispatch<React.SetStateAction<Tables<"profiles"> | null>>
+  profile: Profile | null
+  setProfile: React.Dispatch<React.SetStateAction<Profile | null>>
 
-  chats: Tables<"chats">[]
-  setChats: React.Dispatch<React.SetStateAction<Tables<"chats">[]>>
+  chats: Chat[]
+  setChats: React.Dispatch<React.SetStateAction<Chat[]>>
 
-  selectedChat: Tables<"chats"> | null
-  setSelectedChat: React.Dispatch<React.SetStateAction<Tables<"chats"> | null>>
+  selectedChat: Chat | null
+  setSelectedChat: React.Dispatch<React.SetStateAction<Chat | null>>
 
   chatMessages: ChatMessage[]
   setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>
@@ -38,9 +39,6 @@ export interface MayuraContextProps {
 
   isMessageModalOpen: boolean
   setIsMessageModalOpen: React.Dispatch<React.SetStateAction<boolean>>
-
-  chatSettings: ChatSettings
-  setChatSettings: React.Dispatch<React.SetStateAction<ChatSettings>>
 
   rateLimitStatus: RateLimitStatus | null
   setRateLimitStatus: React.Dispatch<
@@ -85,16 +83,6 @@ export const MayuraContext = createContext<MayuraContextProps>({
   isMessageModalOpen: false,
   setIsMessageModalOpen: () => {},
 
-  chatSettings: {
-    model: "gpt-4",
-    prompt: "You are a helpful AI assistant.",
-    temperature: 0.5,
-    contextLength: 4096,
-    includeProfileContext: true,
-    embeddingsProvider: "openai"
-  },
-  setChatSettings: () => {},
-
   rateLimitStatus: null,
   setRateLimitStatus: () => {},
 
@@ -103,9 +91,9 @@ export const MayuraContext = createContext<MayuraContextProps>({
 })
 
 export function MayuraProvider({ children }: { children: React.ReactNode }) {
-  const [profile, setProfile] = useState<Tables<"profiles"> | null>(null)
-  const [chats, setChats] = useState<Tables<"chats">[]>([])
-  const [selectedChat, setSelectedChat] = useState<Tables<"chats"> | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [chats, setChats] = useState<Chat[]>([])
+  const [selectedChat, setSelectedChat] = useState<Chat | null>(null)
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [firstTokenReceived, setFirstTokenReceived] = useState(false)
@@ -115,14 +103,6 @@ export function MayuraProvider({ children }: { children: React.ReactNode }) {
   const [isAtPickerOpen, setIsAtPickerOpen] = useState(false)
   const [isToolPickerOpen, setIsToolPickerOpen] = useState(false)
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false)
-  const [chatSettings, setChatSettings] = useState<ChatSettings>({
-    model: "gpt-4",
-    prompt: "You are a helpful AI assistant.",
-    temperature: 0.5,
-    contextLength: 4096,
-    includeProfileContext: true,
-    embeddingsProvider: "openai"
-  })
   const [rateLimitStatus, setRateLimitStatus] =
     useState<RateLimitStatus | null>(null)
   const [rateLimitRefreshTrigger, setRateLimitRefreshTrigger] =
@@ -158,8 +138,6 @@ export function MayuraProvider({ children }: { children: React.ReactNode }) {
         setIsToolPickerOpen,
         isMessageModalOpen,
         setIsMessageModalOpen,
-        chatSettings,
-        setChatSettings,
         rateLimitStatus,
         setRateLimitStatus,
         rateLimitRefreshTrigger,

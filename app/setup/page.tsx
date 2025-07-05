@@ -1,8 +1,7 @@
 "use client"
 
 import { MayuraContext } from "@/context/context"
-import { getProfileByUserId, updateProfile } from "@/db/profile"
-import { supabase } from "@/lib/supabase/browser-client"
+import { useAuth } from "@/context/auth-context"
 import { useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
 import { FinishStep } from "../../components/setup/finish-step"
@@ -12,14 +11,17 @@ import {
   StepContainer
 } from "../../components/setup/step-container"
 
+// API base URL for backend calls
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
+
 export default function SetupPage() {
   const { profile, setProfile } = useContext(MayuraContext)
+  const { user, loading: authLoading, getToken } = useAuth()
 
   const router = useRouter()
 
   const [loading, setLoading] = useState(true)
   const [currentStep, setCurrentStep] = useState(1)
-  const [currentUserId, setCurrentUserId] = useState<string>("")
 
   const [username, setUsername] = useState("")
   const [usernameAvailable, setUsernameAvailable] = useState(false)
@@ -28,42 +30,93 @@ export default function SetupPage() {
   useEffect(() => {
     ;(async () => {
       try {
-        const session = (await supabase.auth.getSession()).data.session
+        if (authLoading) return
 
-        if (!session) {
+        if (!user) {
           return router.push("/login")
         }
 
-        const user = session.user
-        setCurrentUserId(user.id)
-
-        const profile = await getProfileByUserId(user.id)
-
-        if (!profile) {
-          console.error("Profile not found")
-          setLoading(false)
-          return
-        }
-
-        setProfile(profile)
-        setUsername(profile.username || "")
-        setDisplayName(profile.display_name || "")
-
-        if (profile.username) {
-          setUsernameAvailable(true)
-        }
-
-        if (profile.has_onboarded) {
+        // Anonymous users don't need setup - redirect to chat
+        if (user.isAnonymous) {
+          // console.log("👤 Anonymous user accessing setup page, redirecting to chat")
           return router.push("/chat")
         }
 
-        setLoading(false)
+        const token = await getToken()
+        if (!token) {
+          return router.push("/login")
+        }
+
+        try {
+          // Get profile from backend
+          const response = await fetch(`${API_BASE_URL}/v1/profiles/by-user-id/${user.uid}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          })
+
+          if (!response.ok) {
+            if (response.status === 404) {
+              // No profile exists, create one
+              const displayName = user.displayName || 
+                                 user.email?.split("@")[0] || 
+                                 "New User"
+              
+              const createResponse = await fetch(`${API_BASE_URL}/v1/profiles`, {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  user_id: user.uid,
+                  username: `user_${user.uid.slice(0, 8)}`,
+                  display_name: displayName,
+                  profile_context: "Welcome to Mayura!",
+                  has_onboarded: false
+                })
+              })
+
+              if (!createResponse.ok) {
+                throw new Error(`Failed to create profile: ${createResponse.statusText}`)
+              }
+
+              const newProfile = await createResponse.json()
+              setProfile(newProfile)
+              setUsername(newProfile.username || "")
+              setDisplayName(newProfile.display_name || "")
+              setUsernameAvailable(true)
+              setLoading(false)
+              return
+            }
+            throw new Error(`Failed to fetch profile: ${response.statusText}`)
+          }
+
+          const existingProfile = await response.json()
+          setProfile(existingProfile)
+          setUsername(existingProfile.username || "")
+          setDisplayName(existingProfile.display_name || "")
+
+          if (existingProfile.username) {
+            setUsernameAvailable(true)
+          }
+
+          if (existingProfile.has_onboarded) {
+            return router.push("/chat")
+          }
+
+          setLoading(false)
+        } catch (error) {
+          console.error("Error fetching/creating profile:", error)
+          setLoading(false)
+        }
       } catch (error) {
         console.error("Error in setup page:", error)
         setLoading(false)
       }
     })()
-  }, [router, setProfile])
+  }, [user, authLoading, router, setProfile, getToken])
 
   const handleShouldProceed = (proceed: boolean) => {
     if (proceed) {
@@ -78,18 +131,40 @@ export default function SetupPage() {
   }
 
   const handleSaveSetupSetting = async () => {
-    if (!profile) return
+    if (!profile || !user) return
 
-    const updatedProfile = await updateProfile(profile.id, {
-      ...profile,
-      username,
-      display_name: displayName,
-      has_onboarded: true
-    })
+    try {
+      const token = await getToken()
+      if (!token) {
+        router.push("/login")
+        return
+      }
 
-    setProfile(updatedProfile)
+      const response = await fetch(`${API_BASE_URL}/v1/profiles/${user.uid}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...profile,
+          username,
+          display_name: displayName,
+          has_onboarded: true
+        })
+      })
 
-    router.push("/chat")
+      if (!response.ok) {
+        throw new Error(`Failed to update profile: ${response.statusText}`)
+      }
+
+      const updatedProfile = await response.json()
+      setProfile(updatedProfile)
+
+      router.push("/chat")
+    } catch (error) {
+      console.error("Error updating profile:", error)
+    }
   }
 
   const renderStep = (stepNum: number) => {
@@ -109,7 +184,7 @@ export default function SetupPage() {
               username={username}
               usernameAvailable={usernameAvailable}
               displayName={displayName}
-              currentUserId={currentUserId}
+              currentUserId={user?.uid || ""}
               onUsernameAvailableChange={setUsernameAvailable}
               onUsernameChange={setUsername}
               onDisplayNameChange={setDisplayName}
@@ -136,7 +211,7 @@ export default function SetupPage() {
     }
   }
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="flex h-full items-center justify-center bg-black">
         <div className="flex flex-col items-center space-y-4">

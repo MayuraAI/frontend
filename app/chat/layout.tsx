@@ -1,50 +1,116 @@
 "use client"
 
-import { Dashboard } from "@/components/ui/dashboard"
 import { MayuraContext } from "@/context/context"
+import { useAuth } from "@/context/auth-context"
 import { getChatsByUserId } from "@/db/chats"
-import { supabase } from "@/lib/supabase/browser-client"
-import { useRouter, useSearchParams } from "next/navigation"
-import { ReactNode, useContext, useEffect, useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Loader2 } from "lucide-react"
 import { getProfileByUserId } from "@/db/profile"
+import { Dashboard } from "@/components/ui/dashboard"
+import { useRouter, useSearchParams } from "next/navigation"
+import { ReactNode, useContext, useEffect, useState, Suspense, useCallback } from "react"
+import { getCurrentUser, signInAnonymouslyUser } from "@/lib/firebase/auth"
 
 interface ChatLayoutProps {
   children: ReactNode
 }
 
-export default function ChatLayout({ children }: ChatLayoutProps) {
+export default function ChatLayout({
+  children
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ChatLayoutContent>{children}</ChatLayoutContent>
+    </Suspense>
+  )
+}
+
+function ChatLayoutContent({
+  children
+}: {
+  children: React.ReactNode
+}) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const chatId = searchParams.get("id")
+  const { user, loading: authLoading } = useAuth()
 
-  const { profile, setProfile, setChats, chats, setSelectedChat, setChatSettings } =
+  const { profile, setProfile, setChats, chats, setSelectedChat } =
     useContext(MayuraContext)
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isSigningInAnonymously, setIsSigningInAnonymously] = useState(false)
+
+  const fetchChatData = useCallback(async (userId: string) => {
+    if (!setChats) {
+      throw new Error("Required context functions are not available")
+    }
+
+    setLoading(true)
+    try {
+      const chats = await getChatsByUserId(userId)
+      setChats(Array.isArray(chats) ? chats : [])
+      setLoading(false)
+    } catch (error) {
+      console.error("Error fetching chat data:", error)
+      setError(error instanceof Error ? error.message : "Unknown error")
+      setChats([])
+      setLoading(false)
+    }
+  }, [setChats])
 
   useEffect(() => {
     const loadProfile = async () => {
-      if (!profile) {
-        setLoading(true)
-        const session = (await supabase.auth.getSession()).data.session
-      if (!session) {
-        return router.push("/login")
-      }
-      const profile = await getProfileByUserId(session.user.id)
-        setProfile(profile)
+      // Skip profile loading for anonymous users
+      if (user && user.isAnonymous) {
+        setLoading(false)
         return
       }
+      
+      if (!profile && user && !user.isAnonymous) {
+        setLoading(true)
+        try {
+          const userProfile = await getProfileByUserId(user.uid)
+          setProfile(userProfile)
+        } catch (error) {
+          console.error("Error loading profile:", error)
+        }
+      }
     }
+    
+    if (authLoading || isSigningInAnonymously) return
+    
+    // Sign in anonymously only after we are sure there's no user and auth has fully initialized
+    if (!user && !authLoading && !isSigningInAnonymously) {
+      // console.log("👤 No user found after auth loading. Signing in anonymously...")
+      setIsSigningInAnonymously(true)
+      signInAnonymouslyUser()
+        .then(() => {
+          // console.log("✅ Successfully signed in anonymously")
+          setIsSigningInAnonymously(false)
+        })
+        .catch((error) => {
+          console.error("❌ Error signing in anonymously:", error)
+          setIsSigningInAnonymously(false)
+          router.push("/login")
+        })
+    }
+
+
     loadProfile()
 
-    if (profile) {
-      fetchChatData(profile.user_id)
+    // Fetch chat data for all users (authenticated and anonymous)
+    if (user) {
+      if (user.isAnonymous) {
+        // For anonymous users, fetch chats using their Firebase anonymous UID
+        fetchChatData(user.uid)
+      } else if (profile) {
+        // For authenticated users with profiles, use profile user_id
+        fetchChatData(profile.user_id)
+      }
     }
-  }, [profile, router])
+  }, [profile, user, authLoading, router, setProfile, setChats, fetchChatData, isSigningInAnonymously])
 
   useEffect(() => {
     if (chatId && chats.length > 0) {
@@ -55,90 +121,44 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
     }
   }, [chatId, chats, setSelectedChat])
 
-  const fetchChatData = async (userId: string) => {
-    if (!setChats || !setChatSettings) {
-      throw new Error("Required context functions are not available")
+  // Function to refetch chats (useful when new chats are created)
+  const refetchChats = useCallback(() => {
+    if (user) {
+      if (user.isAnonymous) {
+        fetchChatData(user.uid)
+      } else if (profile) {
+        fetchChatData(profile.user_id)
+      }
     }
+  }, [user, profile, fetchChatData])
 
-    setLoading(true)
-    try {
-      setChatSettings({
-        model: "gpt-4",
-        prompt: "You are a helpful AI assistant.",
-        temperature: 0.5,
-        contextLength: 4096,
-        includeProfileContext: true,
-        embeddingsProvider: "openai"
-      })
+  // Add refetchChats to context (if needed)
+  // This can be used by chat handler when new chats are created
 
-      const chats = await getChatsByUserId(userId)
-      setChats(chats)
-
-      setLoading(false)
-    } catch (error) {
-      console.error("Error fetching chat data:", error)
-      setError(error instanceof Error ? error.message : "Unknown error")
-      setLoading(false)
-    }
-  }
-
-  if (loading || !profile) {
+  if (authLoading || loading || isSigningInAnonymously) {
     return (
-      <div className="bg-background flex h-screen items-center justify-center">
-        <Card className="w-96">
-          <CardContent className="p-6">
-            <div className="flex flex-col items-center space-y-4">
-              <Loader2 className="text-primary size-8 animate-spin" />
-              <div className="text-center">
-                <h3 className="text-foreground text-lg font-semibold">Loading your chats...</h3>
-                <p className="text-muted-foreground text-sm">
-                  Please wait while we set everything up
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="flex h-full items-center justify-center bg-black">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="text-xl font-semibold text-white">
+            {isSigningInAnonymously ? "Setting up anonymous session..." : "Loading..."}
+          </div>
+          <div className="size-8 animate-spin rounded-full border-y-2 border-violet-500"></div>
+        </div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="bg-background flex h-screen items-center justify-center">
-        <Card className="w-96">
-          <CardContent className="p-6">
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-red-400">Error</h3>
-              <p className="text-muted-foreground text-sm">{error}</p>
-              <button
-                onClick={() => window.location.reload()}
-                className="bg-primary text-primary-foreground hover:bg-primary/90 mt-4 rounded px-4 py-2"
-              >
-                Try Again
-              </button>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="flex h-full items-center justify-center bg-black">
+        <div className="text-xl font-semibold text-red-400">Error: {error}</div>
       </div>
     )
   }
 
-  // if (!profile) {
-  //   return (
-  //     <div className="bg-background flex h-screen items-center justify-center">
-  //       <Card className="w-96">
-  //         <CardContent className="p-6">
-  //           <div className="text-center">
-  //             <h3 className="text-foreground text-lg font-semibold">Profile Required</h3>
-  //             <p className="text-muted-foreground text-sm">
-  //               Please complete your profile setup first.
-  //             </p>
-  //           </div>
-  //         </CardContent>
-  //       </Card>
-  //     </div>
-  //   )
-  // }
-
-  return <Dashboard>{children}</Dashboard>
+  return (
+    <Dashboard>
+      {children}
+    </Dashboard>
+  )
 }

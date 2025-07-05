@@ -2,9 +2,10 @@
 
 import { FC, ReactNode, useContext, useEffect } from "react"
 import { MayuraContext } from "@/context/context"
+import { useAuth } from "@/context/auth-context"
 import { getProfileByUserId } from "@/db/profile"
-import { supabase } from "@/lib/supabase/browser-client"
 import { useRouter } from "next/navigation"
+import { getCurrentUser } from "@/lib/firebase/auth"
 
 interface GlobalStateProps {
   children: ReactNode
@@ -12,6 +13,7 @@ interface GlobalStateProps {
 
 export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const router = useRouter()
+  const { user, loading: authLoading } = useAuth()
   const {
     profile,
     setProfile,
@@ -25,31 +27,75 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
     setIsGenerating,
     isMessageModalOpen,
     setIsMessageModalOpen,
-    setChatSettings
   } = useContext(MayuraContext)
 
   // Load initial data
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        const session = (await supabase.auth.getSession()).data.session
-        if (!session) {
-          console.log("No session found, redirecting to login")
-          return router.push("/login")
+        if (authLoading) {
+          // console.log("🔄 Auth still loading...")
+          return
         }
 
-        // Load profile
-        const profile = await getProfileByUserId(session.user.id)
-        if (profile) {
-          setProfile(profile)
+        if (!user) {
+          // console.log("❌ No user found in global state")
+          setProfile(null)
+          setChats([]) // Ensure chats are empty array when no user
+          return
+        }
+
+        // Skip profile loading for anonymous users but load their chats
+        if (user.isAnonymous) {
+          // console.log("👤 Anonymous user, skipping profile loading")
+          setProfile(null)
+          // Load chats for anonymous users using their Firebase anonymous UID
+          // This will be handled by the chat layout component
+          return
+        }
+
+        // Only load profile if we don't have one yet
+        if (!profile) {
+          // console.log("📡 Loading profile for user:", user.uid)
+          try {
+            const userProfile = await getProfileByUserId(user.uid)
+            if (userProfile) {
+              // console.log("✅ Profile loaded in global state:", userProfile)
+              setProfile(userProfile)
+              
+              // If profile exists but user hasn't onboarded, they should be on setup page
+              if (!userProfile.has_onboarded && window.location.pathname !== "/setup" && getCurrentUser()?.emailVerified) {
+                // console.log("🚀 User hasn't onboarded, should be on setup page")
+                router.push("/setup")
+                return
+              }
+            } else {
+              // console.log("⚠️ No profile found for user, should create one or redirect to setup")
+              setProfile(null)
+              // Only redirect to setup if user is not anonymous and not already on setup page
+              if (!user.isAnonymous && window.location.pathname !== "/setup" && getCurrentUser()?.emailVerified) {
+                // console.log("🚀 Redirecting to setup user profile slgdjoahg")
+                router.push("/setup")
+                return
+              }
+            }
+          } catch (error) {
+            console.error("❌ Error loading profile in global state:", error)
+            setProfile(null)
+          }
+        } else {
+          // console.log("✅ Profile already loaded:", profile.username)
         }
       } catch (error) {
-        console.error("Error loading initial data:", error)
+        console.error("❌ Error in global state loadInitialData:", error)
+        // Ensure clean state on error
+        setProfile(null)
+        setChats([])
       }
     }
 
     loadInitialData()
-  }, [router, setProfile])
+  }, [user, authLoading, router, setProfile, setChats, profile])
 
   // Clear state on page unload
   useEffect(() => {
@@ -60,14 +106,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
       setChatMessages([])
       setIsGenerating(false)
       setIsMessageModalOpen(false)
-      setChatSettings({
-        model: "gpt-4",
-        prompt: "You are a helpful AI assistant.",
-        temperature: 0.5,
-        contextLength: 4096,
-        includeProfileContext: true,
-        embeddingsProvider: "openai"
-      })
     }
 
     window.addEventListener("beforeunload", handleBeforeUnload)
@@ -82,7 +120,6 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
     setChatMessages,
     setIsGenerating,
     setIsMessageModalOpen,
-    setChatSettings
   ])
 
   return <>{children}</>

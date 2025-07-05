@@ -1,36 +1,44 @@
+import { getIdToken } from "@/lib/firebase/auth"
 import { RateLimitStatus } from "@/types/rate-limit"
 
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
+
+export const getRateLimitStatus = async (): Promise<RateLimitStatus | null> => {
+  try {
+    const token = await getIdToken()
+    if (!token) {
+      console.error("No authentication token available for rate limit check")
+      return null
+    }
+
+    const response = await fetch(`${API_BASE_URL}/v1/rate-limit-status`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!response.ok) {
+      console.error(`Rate limit status request failed: ${response.status} ${response.statusText}`)
+      return null
+    }
+
+    const data = await response.json()
+    
+    // Handle null or invalid response from backend
+    if (!data || typeof data !== 'object') {
+      console.error("Invalid rate limit response from backend:", data)
+      return null
+    }
+
+    return data as RateLimitStatus
+  } catch (error) {
+    console.error("Error fetching rate limit status:", error)
+    return null
+  }
+}
 
 export class RateLimitService {
-  static async getRateLimitStatus(token: string): Promise<RateLimitStatus> {
-    try {
-      const response = await fetch(`/api/rate-limit-status`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      })
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error("Authentication failed")
-        }
-        throw new Error(
-          `Failed to fetch rate limit status: ${response.statusText}`
-        )
-      }
-
-      const data = await response.json()
-      return data
-    } catch (error) {
-      console.error("Error fetching rate limit status:", error)
-      throw error
-    }
-  }
-
   static parseRateLimitHeaders(headers: Headers): Partial<RateLimitStatus> {
     return {
       daily_limit: parseInt(headers.get("X-RateLimit-Limit") || "0"),

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import {
   ArrowRight,
   Brain,
@@ -15,37 +16,60 @@ import {
   Lightbulb,
   DollarSign as DollarSignIcon,
   MessageSquare,
-  Route
+  Route,
+  Send
 } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/lib/supabase/browser-client"
+import { useAuth } from "@/context/auth-context"
 import { AIRoutingAnimation } from "@/components/hero/ai-routing-animation"
+import { signInAnonymouslyUser, isAnonymousUser } from "@/lib/firebase/auth"
+
+const FREE_PROMPTS_COUNT = 5
 
 export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [heroPrompt, setHeroPrompt] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
+  const { user, loading } = useAuth()
 
-  // Check if user is authenticated and redirect accordingly
-  useEffect(() => {
-    const checkAuthAndRedirect = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession()
-        
-        if (session?.user) {
-          router.push("/chat")
-        }
-      } catch (error) {
-        console.log("Error checking authentication status")
-      }
-    }
-
-    checkAuthAndRedirect()
-  }, [router])
+  // Don't auto-redirect - let users choose their path
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index)
+  }
+
+  const handleTryWithFreeRequests = async () => {
+    try {
+      await signInAnonymouslyUser()
+      router.push("/chat")
+    } catch (error) {
+      console.error("Error signing in anonymously:", error)
+    }
+  }
+
+  const handleHeroPromptSubmit = async (e?: React.FormEvent, promptText?: string) => {
+    if (e) {
+      e.preventDefault()
+    }
+    
+    const promptToSubmit = samplePromptsMap[promptText as keyof typeof samplePromptsMap] || heroPrompt.trim()
+    if (!promptToSubmit || isSubmitting) return
+
+    setIsSubmitting(true)
+    try {
+      // Store the prompt in localStorage to be picked up by the chat page
+      localStorage.setItem('heroPrompt', promptToSubmit)
+      
+      // Navigate to chat
+      router.push("/chat")
+    } catch (error) {
+      console.error("Error handling hero prompt:", error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const faqs = [
@@ -57,7 +81,7 @@ export default function HomePage() {
     {
       question: "What models are available in the Free tier?",
       answer:
-        "The Free tier includes access to high-quality models including Llama 3.3 70B, DeepSeek R1, Qwen 3 32B, Gemma 2 9B, and more. You get unlimited access to these standard models plus 10 Pro requests daily for premium models."
+        "The Free tier includes access to high-quality models including Llama 3.3 70B, DeepSeek R1, Qwen 3 32B, Gemma 2 9B, and more. You get unlimited access to these standard models plus 5 Pro requests daily for premium models."
     },
     {
       question: "What premium models are available with Pro requests?",
@@ -91,10 +115,28 @@ export default function HomePage() {
     }
   ]
 
+  const samplePromptsMap = {
+    "Debug my code": `
+    Debug my code
+
+    def say_hello():
+      print("Hello" + name + ", Welcome to Mayura!")
+    `,
+    "Create a website": `
+    Create a beautiful landing page for a chatbot using html and css.
+    `,
+    "Write an email": `
+    Write an email to the devs of Mayura to appreciate their product.
+    `,
+    "Explain a concept": `
+    Explain a concept of prompt routing.
+    `
+  }
+
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-black via-slate-900 to-black">
+    <div className="min-h-screen w-full">
       {/* Header */}
-      <header className="flex w-full items-center justify-between border-b border-slate-700 bg-black/20 p-6 shadow-sm backdrop-blur-sm">
+      <header className="flex w-full items-center justify-between border-b border-slate-700 bg-transparent p-6 shadow-sm backdrop-blur-sm">
           <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <img 
@@ -130,65 +172,117 @@ export default function HomePage() {
             FAQ
           </Link>
         <div className="flex items-center gap-4">
-          <Button asChild className="bg-violet-600 text-white hover:bg-violet-700">
-            <Link href="/chat">
-            Try Mayura Now <ArrowRight className="ml-2 size-4" />
-            </Link>
-          </Button>
+          {!loading && user && !isAnonymousUser() ? (
+            // Authenticated user - show Go to Chat
+            <Button onClick={() => router.push("/chat")} className="bg-violet-600 text-white hover:bg-violet-700">
+              Go to Chat <ArrowRight className="ml-2 size-4" />
+            </Button>
+          ) : (
+            // Anonymous or no user - show Try Free Requests
+            <Button onClick={() => router.push("/login")} className="bg-violet-600 text-white hover:bg-violet-700">
+              Sign In<ArrowRight className="ml-2 size-4" />
+            </Button>
+          )}
         </div>
         </nav>
       </header>
 
       <main className="w-full flex-1">
         {/* Hero Section */}
-        <section className="w-full px-6 py-16 md:py-24 lg:py-32">
-          <div className="container mx-auto py-12">
-            <div className="mx-auto flex flex-col items-center gap-12 md:flex-row md:items-stretch md:gap-20">
-              {/* Left: Hero Text */}
-              <div className="flex flex-1 flex-col justify-center space-y-6 text-center md:items-start md:justify-center md:text-left">
-                <div className="space-y-4">
-                  <h1
-                    className="relative select-text bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text pb-2 text-4xl font-bold text-transparent sm:text-5xl md:text-6xl lg:text-7xl"
-                  >
-                    <span className="hero-select-hide">One Prompt</span>{" "}<br />
-                    <span
-                      className="hero-select-show bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-500 bg-clip-text text-transparent drop-shadow-lg"
+        <section className="w-full px-6 py-24 md:py-32 lg:py-40">
+          <div className="container mx-auto max-w-7xl">
+            <div className="flex flex-col items-center gap-16 lg:flex-row lg:items-center lg:gap-24">
+              {/* Left: Hero Content */}
+              <div className="flex flex-1 flex-col items-center text-center lg:items-start lg:text-left">
+                {/* Main Headline */}
+                <h1 className="mb-6 text-4xl font-medium text-white sm:text-5xl lg:text-6xl xl:text-7xl leading-tight tracking-tight">
+                  What do you want to ask?
+                  <br />
+                  <span className="bg-gradient-to-r from-violet-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">We&apos;ll route it to the best AI.</span>
+                </h1>
+
+                {/* Input Section */}
+                <div className="w-full max-w-xl mb-8">
+                  {!loading && user && !isAnonymousUser() ? (
+                    // Authenticated user - show Go to Chat
+                    <Button 
+                      size="lg" 
+                      onClick={() => router.push("/chat")} 
+                      className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium text-lg py-4 h-auto rounded-xl"
                     >
-                      {"{ "}Right Model{" }"}
-                    </span><br />
-                    <span className="hero-select-hide bg-clip-text text-transparent">Every Time</span>
-                    <style jsx>{`
-                      .hero-select-hide::selection {
-                        color: white !important;
-                        background: white !important;
-                      }
-                      .hero-select-show::selection {
-                        color: #a21caf !important;
-                        background: white !important;
-                        -webkit-text-fill-color: #a21caf !important;
-                      }
-                    `}</style>
-                  </h1>
-                  <p className="mx-auto max-w-2xl text-lg text-slate-300 md:mx-0 md:text-lg lg:text-lg">
-                    Shoot your prompt, we&apos;ll route your prompt.
-                  </p>
-                </div>
-                <div className="flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
-                  <Button size="lg" asChild className="bg-violet-600 text-white hover:bg-violet-700">
-                    <Link href="/chat">
-                      <Zap className="mr-2 size-5" /> Try Mayura Now
-                    </Link>
-                  </Button>
-                  <Button size="lg" variant="outline" asChild className="border-violet-600 text-violet-400 hover:bg-violet-900/20">
-                    <Link href="#how-it-works">
-                      <Brain className="mr-2 size-5" /> Learn More
-                    </Link>
-                  </Button>
+                      Go to Chat
+                    </Button>
+                  ) : (
+                    <div className="space-y-4">
+                      {/* Label */}
+                      <div className="text-center lg:text-left">
+                        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-full px-4 py-2 mb-4">
+                          <Zap className="size-4 text-green-400" />
+                          <span className="text-sm font-medium text-green-300">
+                            Try now • <span className="font-bold uppercase">No signup required</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Input Form */}
+                      <form onSubmit={handleHeroPromptSubmit} className="relative">
+                        <div className="relative group">
+                          {/* Gradient Border Effect */}
+                          <div className="absolute -inset-1 bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                          
+                          {/* Input Container */}
+                          <div className="relative bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-600/50 shadow-xl">
+                            <Input
+                              value={heroPrompt}
+                              onChange={(e) => setHeroPrompt(e.target.value)}
+                              placeholder="Type your idea and we will bring it to life"
+                              className="w-full bg-transparent border-0 text-white placeholder:text-slate-400 text-lg py-8 px-8 pr-20 rounded-2xl focus:ring-0 h-auto"
+                              disabled={isSubmitting}
+                            />
+                            <Button 
+                              type="submit" 
+                              disabled={!heroPrompt.trim() || isSubmitting}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium px-4 py-3 rounded-xl h-auto disabled:opacity-50 transition-all duration-200"
+                            >
+                              {isSubmitting ? (
+                                <div className="flex items-center">
+                                  <div className="size-4 animate-spin rounded-full border-2 border-white/20 border-t-white"></div>
+                                </div>
+                              ) : (
+                                <ArrowRight className="size-4" />
+                              )}
+                            </Button>
+                          </div>
+                        </div>
+                      </form>
+
+                      {/* Sample Prompts */}
+                      <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+                        {[
+                          "Debug my code",
+                          "Create a website",
+                          "Write an email",
+                          "Explain a concept"
+                        ].map((prompt, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleHeroPromptSubmit(undefined, prompt)}
+                            className="px-3 py-1.5 text-sm text-slate-400 hover:text-white transition-colors border border-slate-700 rounded-full hover:border-slate-600"
+                          >
+                            {prompt}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
+
               {/* Right: Animation */}
-              <div className="flex min-w-[340px] flex-1 items-center justify-center">
-                <AIRoutingAnimation />
+              <div className="flex flex-1 items-center justify-center lg:justify-end scale-110">
+                <div className="w-full max-w-md">
+                  <AIRoutingAnimation />
+                </div>
               </div>
             </div>
           </div>
@@ -207,7 +301,7 @@ export default function HomePage() {
             </div>
             <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
               {/* Step 1 */}
-              <Card className="flex flex-col items-center border-slate-700 bg-black/30 p-6 text-center shadow-sm backdrop-blur-sm">
+              <Card className="flex flex-col items-center border-slate-700 bg-black/10 p-6 text-center shadow-sm backdrop-blur-sm">
                 <CardHeader className="flex flex-col items-center pb-4">
                   <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-violet-600 text-white">
                     <MessageSquare className="size-7" />
@@ -223,7 +317,7 @@ export default function HomePage() {
                 </CardContent>
               </Card>
               {/* Step 2 */}
-              <Card className="flex flex-col items-center border-slate-700 bg-black/30 p-6 text-center shadow-sm backdrop-blur-sm">
+              <Card className="flex flex-col items-center border-slate-700 bg-black/10 p-6 text-center shadow-sm backdrop-blur-sm">
                 <CardHeader className="flex flex-col items-center pb-4">
                   <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-violet-600 text-white">
                     <Route className="size-7" />
@@ -242,7 +336,7 @@ export default function HomePage() {
                 </CardContent>
               </Card>
               {/* Step 3 */}
-              <Card className="flex flex-col items-center border-slate-700 bg-black/30 p-6 text-center shadow-sm backdrop-blur-sm">
+              <Card className="flex flex-col items-center border-slate-700 bg-black/10 p-6 text-center shadow-sm backdrop-blur-sm">
                 <CardHeader className="flex flex-col items-center pb-4">
                   <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-violet-600 text-white">
                     <Lightbulb className="size-7" />
@@ -273,7 +367,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2 lg:grid-cols-3">
-              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <Star className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Higher Quality Results</CardTitle>
@@ -285,7 +379,7 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <Clock className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Faster Responses</CardTitle>
@@ -297,7 +391,7 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <DollarSignIcon className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Lower Costs</CardTitle>
@@ -309,7 +403,7 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <Zap className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Simplified Workflow</CardTitle>
@@ -321,7 +415,7 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <Rocket className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Future-Proof</CardTitle>
@@ -333,7 +427,7 @@ export default function HomePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <Brain className="mb-2 size-8 text-violet-400" />
                   <CardTitle className="text-white">Focus on Your Work</CardTitle>
@@ -403,7 +497,7 @@ export default function HomePage() {
             </div>
             <div className="mx-auto grid max-w-4xl items-start gap-8 md:grid-cols-2">
               {/* Free Plan */}
-              <Card className="flex h-full flex-col border-slate-700 bg-black/30 shadow-sm backdrop-blur-sm">
+              <Card className="flex h-full flex-col border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-2xl font-bold text-white">Free</h3>
@@ -430,7 +524,7 @@ export default function HomePage() {
                       <li className="flex items-start gap-3">
                         <CheckCircle className="size-5 shrink-0 text-violet-400" />
                         <div>
-                          <strong className="text-white">10 Pro Requests / day</strong>
+                          <strong className="text-white">5 Pro Requests / day</strong>
                           <p className="text-xs text-slate-400">
                             Access premium models like Gemini 2.5 Pro, Gemini 2.5 Flash Preview
                           </p>
@@ -458,7 +552,7 @@ export default function HomePage() {
               </Card>
 
               {/* Pro Plan */}
-              <Card className="relative flex h-full flex-col border-2 border-slate-600 bg-black/20 opacity-80 shadow-sm backdrop-blur-sm">
+              <Card className="relative flex h-full flex-col border-2 border-slate-600 bg-black/10 opacity-80 shadow-sm backdrop-blur-sm">
                 <div className="absolute -top-4 left-1/2 w-fit -translate-x-1/2 rounded-full bg-slate-600 px-4 py-1 text-sm font-medium text-slate-300">
                   Coming Soon
                 </div>
@@ -609,7 +703,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="w-full border-t border-slate-700 bg-black/30 py-12 backdrop-blur-sm">
+      <footer className="w-full border-t border-slate-700 bg-transparent py-12 backdrop-blur-sm">
   <div className="container mx-auto space-y-16 px-6">
     
     {/* Row 1: Branding + Navigation */}

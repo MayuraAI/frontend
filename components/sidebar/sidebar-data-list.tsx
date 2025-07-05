@@ -1,5 +1,5 @@
 import { MayuraContext } from "@/context/context"
-import { Tables } from "@/supabase/types"
+import { Chat } from "@/db/chats"
 import { cn } from "@/lib/utils"
 import { ContentType, DataItemType, DataListType } from "@/types"
 import { FC, useContext, useEffect, useRef, useState } from "react"
@@ -21,7 +21,7 @@ export const SidebarDataList: FC<SidebarDataListProps> = ({
     contentType: ContentType,
     item: DataItemType
   ) => {
-    return <ChatItem key={item.id} chat={item as Tables<"chats">} />
+    return <ChatItem key={item.id} chat={item as Chat} />
   }
 
   const getSortedData = (

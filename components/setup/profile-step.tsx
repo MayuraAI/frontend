@@ -5,7 +5,7 @@ import {
   PROFILE_USERNAME_MAX,
   PROFILE_USERNAME_MIN
 } from "@/db/limits"
-import { supabase } from "@/lib/supabase/browser-client"
+import { useAuth } from "@/context/auth-context"
 import {
   IconCircleCheckFilled,
   IconCircleXFilled,
@@ -14,6 +14,9 @@ import {
 import { FC, useCallback, useState } from "react"
 import { LimitDisplay } from "../ui/limit-display"
 import { toast } from "sonner"
+
+// API base URL for backend calls
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
 
 interface ProfileStepProps {
   username: string
@@ -35,6 +38,7 @@ export const ProfileStep: FC<ProfileStepProps> = ({
   onDisplayNameChange
 }) => {
   const [loading, setLoading] = useState(false)
+  const { getToken } = useAuth()
 
   const debounce = (func: (...args: any[]) => void, wait: number) => {
     let timeout: NodeJS.Timeout | null
@@ -75,23 +79,39 @@ export const ProfileStep: FC<ProfileStepProps> = ({
 
       setLoading(true)
 
-      // Use the Supabase function to check username availability
-      const { data, error } = await supabase.rpc('check_username_available', {
-        username_to_check: username,
-        user_id_to_check: currentUserId || ''
-      })
+      try {
+        const token = await getToken()
+        if (!token) {
+          onUsernameAvailableChange(false)
+          setLoading(false)
+          return
+        }
 
-      if (error) {
-        console.error(error)
+        // Use our backend API to check username availability
+        const response = await fetch(`${API_BASE_URL}/v1/profiles/username-availability-check?username=${username}&exclude_user_id=${currentUserId || ''}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+
+        if (!response.ok) {
+          console.error('Error checking username availability:', response.statusText)
+          onUsernameAvailableChange(false)
+          setLoading(false)
+          return
+        }
+
+        const data = await response.json()
+        onUsernameAvailableChange(data.available)
+        setLoading(false)
+      } catch (error) {
+        console.error('Error checking username availability:', error)
         onUsernameAvailableChange(false)
         setLoading(false)
-        return
       }
-
-      onUsernameAvailableChange(!!data)
-      setLoading(false)
     }, 500),
-    [currentUserId, onUsernameAvailableChange]
+    [currentUserId, onUsernameAvailableChange, getToken]
   )
 
   return (

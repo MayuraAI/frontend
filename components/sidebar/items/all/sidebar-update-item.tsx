@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/sheet"
 import { MayuraContext } from "@/context/context"
 import { updateChat } from "@/db/chats"
-import { Tables } from "@/supabase/types"
-import { ContentType, DataItemType, TablesUpdate } from "@/types"
+import { Chat } from "@/db/chats"
+import { ContentType, DataItemType } from "@/types"
 import { FC, useContext, useRef, useState } from "react"
 import { toast } from "sonner"
 import { SidebarDeleteItem } from "./sidebar-delete-item"
@@ -43,12 +43,13 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
   }
 
   const updateFunctions = {
-    chats: async (chat: TablesUpdate<"chats">) => {
-      if (!chat.id) return
-      const updatedChat = await updateChat(chat.id, chat)
+    chats: async (chatUpdate: { id: string; name?: string; sharing?: string }) => {
+      if (!chatUpdate.id) return
+      const { id, ...updateData } = chatUpdate
+      const updatedChat = await updateChat(id, updateData)
       setChats(prevState =>
         prevState.map(prevChat =>
-          prevChat.id === chat.id ? { ...prevChat, ...updatedChat } : prevChat
+          prevChat.id === id ? { ...prevChat, ...updatedChat } : prevChat
         )
       )
     }

@@ -3,15 +3,25 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 })
 
 const withPWA = require("next-pwa")({
-  dest: "public"
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  register: true,
+  skipWaiting: true,
 })
 
 module.exports = withBundleAnalyzer(
   withPWA({
     reactStrictMode: true,
     output: 'standalone',
-    // This is required to support PostHog trailing slash API requests
     skipTrailingSlashRedirect: true,
+    async rewrites() {
+      return [
+        {
+          source: "/resqW/:path*",
+          destination: "https://us.i.posthog.com/:path*",
+        },
+      ];
+    },
     images: {
       remotePatterns: [
         {
@@ -39,33 +49,6 @@ module.exports = withBundleAnalyzer(
           fullySpecified: false
         }
       })
-
-      // Handle JSON files
-      config.module.rules = config.module.rules.map((rule) => {
-        if (rule.test?.test?.('.json')) {
-          return {
-            ...rule,
-            type: 'javascript/auto'
-          }
-        }
-        return rule
-      })
-
-      // Optimize chunks
-      if (!isServer) {
-        config.optimization = {
-          ...config.optimization,
-          splitChunks: {
-            chunks: 'all',
-            minSize: 20000,
-            maxSize: 70000,
-            cacheGroups: {
-              default: false,
-              vendors: false
-            }
-          }
-        }
-      }
 
       return config
     }

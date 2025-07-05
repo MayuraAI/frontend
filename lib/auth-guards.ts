@@ -1,75 +1,97 @@
-import { createClient } from "@/lib/supabase/server"
-import { cookies } from "next/headers"
+import { getCurrentUser, getIdToken } from "@/lib/firebase/auth"
 import { redirect } from "next/navigation"
 
+// API base URL for backend calls
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
+
 export async function requireAuth() {
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
+  const user = getCurrentUser()
 
-  const {
-    data: { session }
-  } = await supabase.auth.getSession()
-
-  if (!session) {
+  if (!user) {
     redirect("/login")
   }
 
-  return session
+  return user
 }
 
 export async function requireCompleteProfile() {
-  const session = await requireAuth()
-  const user = session.user
+  const user = await requireAuth()
+  
+  try {
+    const token = await getIdToken()
+    if (!token) {
+      redirect("/login")
+    }
 
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
+    // Call our backend API to get profile
+    const response = await fetch(`${API_BASE_URL}/v1/profiles/user/${user.uid}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
 
-  const { data: profile, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("user_id", user.id)
-    .single()
+    if (!response.ok) {
+      if (response.status === 404) {
+        redirect("/setup")
+      }
+      throw new Error(`Failed to fetch profile: ${response.statusText}`)
+    }
 
-  // If no profile exists or user hasn't completed onboarding
-  if (error && error.code === "PGRST116") {
+    const profile = await response.json()
+
+    // If profile exists but user hasn't completed onboarding
+    if (profile && !profile.has_onboarded) {
+      redirect("/setup")
+    }
+
+    return { user, profile }
+  } catch (error) {
+    console.error("Error checking profile:", error)
     redirect("/setup")
   }
-
-  if (profile && !profile.has_onboarded) {
-    redirect("/setup")
-  }
-
-  return { session, profile }
 }
 
 export async function getProfileStatus() {
   try {
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
+    const user = getCurrentUser()
 
-    const {
-      data: { session }
-    } = await supabase.auth.getSession()
-
-    if (!session) {
+    if (!user) {
       return { isAuthenticated: false, hasProfile: false, hasOnboarded: false }
     }
 
-    const { data: profile, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", session.user.id)
-      .single()
-
-    if (error && error.code === "PGRST116") {
-      return { isAuthenticated: true, hasProfile: false, hasOnboarded: false }
+    const token = await getIdToken()
+    if (!token) {
+      return { isAuthenticated: false, hasProfile: false, hasOnboarded: false }
     }
 
-    return {
-      isAuthenticated: true,
-      hasProfile: !!profile,
-      hasOnboarded: profile?.has_onboarded || false,
-      profile
+    try {
+      // Call our backend API to get profile
+      const response = await fetch(`${API_BASE_URL}/v1/profiles/user/${user.uid}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return { isAuthenticated: true, hasProfile: false, hasOnboarded: false }
+        }
+        throw new Error(`Failed to fetch profile: ${response.statusText}`)
+      }
+
+      const profile = await response.json()
+
+      return {
+        isAuthenticated: true,
+        hasProfile: !!profile,
+        hasOnboarded: profile?.has_onboarded || false,
+        profile
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error)
+      return { isAuthenticated: true, hasProfile: false, hasOnboarded: false }
     }
   } catch (error) {
     console.error("Error checking profile status:", error)

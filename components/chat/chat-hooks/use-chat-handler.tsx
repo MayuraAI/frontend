@@ -1,153 +1,147 @@
+"use client"
+
+import { useAuth } from "@/context/auth-context"
 import { MayuraContext } from "@/context/context"
-import { deleteMessagesIncludingAndAfter } from "@/db/messages"
-import { supabase } from "@/lib/supabase/browser-client"
 import { ChatMessage } from "@/types"
 import { useRouter } from "next/navigation"
-import { useContext, useRef } from "react"
+import { useContext, useRef, useState } from "react"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
-import {
-  handleCreateChat,
-  handleCreateMessages,
-  processResponse
-} from "../chat-helpers"
 import { useRateLimit } from "@/lib/hooks/use-rate-limit"
+import { isAnonymousUser } from "@/lib/firebase/auth"
+import { SignupPromptModal } from "@/components/ui/signup-prompt-modal"
+import { getChatsByUserId } from "@/db/chats"
+
+// API base URL for backend calls
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
 
 export const useChatHandler = () => {
+  const router = useRouter()
+  const { user, getToken } = useAuth()
+  const { refreshRateLimit, updateFromHeaders } = useRateLimit()
+  const [showSignupPrompt, setShowSignupPrompt] = useState(false)
+
   const {
-    profile,
-    chatSettings,
     userInput,
     setUserInput,
-    chatMessages,
-    setChatMessages,
+    profile,
     selectedChat,
     setSelectedChat,
-    setChats,
-    abortController,
-    setAbortController,
+    setChatMessages,
     setIsGenerating,
+    isGenerating,
     firstTokenReceived,
     setFirstTokenReceived,
-    refreshRateLimit
+    abortController,
+    setAbortController,
+    chats,
+    setChats,
+    rateLimitStatus
   } = useContext(MayuraContext)
 
-  const router = useRouter()
   const chatInputRef = useRef<HTMLTextAreaElement>(null)
-  const { updateFromHeaders, getStatusSummary } = useRateLimit()
+
+  const handleNewChat = () => {
+    setSelectedChat(null)
+    setChatMessages([])
+    setUserInput("")
+
+    return router.push("/chat")
+  }
 
   const handleFocusChatInput = () => {
-    if (chatInputRef.current) {
-      chatInputRef.current.focus()
-    }
-  }
-
-  const handleNewChat = async () => {
-    if (!profile) return
-
-    setChatMessages([])
-    setSelectedChat(null)
-    setUserInput("")
-    setIsGenerating(false)
-    setFirstTokenReceived(false)
-    router.push("/chat")
-  }
-
-  const handleStopMessage = () => {
-    if (abortController) {
-      abortController.abort()
-      setAbortController(null)
-      setIsGenerating(false)
-      setFirstTokenReceived(false)
-    }
+    chatInputRef.current?.focus()
   }
 
   const handleSendMessage = async (
     messageContent: string,
     chatMessages: ChatMessage[],
-    isRegeneration: boolean
+    isRegeneration: boolean = false
   ) => {
-    if (!profile) return
+    // Check if this is a new chat (no selectedChat initially)
+    const isNewChat = !selectedChat?.id && !isRegeneration
 
-    try {
-      setIsGenerating(true)
+    // Check if anonymous user has exhausted their quota
+    if (user && isAnonymousUser() && rateLimitStatus) {
+      if (rateLimitStatus.requests_remaining <= 0) {
+        setShowSignupPrompt(true)
+        return
+      }
+    }
 
-      const newAbortController = new AbortController()
-      setAbortController(newAbortController)
+    const startingInput = messageContent
+    setUserInput("")
+    setIsGenerating(true)
+    setFirstTokenReceived(false)
 
-      const tempUserMessage = {
+    // Create abort controller for this request
+    const newAbortController = new AbortController()
+    setAbortController(newAbortController)
+
+    // Prepare messages to send
+    let messagesToSend: ChatMessage[] = []
+
+    if (isRegeneration) {
+      // For regeneration, remove the last assistant message and use existing messages
+      const lastUserMessageIndex = chatMessages
+        .map((msg, index) => ({ msg, index }))
+        .filter(({ msg }) => msg.role === "user")
+        .pop()?.index
+
+      if (lastUserMessageIndex !== undefined) {
+        messagesToSend = chatMessages.slice(0, lastUserMessageIndex + 1)
+      }
+    } else {
+      // For new messages, add the user message to the UI immediately
+      const userMessage: ChatMessage = {
         id: uuidv4(),
         chat_id: selectedChat?.id || "",
-        user_id: profile.user_id,
+        user_id: user?.uid || "",
         content: messageContent,
         role: "user",
-        model_name: null,
-        sequence_number: chatMessages.length,
-        created_at: new Date().toISOString(),
-        updated_at: null
-      }
-
-      const tempAssistantMessage = {
-        id: uuidv4(),
-        chat_id: selectedChat?.id || "",
-        user_id: profile.user_id,
-        content: "",
-        role: "assistant",
-        model_name: null,
+        model_name: "",
         sequence_number: chatMessages.length + 1,
         created_at: new Date().toISOString(),
-        updated_at: null
+        updated_at: new Date().toISOString()
       }
 
-      const tempUserChatMessage: ChatMessage = { ...tempUserMessage }
-      const tempAssistantChatMessage: ChatMessage = {
-        ...tempAssistantMessage
+      messagesToSend = [...chatMessages, userMessage]
+    }
+
+    // Add placeholder assistant message to UI
+    const assistantMessage: ChatMessage = {
+      id: uuidv4(),
+      chat_id: selectedChat?.id || "",
+      user_id: user?.uid || "",
+      content: "",
+      role: "assistant",
+      model_name: "",
+      sequence_number: messagesToSend.length + 1,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }
+
+    const newMessages = [...messagesToSend, assistantMessage]
+    setChatMessages(newMessages)
+
+    try {
+      const token = await getToken()
+      if (!token) {
+        throw new Error("No authentication token available")
       }
 
-      if (!isRegeneration) {
-        setChatMessages(prev => [...prev, tempUserChatMessage])
-      }
-
-      setChatMessages(prev => [...prev, tempAssistantChatMessage])
-
-      const messages = isRegeneration
-        ? chatMessages
-        : [...chatMessages, tempUserChatMessage]
-
-      // Get the access token from Supabase session
-      const {
-        data: { session },
-        error: sessionError
-      } = await supabase.auth.getSession()
-
-      if (sessionError) {
-        throw new Error("Failed to get session: " + sessionError.message)
-      }
-
-      if (!session?.access_token) {
-        throw new Error("No valid session found. Please log in again.")
-      }
-
-      // filter only last 4 messages or all if less than 4
-      let messagesToSend = messages.slice(-4)
-      // slice content of the content of the messages if it exceeds 2000 characters
-      // remove think block in ◁think▷ and ◁/think▷
-      messagesToSend = messagesToSend.map(message => ({
-        ...message,
-        content: message.content.replace(/◁think▷.*?◁\/think▷/gs, "").slice(0, 2000)
-      }))
-
-      const response = await fetch("/api/chat", {
+      // Send request to backend - backend will handle chat creation and message saving
+      const response = await fetch(`${API_BASE_URL}/v1/complete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          messages: messagesToSend,
-          profile_context: chatSettings.includeProfileContext
-            ? profile.profile_context
-            : undefined
+          previous_messages: messagesToSend.slice(0, -1), // Don't send the placeholder assistant message
+          prompt: messageContent,
+          profile_context: (user && !isAnonymousUser()) ? profile?.profile_context : undefined,
+          chat_id: selectedChat?.id || undefined // Let backend create chat if no chat_id
         }),
         signal: newAbortController.signal
       })
@@ -158,161 +152,166 @@ export const useChatHandler = () => {
       refreshRateLimit()
 
       if (!response.ok) {
-        // Parse error response
-        let errorData: any = {}
-        try {
-          errorData = await response.json()
-        } catch {
-          // If response is not JSON, use default error message
-          errorData = { message: `Request failed with status ${response.status}` }
-        }
-
-        const errorMessage = errorData.message || errorData.error || `Request failed with status ${response.status}`
-
         if (response.status === 401) {
-          toast.error("Authentication failed", {
-            description: "Please log in again."
-          })
-          throw new Error("Authentication failed. Please log in again.")
+          toast.error("Authentication failed. Please log in again.")
+          router.push("/login")
+          return
         }
-        
+
         if (response.status === 429) {
-          // Show rate limit specific toast
-          const summary = getStatusSummary()
-          if (summary?.timeUntilReset) {
-            toast.error("Too many requests", {
-              description: `We know our platform is good, but please wait a little bit before sending another message.`
-            })
-          } else {
-            toast.error("Rate limit exceeded", {
-              description: "Please wait before sending another message."
-            })
-          }
-          throw new Error("Rate limit exceeded. Please wait before sending another message.")
+          setShowSignupPrompt(true)
+          // remove the placeholder messages
+          setChatMessages(chatMessages)
+          return
         }
 
-        // Handle other errors
-        toast.error("Failed to send message", {
-          description: errorMessage
-        })
-        throw new Error(errorMessage)
+        const errorData = await response.json()
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
       }
 
-      if (updatedStatus) {
-        const summary = getStatusSummary()
+      const reader = response.body?.getReader()
+      const decoder = new TextDecoder()
 
-        // Show appropriate toasts based on rate limit status
-        if (summary?.isRunningLow && !summary.isInFreeMode) {
-          toast.warning(
-            `Only ${summary.requestsRemaining} pro requests remaining today!`,
-            {
-              description: `${summary.timeUntilReset}`
+      let fullGeneratedText = ""
+      let hasReceivedFirstToken = false
+
+      if (reader) {
+        try {
+          let modelName = "Mayura"
+          while (true) {
+            const { done, value } = await reader.read()
+
+            if (done) {
+              break
             }
-          )
-        } else if (summary?.isInFreeMode) {
-          toast.info("You're now in free mode - unlimited requests!", {
-            description: "Pro requests will reset tomorrow"
-          })
+
+            const chunk = decoder.decode(value)
+            const lines = chunk.split("\n")
+
+            for (const line of lines) {
+              if (line.startsWith("data: ")) {
+                const data = line.slice(6)
+
+                if (data === "[DONE]") {
+                  break
+                }
+
+                try {
+                  const parsed = JSON.parse(data)
+
+                  if (parsed.error) {
+                    throw new Error(parsed.error)
+                  }
+                  if (parsed.model) {
+                    modelName = parsed.model
+                    continue
+                  }
+
+                  if (parsed.message) {
+                    if (!hasReceivedFirstToken) {
+                      setFirstTokenReceived(true)
+                      hasReceivedFirstToken = true
+                    }
+
+                    fullGeneratedText += parsed.message
+
+                    // Update the assistant message in real-time
+                    setChatMessages(prevMessages => {
+                      const updatedMessages = [...prevMessages]
+                      const lastMessage = updatedMessages[updatedMessages.length - 1]
+                      if (lastMessage && lastMessage.role === "assistant") {
+                        lastMessage.content = fullGeneratedText
+                        lastMessage.model_name = modelName
+                      }
+                      return updatedMessages
+                    })
+                  }
+                } catch (parseError) {
+                  // Ignore parsing errors for non-JSON lines
+                }
+              }
+            }
+          }
+        } catch (error) {
+          if (error instanceof Error && error.name === "AbortError") {
+            // console.log("Request was aborted")
+          } else {
+            throw error
+          }
+        } finally {
+          reader.releaseLock()
         }
       }
 
-      const [generatedText, modelName] = await processResponse(
-        response,
-        tempAssistantChatMessage,
-        newAbortController,
-        setFirstTokenReceived,
-        setChatMessages
-      )
-
-      // Only save to database if we got some content
-      if (generatedText) {
-        if (!selectedChat) {
-          const chat = await handleCreateChat(
-            profile,
-            messageContent,
-            setSelectedChat,
-            setChats
-          )
-
-          await handleCreateMessages(
-            tempUserChatMessage,
-            generatedText,
-            modelName,
-            isRegeneration,
-            chat.id,
-            profile,
-            setChatMessages
-          )
-        } else {
-          await handleCreateMessages(
-            tempUserChatMessage,
-            generatedText,
-            modelName,
-            isRegeneration,
-            selectedChat.id,
-            profile,
-            setChatMessages
-          )
+      // If this was a new chat and we successfully sent a message, 
+      // fetch the updated chat list and navigate to the new chat
+      if (isNewChat && user && fullGeneratedText) {
+        try {
+          const userId = user.isAnonymous ? user.uid : profile?.user_id
+          if (userId) {
+            const updatedChats = await getChatsByUserId(userId)
+            if (Array.isArray(updatedChats)) {
+              setChats(updatedChats)
+              
+              // Find the most recent chat (should be the newly created one)
+              const newestChat = updatedChats.reduce((latest, chat) => {
+                return new Date(chat.created_at) > new Date(latest.created_at) ? chat : latest
+              })
+              
+              if (newestChat) {
+                setSelectedChat(newestChat)
+                // Navigate to the specific chat ID route
+                router.push(`/chat/${newestChat.id}`)
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching updated chats:", error)
         }
-      }
-
-      setUserInput("")
-      setIsGenerating(false)
-      setFirstTokenReceived(false)
-    } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
-        console.log("Request aborted by user")
       } else {
-        // Only show generic error toast if we haven't already shown a specific one
-        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
-        
-        // Don't show duplicate toast for errors we've already handled above
-        if (!errorMessage.includes("Authentication failed") && 
-            !errorMessage.includes("Rate limit exceeded") && 
-            !errorMessage.includes("Failed to send message")) {
-          toast.error("Error sending message", {
-            description: errorMessage
-          })
+        // Refresh chat list after successful message for existing chats
+        if (user) {
+          try {
+            // We'll let the chat layout handle refreshing the chat list
+            // console.log("Message sent successfully")
+          } catch (error) {
+            console.error("Error refreshing chat list:", error)
+          }
         }
-        
-        console.error("Error sending message:", error)
       }
-      
-      // Remove the temporary assistant message on error
-      setChatMessages(prev => prev.slice(0, -1))
+    } catch (error: any) {
+      console.error("Error sending message:", error)
+
+      if (error.name === "AbortError") {
+        // console.log("Request was aborted by user")
+      } else {
+        // Remove the placeholder messages on error
+        setChatMessages(chatMessages)
+        toast.error(error.message || "Failed to send message. Please try again.")
+      }
+    } finally {
       setIsGenerating(false)
       setFirstTokenReceived(false)
+      setAbortController(null)
     }
   }
 
-  const handleSendEdit = async (
-    editedContent: string,
-    sequenceNumber: number
-  ) => {
-    if (!selectedChat || !profile) return
-
-    try {
-      await deleteMessagesIncludingAndAfter(
-        profile.user_id,
-        selectedChat.id,
-        sequenceNumber
-      )
-
-      const updatedMessages = chatMessages.slice(0, sequenceNumber)
-      setChatMessages(updatedMessages)
-
-      await handleSendMessage(editedContent, updatedMessages, false)
-    } catch (error) {
-      toast.error("Error editing message")
+  const handleStopMessage = () => {
+    if (abortController) {
+      abortController.abort()
+      setAbortController(null)
     }
+    setIsGenerating(false)
+    setFirstTokenReceived(false)
   }
 
   return {
     chatInputRef,
-    handleFocusChatInput,
     handleNewChat,
     handleSendMessage,
-    handleSendEdit,
-    handleStopMessage
+    handleStopMessage,
+    handleFocusChatInput,
+    showSignupPrompt,
+    setShowSignupPrompt
   }
 }

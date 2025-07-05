@@ -5,7 +5,11 @@ import { TabsContent } from "../ui/tabs"
 import { SidebarContent } from "./sidebar-content"
 import { WithTooltip } from "../ui/with-tooltip"
 import { ProfileSettings } from "../utility/profile-settings"
-import { MessageCircle } from "lucide-react"
+import { ArrowRight, MessageCircle, Plus, UserPlus } from "lucide-react"
+import { useAuth } from "@/context/auth-context"
+import { isAnonymousUser } from "@/lib/firebase/auth"
+import { Button } from "../ui/button"
+import { useRouter } from "next/navigation"
 
 interface SidebarProps {
   contentType: ContentType
@@ -14,6 +18,8 @@ interface SidebarProps {
 
 export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
   const { chats } = useContext(MayuraContext)
+  const { user } = useAuth()
+  const router = useRouter()
 
   const getContentData = (contentType: ContentType) => {
     return chats
@@ -70,14 +76,27 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
       {/* Responsive Settings Footer */}
       <footer className="shrink-0 p-3 md:p-6">
         <div className="flex justify-start">
-          <WithTooltip
-            display={
-              <div className="text-sm font-medium">
-                Profile Settings
-              </div>
-            }
-            trigger={<ProfileSettings />}
-          />
+          {user && !isAnonymousUser() ? (
+            /* Show profile settings for authenticated users */
+            <WithTooltip
+              display={
+                <div className="text-sm font-medium">
+                  Profile Settings
+                </div>
+              }
+              trigger={<ProfileSettings />}
+            />
+          ) : user && isAnonymousUser() ? (
+            /* Show sign up button for anonymous users */
+                <Button
+                  onClick={() => router.push("/login")}
+                  className="h-auto w-full justify-start gap-3 bg-violet-600 p-3 text-white rounded-lg"
+                >
+                <div className="text-sm font-medium flex items-center gap-2">
+                  <p>Sign Up for More Features</p> <ArrowRight size={24} className="text-white" />
+                </div>
+                </Button>
+          ) : null}
         </div>
       </footer>
     </TabsContent>
