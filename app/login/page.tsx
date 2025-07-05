@@ -55,7 +55,7 @@ function LoginPageContent() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const { setProfile } = useContext(MayuraContext)
+  const { setChatMessages, setSelectedChat } = useContext(MayuraContext)
 
   // On mount, check if user is already logged in
   useEffect(() => {
@@ -99,6 +99,8 @@ function LoginPageContent() {
       await setTokenInCookies()
       posthog.capture("sign_in_success")
       if(getCurrentUser()?.emailVerified) {
+        setChatMessages([])
+        setSelectedChat(null)
         await redirectAfterAuth(router)
       } else {
         setMessage("Please check your email and click the verification link to complete your account setup.")
