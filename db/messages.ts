@@ -191,7 +191,6 @@ export async function deleteMessagesIncludingAndAfter(
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      user_id: userId,
       chat_id: chatId,
       sequence_number: sequenceNumber
     })

@@ -2,10 +2,10 @@
 
 import { MayuraContext } from "@/context/context"
 import { useAuth } from "@/context/auth-context"
-import { getChatsByUserId } from "@/db/chats"
-import { getProfileByUserId } from "@/db/profile"
+import { getCurrentUserChats } from "@/db/chats"
+import { getCurrentUserProfile } from "@/db/profile"
 import { Dashboard } from "@/components/ui/dashboard"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { ReactNode, useContext, useEffect, useState, Suspense, useCallback } from "react"
 import { getCurrentUser, signInAnonymouslyUser } from "@/lib/firebase/auth"
 
@@ -31,8 +31,9 @@ function ChatLayoutContent({
   children: React.ReactNode
 }) {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const chatId = searchParams.get("id")
+  const pathname = usePathname()
+  // Extract chat ID from pathname like /chat/[chatid]
+  const chatId = pathname.startsWith('/chat/') ? pathname.split('/chat/')[1] : null
   const { user, loading: authLoading } = useAuth()
 
   const { profile, setProfile, setChats, chats, setSelectedChat } =
@@ -49,7 +50,7 @@ function ChatLayoutContent({
 
     setLoading(true)
     try {
-      const chats = await getChatsByUserId(userId)
+      const chats = await getCurrentUserChats()
       setChats(Array.isArray(chats) ? chats : [])
       setLoading(false)
     } catch (error) {
@@ -71,7 +72,7 @@ function ChatLayoutContent({
       if (!profile && user && !user.isAnonymous) {
         setLoading(true)
         try {
-          const userProfile = await getProfileByUserId(user.uid)
+          const userProfile = await getCurrentUserProfile()
           setProfile(userProfile)
         } catch (error) {
           console.error("Error loading profile:", error)
@@ -102,13 +103,7 @@ function ChatLayoutContent({
 
     // Fetch chat data for all users (authenticated and anonymous)
     if (user) {
-      if (user.isAnonymous) {
-        // For anonymous users, fetch chats using their Firebase anonymous UID
-        fetchChatData(user.uid)
-      } else if (profile) {
-        // For authenticated users with profiles, use profile user_id
-        fetchChatData(profile.user_id)
-      }
+      fetchChatData("")
     }
   }, [profile, user, authLoading, router, setProfile, setChats, fetchChatData, isSigningInAnonymously])
 
@@ -117,20 +112,22 @@ function ChatLayoutContent({
       const chat = chats.find(c => c.id === chatId)
       if (chat) {
         setSelectedChat(chat)
+      } else {
+        // Chat ID in URL doesn't match any of the user's chats
+        // This means they're trying to access a chat that doesn't belong to them
+        console.log("Chat ID in URL doesn't belong to user, redirecting to /chat")
+        router.push("/chat")
+        return
       }
     }
-  }, [chatId, chats, setSelectedChat])
+  }, [chatId, chats, setSelectedChat, router])
 
   // Function to refetch chats (useful when new chats are created)
   const refetchChats = useCallback(() => {
     if (user) {
-      if (user.isAnonymous) {
-        fetchChatData(user.uid)
-      } else if (profile) {
-        fetchChatData(profile.user_id)
-      }
+      fetchChatData("")
     }
-  }, [user, profile, fetchChatData])
+  }, [user, fetchChatData])
 
   // Add refetchChats to context (if needed)
   // This can be used by chat handler when new chats are created

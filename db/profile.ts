@@ -28,13 +28,14 @@ export interface UpdateProfileData {
   has_onboarded?: boolean
 }
 
-export const getProfileByUserId = async (userId: string): Promise<Profile | null> => {
+// Get current user's profile (no user ID needed - extracted from token)
+export const getCurrentUserProfile = async (): Promise<Profile | null> => {
   const token = await getIdToken()
   if (!token) {
     throw new Error("No authentication token available")
   }
 
-  const response = await fetch(`${API_BASE_URL}/v1/profiles/by-user-id/${userId}`, {
+  const response = await fetch(`${API_BASE_URL}/v1/profiles/current`, {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
@@ -43,13 +44,19 @@ export const getProfileByUserId = async (userId: string): Promise<Profile | null
 
   if (!response.ok) {
     if (response.status === 404) {
-      // Return null for 404 - don't auto-create profiles anymore
       return null
     }
     throw new Error(`Failed to fetch profile: ${response.statusText}`)
   }
 
   return await response.json()
+}
+
+// Legacy function - now redirects to getCurrentUserProfile
+export const getProfileByUserId = async (userId: string): Promise<Profile | null> => {
+  // For backward compatibility, we'll use the new endpoint
+  // The userId parameter is ignored since the backend gets it from the token
+  return getCurrentUserProfile()
 }
 
 export const getProfilesByUserId = async (userId: string): Promise<Profile[]> => {
@@ -82,12 +89,13 @@ export const getProfilesByUserId = async (userId: string): Promise<Profile[]> =>
   }
 }
 
-export const createProfile = async (profile: CreateProfileData): Promise<Profile> => {
+export const createProfile = async (profile: Omit<Profile, 'user_id' | 'created_at' | 'updated_at'>): Promise<Profile> => {
   const token = await getIdToken()
   if (!token) {
     throw new Error("No authentication token available")
   }
 
+  // Remove user_id from the request body since backend will set it from token
   const response = await fetch(`${API_BASE_URL}/v1/profiles`, {
     method: 'POST',
     headers: {
@@ -105,15 +113,16 @@ export const createProfile = async (profile: CreateProfileData): Promise<Profile
 }
 
 export const updateProfile = async (
-  userId: string,
-  profile: UpdateProfileData
+  profileId: string,
+  profile: Partial<Omit<Profile, 'user_id' | 'created_at' | 'updated_at'>>
 ): Promise<Profile> => {
   const token = await getIdToken()
   if (!token) {
     throw new Error("No authentication token available")
   }
 
-  const response = await fetch(`${API_BASE_URL}/v1/profiles/${userId}`, {
+  // Remove user_id from the request body since backend will set it from token
+  const response = await fetch(`${API_BASE_URL}/v1/profiles/${profileId}`, {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -129,13 +138,13 @@ export const updateProfile = async (
   return await response.json()
 }
 
-export const deleteProfile = async (userId: string): Promise<boolean> => {
+export const deleteProfile = async (profileId: string): Promise<boolean> => {
   const token = await getIdToken()
   if (!token) {
     throw new Error("No authentication token available")
   }
 
-  const response = await fetch(`${API_BASE_URL}/v1/profiles/${userId}`, {
+  const response = await fetch(`${API_BASE_URL}/v1/profiles/${profileId}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`,

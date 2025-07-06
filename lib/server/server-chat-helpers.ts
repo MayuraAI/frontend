@@ -15,8 +15,8 @@ export async function getServerProfile() {
   }
 
   try {
-    // Call our backend API to get profile
-    const response = await fetch(`${API_BASE_URL}/v1/profiles/user/current`, {
+    // Call our backend API to get current user's profile
+    const response = await fetch(`${API_BASE_URL}/v1/profiles/current`, {
       headers: {
         'Authorization': `Bearer ${firebaseToken}`,
         'Content-Type': 'application/json'
