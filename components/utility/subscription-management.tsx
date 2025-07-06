@@ -15,7 +15,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
 
 interface SubscriptionData {
   user_id: string
-  subscription_id?: string
+  sub_id?: string
   tier: "free" | "plus" | "pro"
   status: string
   expires_at?: string
@@ -143,7 +143,7 @@ export const SubscriptionManagement: FC<SubscriptionManagementProps> = ({ isAnon
   }
 
   const handleManageSubscription = async () => {
-    if (!user || !subscriptionData?.subscription_id) return
+    if (!user) return
 
     try {
       const token = await getToken()
@@ -162,8 +162,11 @@ export const SubscriptionManagement: FC<SubscriptionManagementProps> = ({ isAnon
       if (response.ok) {
         const data = await response.json()
         window.open(data.management_url, '_blank')
+      } else if (response.status === 404) {
+        toast.error("No active subscription found. Please upgrade to a paid plan first.")
       } else {
-        toast.error("Failed to get management URL")
+        const errorData = await response.json().catch(() => ({}))
+        toast.error(errorData.error || "Failed to get management URL")
       }
     } catch (error) {
       console.error("Error getting management URL:", error)
