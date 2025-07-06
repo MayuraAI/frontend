@@ -4,7 +4,7 @@ import Loading from "@/app/loading"
 import { MayuraContext } from "@/context/context"
 import { getChatById } from "@/db/chats"
 import { getMessagesByChatId } from "@/db/messages"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { FC, useContext, useEffect, useState } from "react"
 import { useScroll } from "./chat-hooks/use-scroll"
 import { ChatInput } from "./chat-input"
@@ -23,6 +23,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
   const { user } = useAuth()
 
   const params = useParams()
+  const router = useRouter()
   const { scrollToBottom, messagesStartRef, messagesEndRef, isUserScrolledUp, shouldAutoScroll } = useScroll()
   const [loading, setLoading] = useState(false)
   const [isReady, setIsReady] = useState(true)
@@ -40,10 +41,10 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
           setIsReady(true)
         } catch (error) {
           console.error("Error fetching messages:", error)
-          // Set empty array on error to prevent null reference issues
-          setChatMessages([])
-          setLoading(false)
-          setIsReady(true)
+          // If we can't fetch messages, it likely means the chat doesn't belong to the user
+          // Redirect to /chat
+          router.push("/chat")
+          return
         }
       }
 
@@ -52,16 +53,25 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
           const chat = await getChatById(params.chatid as string)
           if (chat) {
             setSelectedChat(chat)
+          } else {
+            // Chat not found or doesn't belong to user - redirect to /chat
+            console.log("Chat not found or access denied, redirecting to /chat")
+            router.push("/chat")
+            return
           }
         } catch (error) {
           console.error("Error fetching chat:", error)
+          // If we can't fetch the chat, it likely means it doesn't belong to the user
+          // Redirect to /chat
+          router.push("/chat")
+          return
         }
       }
 
       fetchChat()
       fetchMessages()
     }
-  }, [params.chatid, setChatMessages, setSelectedChat])
+  }, [params.chatid, setChatMessages, setSelectedChat, router])
 
   // Auto-scroll to bottom when messages are first loaded
   useEffect(() => {

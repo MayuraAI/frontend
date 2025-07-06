@@ -175,7 +175,7 @@ export const redirectAfterAuth = async (router: any) => {
 
     // console.log("✅ Token obtained, checking profile in backend...")
     // Check if profile exists in backend
-    const response = await fetch(`${API_BASE_URL}/v1/profiles/by-user-id/${user.uid}`, {
+    const response = await fetch(`${API_BASE_URL}/v1/profiles/current`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'

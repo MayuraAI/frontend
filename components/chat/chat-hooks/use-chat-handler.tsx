@@ -10,7 +10,8 @@ import { v4 as uuidv4 } from "uuid"
 import { useRateLimit } from "@/lib/hooks/use-rate-limit"
 import { isAnonymousUser } from "@/lib/firebase/auth"
 import { SignupPromptModal } from "@/components/ui/signup-prompt-modal"
-import { getChatsByUserId } from "@/db/chats"
+import { getCurrentUserChats } from "@/db/chats"
+import posthog from "posthog-js"
 
 // API base URL for backend calls
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
@@ -247,22 +248,20 @@ export const useChatHandler = () => {
       // fetch the updated chat list and navigate to the new chat
       if (isNewChat && user && fullGeneratedText) {
         try {
-          const userId = user.isAnonymous ? user.uid : profile?.user_id
-          if (userId) {
-            const updatedChats = await getChatsByUserId(userId)
-            if (Array.isArray(updatedChats)) {
-              setChats(updatedChats)
-              
-              // Find the most recent chat (should be the newly created one)
-              const newestChat = updatedChats.reduce((latest, chat) => {
-                return new Date(chat.created_at) > new Date(latest.created_at) ? chat : latest
-              })
-              
-              if (newestChat) {
-                setSelectedChat(newestChat)
-                // Navigate to the specific chat ID route
-                router.push(`/chat/${newestChat.id}`)
-              }
+          // Use new function that gets user ID from token
+          const updatedChats = await getCurrentUserChats()
+          if (Array.isArray(updatedChats)) {
+            setChats(updatedChats)
+            
+            // Find the most recent chat (should be the newly created one)
+            const newestChat = updatedChats.reduce((latest, chat) => {
+              return new Date(chat.created_at) > new Date(latest.created_at) ? chat : latest
+            })
+            
+            if (newestChat) {
+              setSelectedChat(newestChat)
+              // Navigate to the specific chat ID route
+              router.push(`/chat/${newestChat.id}`)
             }
           }
         } catch (error) {

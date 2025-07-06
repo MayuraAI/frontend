@@ -71,11 +71,8 @@ export const handleCreateChat = async (
   setSelectedChat: React.Dispatch<React.SetStateAction<Chat | null>>,
   setChats: React.Dispatch<React.SetStateAction<Chat[]>>
 ) => {
-  // Handle both anonymous users (string UID) and authenticated users (Profile object)
-  const user_id = typeof userIdOrProfile === 'string' ? userIdOrProfile : userIdOrProfile.user_id
-  
+  // No longer need to pass user_id since backend gets it from token
   const newChat = {
-    user_id,
     name: messageContent.slice(0, 100),
     sharing: "private"
   }
