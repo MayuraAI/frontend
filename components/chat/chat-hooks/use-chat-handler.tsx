@@ -159,14 +159,16 @@ export const useChatHandler = () => {
           return
         }
 
-        if (response.status === 429) {
+        if (response.status === 429 && isAnonymousUser()) {
           setShowSignupPrompt(true)
-          // remove the placeholder messages
           setChatMessages(chatMessages)
           return
         }
 
         const errorData = await response.json()
+        if(response.status === 429) {
+          throw new Error("Too many requests in a minute. Please try again later.")
+        }
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
       }
 
