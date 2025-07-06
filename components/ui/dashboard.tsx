@@ -121,7 +121,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
       {/* Main Content Area */}
       <main className="bg-background flex min-w-0 flex-1 flex-col">
         {/* Mobile Header */}
-        <header className="bg-sidebar border-sidebar-border fixed top-0 left-0 z-20 flex h-16 w-full items-center justify-between border-b p-3 shadow-sm md:hidden">
+        <header className="bg-sidebar border-sidebar-border fixed left-0 top-0 z-20 flex h-16 w-full items-center justify-between border-b p-3 shadow-sm md:hidden">
           {/* Only show menu button for non-anonymous users */}
           {(
             <Button

@@ -228,11 +228,11 @@ function LoginPageContent() {
   }
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-background px-4">
+    <div className="bg-background flex min-h-screen w-full items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Zap className="size-6 text-primary" />
+          <div className="mb-4 flex items-center justify-center space-x-2">
+            <Zap className="text-primary size-6" />
             <CardTitle className="text-2xl font-bold">Mayura</CardTitle>
           </div>
           <CardDescription className="text-center">
@@ -324,7 +324,7 @@ function LoginPageContent() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
+              <span className="bg-background text-muted-foreground px-2">
                 Or continue with
               </span>
             </div>
@@ -356,9 +356,9 @@ function LoginPageContent() {
               variant="link"
               onClick={handleResetPassword}
               disabled={loading || !email}
-              className="p-0 h-auto text-xs text-muted-foreground hover:text-primary"
+              className="text-muted-foreground hover:text-primary h-auto p-0 text-xs"
             >
-              <KeyRound className="size-3 mr-1" />
+              <KeyRound className="mr-1 size-3" />
               Forgot your password?
             </Button>
           </div>

@@ -90,9 +90,9 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
             /* Show sign up button for anonymous users */
                 <Button
                   onClick={() => router.push("/login")}
-                  className="h-auto w-full justify-start gap-3 bg-violet-600 p-3 text-white rounded-lg"
+                  className="h-auto w-full justify-start gap-3 rounded-lg bg-violet-600 p-3 text-white"
                 >
-                <div className="text-sm font-medium flex items-center gap-2">
+                <div className="flex items-center gap-2 text-sm font-medium">
                   <p>Sign Up for More Features</p> <ArrowRight size={24} className="text-white" />
                 </div>
                 </Button>

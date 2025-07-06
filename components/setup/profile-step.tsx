@@ -116,23 +116,23 @@ export const ProfileStep: FC<ProfileStepProps> = ({
 
   return (
     <>
-      <div className="space-y-1">
-        <div className="flex items-center space-x-2">
-          <Label>Username</Label>
+      <div className="space-y-2">
+        <div className="flex flex-col space-y-1 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0">
+          <Label className="text-sm font-medium">Username</Label>
 
           <div className="text-xs">
             {username &&
               (usernameAvailable ? (
-                <div className="text-purple-500">AVAILABLE</div>
+                <div className="text-purple-500 font-medium">AVAILABLE</div>
               ) : (
-                <div className="text-red-500">UNAVAILABLE</div>
+                <div className="text-red-500 font-medium">UNAVAILABLE</div>
               ))}
           </div>
         </div>
 
         <div className="relative">
           <Input
-            className="pr-10"
+            className="pr-10 h-11 sm:h-10"
             placeholder="username"
             value={username}
             onChange={e => {
@@ -146,11 +146,11 @@ export const ProfileStep: FC<ProfileStepProps> = ({
           {username && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-3">
               {loading ? (
-                <IconLoader2 className="animate-spin" />
+                <IconLoader2 className="animate-spin size-5" />
               ) : usernameAvailable ? (
-                <IconCircleCheckFilled className="text-purple-500" />
+                <IconCircleCheckFilled className="text-purple-500 size-5" />
               ) : (
-                <IconCircleXFilled className="text-red-500" />
+                <IconCircleXFilled className="text-red-500 size-5" />
               )}
             </div>
           )}
@@ -159,10 +159,11 @@ export const ProfileStep: FC<ProfileStepProps> = ({
         <LimitDisplay used={username.length} limit={PROFILE_USERNAME_MAX} />
       </div>
 
-      <div className="space-y-1">
-        <Label>Display Name</Label>
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">Display Name</Label>
 
         <Input
+          className="h-11 sm:h-10"
           placeholder="Your Name"
           value={displayName}
           onChange={e => onDisplayNameChange(e.target.value)}

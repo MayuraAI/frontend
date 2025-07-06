@@ -20,7 +20,7 @@ export function AnonymousBanner({ requestsRemaining, totalRequests }: AnonymousB
   const isQuotaExhausted = requestsRemaining <= 0
 
   return (
-    <Card className={`mb-4 border-violet-600/20 backdrop-blur-sm shadow-xl ${isQuotaExhausted ? 'bg-gradient-to-r from-red-900/20 to-orange-900/20' : 'bg-gradient-to-r from-violet-900/20 to-purple-900/20'}`}>
+    <Card className={`mb-4 border-violet-600/20 shadow-xl backdrop-blur-sm ${isQuotaExhausted ? 'bg-gradient-to-r from-red-900/20 to-orange-900/20' : 'bg-gradient-to-r from-violet-900/20 to-purple-900/20'}`}>
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -53,10 +53,10 @@ export function AnonymousBanner({ requestsRemaining, totalRequests }: AnonymousB
             <Button
               onClick={handleSignUp}
               size="sm"
-              className="bg-violet-600 text-white hover:bg-violet-700"
+              className="bg-violet-600 text-white hover:bg-violet-700 shrink-0"
             >
-              <UserPlus className="size-4 mr-2" />
-              Sign Up
+              <UserPlus className="mr-1 size-4 sm:mr-2" />
+              <span className="text-xs sm:text-sm">Sign Up</span>
             </Button>
           </div>
         </div>

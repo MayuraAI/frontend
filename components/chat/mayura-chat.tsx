@@ -89,11 +89,11 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
   }
 
   return (
-    <div className="relative flex h-full flex-col bg-background">
+    <div className="bg-background relative flex h-full flex-col">
       {/* Chat Messages Area */}
       {/* Anonymous User Banner - Absolute positioned within messages container */}
       {user && isAnonymousUser() && rateLimitStatus && (
-        <div className="absolute top-4 left-0 right-0 z-50 max-w-4xl mx-auto">
+        <div className="absolute inset-x-0 top-4 z-50 mx-auto max-w-4xl">
           <div className="shadow-lg">
             <AnonymousBanner
               requestsRemaining={rateLimitStatus.requests_remaining}
@@ -103,7 +103,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
         </div>
       )}
       <section
-        className="flex-1 overflow-y-auto bg-background px-3 pb-4 sm:px-4 md:px-6 md:pt-6 md:pb-6"
+        className="bg-background flex-1 overflow-y-auto px-3 pb-4 sm:px-4 md:p-6"
         role="log"
         aria-live="polite"
         aria-label="Chat messages"
@@ -111,7 +111,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
         {/* Add top spacing for mobile header on mobile only */}
         <div className="h-16 md:hidden" />
         
-        <div className="mx-auto max-w-4xl space-y-4 relative">
+        <div className="relative mx-auto max-w-4xl space-y-4">
 
           <div ref={messagesStartRef} 
           style={{ 
@@ -169,7 +169,7 @@ export const MayuraChat: FC<MayuraChatProps> = ({}) => {
       </section>
 
       {/* Chat Input Area */}
-      <footer className="shrink-0 border-t border-border bg-background p-3 sm:p-4 md:p-6">
+      <footer className="border-border bg-background shrink-0 border-t p-3 sm:p-4 md:p-6">
         <div className="mx-auto max-w-4xl">
           <ChatInput />
         </div>
