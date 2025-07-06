@@ -50,19 +50,24 @@ export default function HomePage() {
     }
   }
 
-  const handleHeroPromptSubmit = async (e?: React.FormEvent, promptText?: string) => {
+  const handleHeroPromptSubmit = async (
+    e?: React.FormEvent,
+    promptText?: string
+  ) => {
     if (e) {
       e.preventDefault()
     }
-    
-    const promptToSubmit = samplePromptsMap[promptText as keyof typeof samplePromptsMap] || heroPrompt.trim()
+
+    const promptToSubmit =
+      samplePromptsMap[promptText as keyof typeof samplePromptsMap] ||
+      heroPrompt.trim()
     if (!promptToSubmit || isSubmitting) return
 
     setIsSubmitting(true)
     try {
       // Store the prompt in localStorage to be picked up by the chat page
-      localStorage.setItem('heroPrompt', promptToSubmit)
-      
+      localStorage.setItem("heroPrompt", promptToSubmit)
+
       // Navigate to chat
       router.push("/chat")
     } catch (error) {
@@ -136,22 +141,23 @@ export default function HomePage() {
   return (
     <div className="min-h-screen w-full">
       {/* Header */}
-      <header className="flex w-full items-center justify-between border-b border-slate-700 bg-transparent p-6 shadow-sm backdrop-blur-sm">
-          <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <img 
-                  src="/logo_512.png" 
-                  alt="Mayura Logo" 
-                  className="size-8 md:size-10 lg:size-12"
-                />
-                <p
-            className="text-sidebar-foreground flex-1 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl"
-          >
-            Mayura 
-          </p>
-            <span className="ml-1 align-top text-base font-semibold opacity-60">(beta)</span>
-              </div>
+      <header className="flex w-full items-center justify-between border-b border-slate-700 bg-transparent p-4 shadow-sm backdrop-blur-sm md:p-6">
+        {/* Logo + Brand */}
+        <div className="flex items-center gap-2">
+          <img
+            src="/logo_512.png"
+            alt="Mayura Logo"
+            className="size-8 object-contain md:size-10 lg:size-12"
+          />
+          <div className="flex items-baseline gap-1">
+            <p className="text-xl font-semibold leading-none tracking-tight text-white md:text-2xl lg:text-3xl">
+              Mayura
+            </p>
+            <span className="text-sm font-medium text-white/60">(beta)</span>
           </div>
+        </div>
+
+        {/* Desktop Nav */}
         <nav className="hidden items-center gap-6 md:flex">
           <Link
             href="#how-it-works"
@@ -165,26 +171,47 @@ export default function HomePage() {
           >
             Features
           </Link>
-          <Link href="#pricing" className="text-base font-medium text-slate-300 hover:text-violet-400 hover:underline">
+          <Link
+            href="#pricing"
+            className="text-base font-medium text-slate-300 hover:text-violet-400 hover:underline"
+          >
             Pricing
           </Link>
-          <Link href="#faq" className="text-base font-medium text-slate-300 hover:text-violet-400 hover:underline">
+          <Link
+            href="#faq"
+            className="text-base font-medium text-slate-300 hover:text-violet-400 hover:underline"
+          >
             FAQ
           </Link>
-        <div className="flex items-center gap-4">
-          {!loading && user && !isAnonymousUser() ? (
-            // Authenticated user - show Go to Chat
-            <Button onClick={() => router.push("/chat")} className="bg-violet-600 text-white hover:bg-violet-700">
-              Go to Chat <ArrowRight className="ml-2 size-4" />
-            </Button>
-          ) : (
-            // Anonymous or no user - show Try Free Requests
-            <Button onClick={() => router.push("/login")} className="bg-violet-600 text-white hover:bg-violet-700">
-              Sign In<ArrowRight className="ml-2 size-4" />
-            </Button>
-          )}
-        </div>
+
+          <div className="flex items-center">
+            {!loading && user && !isAnonymousUser() ? (
+              <Button
+                onClick={() => router.push("/chat")}
+                className="bg-violet-600 text-white hover:bg-violet-700"
+              >
+                Go to Chat <ArrowRight className="ml-2 size-4" />
+              </Button>
+            ) : (
+              <Button
+                onClick={() => router.push("/login")}
+                className="bg-violet-600 text-white hover:bg-violet-700"
+              >
+                Sign In <ArrowRight className="ml-2 size-4" />
+              </Button>
+            )}
+          </div>
         </nav>
+
+        {/* Mobile Sign In Button */}
+        <div className="flex md:hidden">
+          <Button
+            onClick={() => router.push("/login")}
+            className="bg-violet-600 px-3 py-2 text-sm text-white hover:bg-violet-700"
+          >
+            Sign In
+          </Button>
+        </div>
       </header>
 
       <main className="w-full flex-1">
@@ -195,20 +222,22 @@ export default function HomePage() {
               {/* Left: Hero Content */}
               <div className="flex flex-1 flex-col items-center text-center lg:items-start lg:text-left">
                 {/* Main Headline */}
-                <h1 className="mb-6 text-4xl font-medium text-white sm:text-5xl lg:text-6xl xl:text-7xl leading-tight tracking-tight">
+                <h1 className="mb-6 text-center text-[2.2rem] font-semibold leading-tight tracking-tight text-white sm:text-5xl lg:text-left lg:text-6xl xl:text-7xl">
                   What do you want to ask?
                   <br />
-                  <span className="bg-gradient-to-r from-violet-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">We&apos;ll route it to the best AI.</span>
+                  <span className="bg-gradient-to-r from-violet-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                    We&apos;ll route it to the best AI.
+                  </span>
                 </h1>
 
                 {/* Input Section */}
-                <div className="w-full max-w-xl mb-8">
+                <div className="mb-8 w-full max-w-xl">
                   {!loading && user && !isAnonymousUser() ? (
                     // Authenticated user - show Go to Chat
-                    <Button 
-                      size="lg" 
-                      onClick={() => router.push("/chat")} 
-                      className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium text-lg py-4 h-auto rounded-xl"
+                    <Button
+                      size="lg"
+                      onClick={() => router.push("/chat")}
+                      className="h-auto w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 py-4 text-lg font-medium text-white hover:from-violet-700 hover:to-purple-700"
                     >
                       Go to Chat
                     </Button>
@@ -216,33 +245,39 @@ export default function HomePage() {
                     <div className="space-y-4">
                       {/* Label */}
                       <div className="text-center lg:text-left">
-                        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-full px-4 py-2 mb-4">
+                        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-gradient-to-r from-green-500/20 to-emerald-500/20 px-3 py-1.5 sm:px-4 sm:py-2">
                           <Zap className="size-4 text-green-400" />
-                          <span className="text-sm font-medium text-green-300">
-                            Try now • <span className="font-bold uppercase">No signup required</span>
+                          <span className="text-xs font-medium text-green-300 sm:text-sm">
+                            Try now •{" "}
+                            <span className="font-bold uppercase">
+                              No signup required
+                            </span>
                           </span>
                         </div>
                       </div>
 
                       {/* Input Form */}
-                      <form onSubmit={handleHeroPromptSubmit} className="relative">
-                        <div className="relative group">
+                      <form
+                        onSubmit={handleHeroPromptSubmit}
+                        className="relative"
+                      >
+                        <div className="group relative">
                           {/* Gradient Border Effect */}
-                          <div className="absolute -inset-1 bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                          
+                          <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 opacity-30 blur transition duration-300 group-hover:opacity-50"></div>
+
                           {/* Input Container */}
-                          <div className="relative bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-600/50 shadow-xl">
+                          <div className="relative rounded-2xl border border-slate-600/50 bg-slate-900/80 shadow-xl backdrop-blur-sm">
                             <Input
                               value={heroPrompt}
-                              onChange={(e) => setHeroPrompt(e.target.value)}
-                              placeholder="Type your idea and we will bring it to life"
-                              className="w-full bg-transparent border-0 text-white placeholder:text-slate-400 text-lg py-8 px-8 pr-20 rounded-2xl focus:ring-0 h-auto"
-                              disabled={isSubmitting}
+                              onChange={e => setHeroPrompt(e.target.value)}
+                              placeholder="Tell us your idea"
+                              className="h-auto w-full rounded-2xl border-0 bg-transparent px-6 py-5 pr-20 text-base text-white placeholder:text-slate-400 focus:ring-0 sm:p-8 sm:text-lg"
                             />
-                            <Button 
-                              type="submit" 
+
+                            <Button
+                              type="submit"
                               disabled={!heroPrompt.trim() || isSubmitting}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium px-4 py-3 rounded-xl h-auto disabled:opacity-50 transition-all duration-200"
+                              className="absolute right-2 top-1/2 h-auto -translate-y-1/2 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 px-4 py-3 font-medium text-white transition-all duration-200 hover:from-violet-700 hover:to-purple-700 disabled:opacity-50 sm:right-3 sm:px-5 sm:py-4"
                             >
                               {isSubmitting ? (
                                 <div className="flex items-center">
@@ -257,7 +292,7 @@ export default function HomePage() {
                       </form>
 
                       {/* Sample Prompts */}
-                      <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+                      <div className="flex flex-wrap justify-center gap-2 lg:justify-start">
                         {[
                           "Debug my code",
                           "Create a website",
@@ -266,8 +301,10 @@ export default function HomePage() {
                         ].map((prompt, index) => (
                           <button
                             key={index}
-                            onClick={() => handleHeroPromptSubmit(undefined, prompt)}
-                            className="px-3 py-1.5 text-sm text-slate-400 hover:text-white transition-colors border border-slate-700 rounded-full hover:border-slate-600"
+                            onClick={() =>
+                              handleHeroPromptSubmit(undefined, prompt)
+                            }
+                            className="rounded-full border border-slate-700 px-3 py-1.5 text-xs text-slate-400 transition-colors hover:border-slate-600 hover:text-white sm:text-sm"
                           >
                             {prompt}
                           </button>
@@ -279,7 +316,7 @@ export default function HomePage() {
               </div>
 
               {/* Right: Animation */}
-              <div className="flex flex-1 items-center justify-center lg:justify-end scale-110">
+              <div className="flex flex-1 items-center justify-center lg:justify-end">
                 <div className="w-full max-w-md">
                   <AIRoutingAnimation />
                 </div>
@@ -324,14 +361,13 @@ export default function HomePage() {
                   </div>
                   <CardTitle
                     className="text-xl font-semibold text-white"
-                    dangerouslySetInnerHTML={{
-                      __html: "2. Smart Routing"
-                    }}
+                    dangerouslySetInnerHTML={{ __html: "2. Smart Routing" }}
                   />
                 </CardHeader>
                 <CardContent className="text-slate-300">
                   <p>
-                    Our complex classification system routes your prompt to the best model.
+                    Our complex classification system routes your prompt to the
+                    best model.
                   </p>
                 </CardContent>
               </Card>
@@ -363,14 +399,17 @@ export default function HomePage() {
                 Why Mayura?
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-slate-300">
-                Stop juggling multiple AI platforms. Get better results with less effort.
+                Stop juggling multiple AI platforms. Get better results with
+                less effort.
               </p>
             </div>
             <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2 lg:grid-cols-3">
               <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <Star className="mb-2 size-8 text-violet-400" />
-                  <CardTitle className="text-white">Higher Quality Results</CardTitle>
+                  <CardTitle className="text-white">
+                    Higher Quality Results
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-slate-300">
@@ -406,7 +445,9 @@ export default function HomePage() {
               <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <Zap className="mb-2 size-8 text-violet-400" />
-                  <CardTitle className="text-white">Simplified Workflow</CardTitle>
+                  <CardTitle className="text-white">
+                    Simplified Workflow
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-slate-300">
@@ -430,7 +471,9 @@ export default function HomePage() {
               <Card className="border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader>
                   <Brain className="mb-2 size-8 text-violet-400" />
-                  <CardTitle className="text-white">Focus on Your Work</CardTitle>
+                  <CardTitle className="text-white">
+                    Focus on Your Work
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-slate-300">
@@ -451,7 +494,9 @@ export default function HomePage() {
                 <div className="flex items-start gap-4">
                   <div className="shrink-0">
                     <div className="flex size-8 items-center justify-center rounded-full bg-amber-600/20">
-                      <span className="text-sm font-bold text-amber-400">β</span>
+                      <span className="text-sm font-bold text-amber-400">
+                        β
+                      </span>
                     </div>
                   </div>
                   <div className="flex-1">
@@ -459,9 +504,10 @@ export default function HomePage() {
                       Beta Version Notice
                     </h3>
                     <p className="mb-4 text-slate-300">
-                      Mayura is currently in public beta. While we&apos;ve worked hard to make it as stable as possible, 
-                      you might encounter occasional bugs or unexpected behavior. Your feedback is invaluable in helping 
-                      us improve the platform.
+                      Mayura is currently in public beta. While we&apos;ve
+                      worked hard to make it as stable as possible, you might
+                      encounter occasional bugs or unexpected behavior. Your
+                      feedback is invaluable in helping us improve the platform.
                     </p>
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                       <p className="text-sm text-slate-400">
@@ -524,28 +570,39 @@ export default function HomePage() {
                       <li className="flex items-start gap-3">
                         <CheckCircle className="size-5 shrink-0 text-violet-400" />
                         <div>
-                          <strong className="text-white">5 Pro Requests / day</strong>
+                          <strong className="text-white">
+                            5 Pro Requests / day
+                          </strong>
                           <p className="text-xs text-slate-400">
-                            Access premium models like Gemini 2.5 Pro, Gemini 2.5 Flash Preview
+                            Access premium models like Gemini 2.5 Pro, Gemini
+                            2.5 Flash Preview
                           </p>
                         </div>
                       </li>
                       <li className="flex items-start gap-3">
                         <CheckCircle className="size-5 shrink-0 text-violet-400" />
                         <div>
-                          <strong className="text-white">Unlimited Standard Requests</strong>
+                          <strong className="text-white">
+                            Unlimited Standard Requests
+                          </strong>
                           <p className="text-xs text-slate-400">
-                            Access to models including Llama 3.3 70B, DeepSeek R1, Qwen 3 32B, Gemma 2 9B
+                            Access to models including Llama 3.3 70B, DeepSeek
+                            R1, Qwen 3 32B, Gemma 2 9B
                           </p>
                         </div>
                       </li>
                       <li className="flex items-start gap-3">
                         <CheckCircle className="size-5 shrink-0 text-violet-400" />
-                        <div className="text-white">Intelligent Auto-Routing Only</div>
+                        <div className="text-white">
+                          Intelligent Auto-Routing Only
+                        </div>
                       </li>
                     </ul>
                   </div>
-                  <Button className="mt-8 w-full bg-violet-600 text-white hover:bg-violet-700" asChild>
+                  <Button
+                    className="mt-8 w-full bg-violet-600 text-white hover:bg-violet-700"
+                    asChild
+                  >
                     <Link href="/chat">Try Mayura Now</Link>
                   </Button>
                 </CardContent>
@@ -564,13 +621,16 @@ export default function HomePage() {
                     </div>
                   </div>
                   <p className="pt-2 text-sm text-slate-500">
-                    For professionals who need full control and unlimited access.
+                    For professionals who need full control and unlimited
+                    access.
                   </p>
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col justify-between">
                   <div>
                     <div className="mb-6">
-                      <span className="text-4xl font-bold text-slate-300">$xx</span>
+                      <span className="text-4xl font-bold text-slate-300">
+                        $xx
+                      </span>
                       <span className="text-lg font-medium text-slate-500">
                         /month
                       </span>
@@ -582,7 +642,9 @@ export default function HomePage() {
                       <li className="flex items-start gap-3">
                         <CheckCircle className="size-5 shrink-0 text-slate-500" />
                         <div>
-                          <strong className="text-slate-300">100 Pro Requests / day</strong>
+                          <strong className="text-slate-300">
+                            100 Pro Requests / day
+                          </strong>
                           <p className="text-xs text-slate-500">
                             Access to premium models
                           </p>
@@ -591,7 +653,9 @@ export default function HomePage() {
                       <li className="flex items-start gap-3">
                         <CheckCircle className="size-5 shrink-0 text-slate-500" />
                         <div>
-                          <strong className="text-slate-300">Manual Model Selection</strong>
+                          <strong className="text-slate-300">
+                            Manual Model Selection
+                          </strong>
                           <p className="text-xs text-slate-500">
                             Choose specific models or use auto-routing
                           </p>
@@ -611,7 +675,10 @@ export default function HomePage() {
                       </li> */}
                     </ul>
                   </div>
-                  <Button className="mt-8 w-full cursor-not-allowed bg-slate-600 text-slate-300" disabled>
+                  <Button
+                    className="mt-8 w-full cursor-not-allowed bg-slate-600 text-slate-300"
+                    disabled
+                  >
                     Coming After Beta
                   </Button>
                 </CardContent>
@@ -626,11 +693,12 @@ export default function HomePage() {
           <div className="container mx-auto px-6">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="mb-6 text-3xl font-bold tracking-tight text-white md:text-4xl">
-              Many Models. One Platform. Zero Hassle.
+                Many Models. One Platform. Zero Hassle.
               </h2>
               <p className="mb-2 text-lg text-slate-300">
                 Jumping from one AI platform to another is a pain. <br />
-                We know your problem, we faced it too, that&apos;s why we built Mayura.
+                We know your problem, we faced it too, that&apos;s why we built
+                Mayura.
               </p>
               {/* <p className="text-slate-300">
                 We just want to make your life easier and some money :P.
@@ -657,7 +725,9 @@ export default function HomePage() {
                     className="flex w-full items-center justify-between py-6 text-left"
                     onClick={() => toggleFaq(index)}
                   >
-                    <span className="font-semibold text-white">{faq.question}</span>
+                    <span className="font-semibold text-white">
+                      {faq.question}
+                    </span>
                     {openFaq === index ? (
                       <ChevronUp className="size-5 text-slate-400" />
                     ) : (
@@ -687,12 +757,21 @@ export default function HomePage() {
                 today.
               </p>
               <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                <Button size="lg" asChild className="bg-violet-600 text-white hover:bg-violet-700">
+                <Button
+                  size="lg"
+                  asChild
+                  className="bg-violet-600 text-white hover:bg-violet-700"
+                >
                   <Link href="/login">
                     <Zap className="mr-2 size-5" /> Get Started Free
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild className="border-violet-600 text-violet-400 hover:bg-violet-900/20">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  asChild
+                  className="border-violet-600 text-violet-400 hover:bg-violet-900/20"
+                >
                   <Link href="#pricing">
                     <DollarSignIcon className="mr-2 size-5" /> View Pricing
                   </Link>
@@ -704,111 +783,114 @@ export default function HomePage() {
       </main>
 
       <footer className="w-full border-t border-slate-700 bg-transparent py-12 backdrop-blur-sm">
-  <div className="container mx-auto space-y-16 px-6">
-    
-    {/* Row 1: Branding + Navigation */}
-    <div className="mb-6 flex flex-row items-start justify-between gap-6 lg:flex-row lg:items-center">
-      
-      {/* Branding and Subline */}
-      <div>
-        <div className="mb-2 flex items-center gap-2">
-          <div className="rounded bg-violet-600 p-2">
-            <p className="font-bold text-white">M</p>
+        <div className="container mx-auto space-y-16 px-6">
+          {/* Row 1: Branding + Navigation */}
+          <div className="mb-6 flex flex-row items-start justify-between gap-6 lg:flex-row lg:items-center">
+            {/* Branding and Subline */}
+            <div>
+              <div className="mb-2 flex items-center gap-2">
+                <div className="rounded bg-violet-600 p-2">
+                  <p className="font-bold text-white">M</p>
+                </div>
+                <h3 className="text-lg font-bold text-white">Mayura</h3>
+              </div>
+              <p className="text-sm text-slate-300">
+                Intelligent AI routing for superior results, every time.
+              </p>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="flex flex-row gap-6">
+              <Link
+                href="#features"
+                className="text-sm text-slate-300 hover:text-violet-400 hover:underline"
+              >
+                Features
+              </Link>
+              <Link
+                href="#pricing"
+                className="text-sm text-slate-300 hover:text-violet-400 hover:underline"
+              >
+                Pricing
+              </Link>
+              <Link
+                href="/about"
+                className="text-sm text-slate-300 hover:text-violet-400 hover:underline"
+              >
+                About Us
+              </Link>
+            </div>
           </div>
-          <h3 className="text-lg font-bold text-white">Mayura</h3>
-        </div>
-        <p className="text-sm text-slate-300">
-          Intelligent AI routing for superior results, every time.
-        </p>
-      </div>
 
-      {/* Navigation Links */}
-      <div className="flex flex-row gap-6">
-        <Link href="#features" className="text-sm text-slate-300 hover:text-violet-400 hover:underline">
-          Features
-        </Link>
-        <Link href="#pricing" className="text-sm text-slate-300 hover:text-violet-400 hover:underline">
-          Pricing
-        </Link>
-        <Link href="/about" className="text-sm text-slate-300 hover:text-violet-400 hover:underline">
-          About Us
-        </Link>
-      </div>
-    </div>
+          {/* Row 2: Contact Info */}
+          <div className="text-sm text-slate-400">
+            <p className="mb-2">Contact us:</p>
+            <div className="flex flex-row gap-12">
+              {/* Pavan Manish */}
+              <div className="flex flex-col gap-1">
+                <p className="font-bold text-slate-300">Pavan Manish</p>
+                <div className="flex gap-4 text-xs">
+                  <a
+                    href="https://x.com/fromleg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-violet-400 hover:text-violet-300 hover:underline"
+                  >
+                    X
+                  </a>
+                  <a
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=pavanmanishd@gmail.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-violet-400 hover:text-violet-300 hover:underline"
+                  >
+                    Email
+                  </a>
+                  <a
+                    href="https://github.com/pavanmanishd"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-violet-400 hover:text-violet-300 hover:underline"
+                  >
+                    GitHub
+                  </a>
+                </div>
+              </div>
 
-    {/* Row 2: Contact Info */}
-    <div className="text-sm text-slate-400">
-      <p className="mb-2">Contact us:</p>
-      <div className="flex flex-row gap-12">
-        {/* Pavan Manish */}
-        <div className="flex flex-col gap-1">
-          <p className="font-bold text-slate-300">Pavan Manish</p>
-          <div className="flex gap-4 text-xs">
-            <a
-              href="https://x.com/fromleg"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-violet-400 hover:text-violet-300 hover:underline"
-            >
-              X
-            </a>
-            <a
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=pavanmanishd@gmail.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-violet-400 hover:text-violet-300 hover:underline"
-            >
-              Email
-            </a>
-            <a
-              href="https://github.com/pavanmanishd"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-violet-400 hover:text-violet-300 hover:underline"
-            >
-              GitHub
-            </a>
+              {/* Sai Vishal */}
+              <div className="flex flex-col gap-1">
+                <p className="font-bold text-slate-300">Sai Vishal</p>
+                <div className="flex gap-4 text-xs">
+                  <a
+                    href="https://x.com/lahsiv_ias"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-violet-400 hover:text-violet-300 hover:underline"
+                  >
+                    X
+                  </a>
+                  <a
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=saivishalradham@gmail.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-violet-400 hover:text-violet-300 hover:underline"
+                  >
+                    Email
+                  </a>
+                  <a
+                    href="https://github.com/Vishal0129"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-violet-400 hover:text-violet-300 hover:underline"
+                  >
+                    GitHub
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Sai Vishal */}
-        <div className="flex flex-col gap-1">
-          <p className="font-bold text-slate-300">Sai Vishal</p>
-          <div className="flex gap-4 text-xs">
-            <a
-              href="https://x.com/lahsiv_ias"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-violet-400 hover:text-violet-300 hover:underline"
-            >
-              X
-            </a>
-            <a
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=saivishalradham@gmail.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-violet-400 hover:text-violet-300 hover:underline"
-            >
-              Email
-            </a>
-            <a
-              href="https://github.com/Vishal0129"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-violet-400 hover:text-violet-300 hover:underline"
-            >
-              GitHub
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</footer>
-
-
-
+      </footer>
 
       {/* Big MAYURA Footer */}
       {/* <div className="relative w-full overflow-hidden py-28 flex items-end justify-center bg-black/30 backdrop-blur-sm">

@@ -213,9 +213,9 @@ export default function SetupPage() {
 
   if (loading || authLoading) {
     return (
-      <div className="flex h-full items-center justify-center bg-black">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="text-xl font-bold text-white">Loading...</div>
+      <div className="flex h-full items-center justify-center bg-black px-4">
+        <div className="flex flex-col items-center space-y-4 text-center">
+          <div className="text-lg sm:text-xl font-bold text-white">Loading...</div>
           <div className="size-8 animate-spin rounded-full border-y-2 border-violet-500"></div>
         </div>
       </div>
@@ -223,7 +223,7 @@ export default function SetupPage() {
   }
 
   return (
-    <div className="center-setup-step">
+    <div className="center-setup-step px-4 sm:px-6 lg:px-8">
       {renderStep(currentStep)}
     </div>
   )

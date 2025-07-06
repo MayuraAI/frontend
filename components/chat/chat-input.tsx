@@ -106,65 +106,70 @@ export const ChatInput: FC<ChatInputProps> = () => {
   return (
     <>
       <form onSubmit={handleFormSubmit} className="w-full">
-        <div className="relative">
-          <Textarea
-            ref={textareaRef}
-            placeholder={
-              !user
-                ? "Please sign in to start chatting..."
-                : !canSendMessage
-                ? "Please complete your profile setup..."
-                : "Type your message here..."
-            }
-            value={inputValue}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            disabled={!canSendMessage}
-            className={cn(
-              "min-h-[60px] max-h-[200px] resize-none rounded-xl border-2 pr-12 text-base leading-relaxed transition-all duration-200 focus:border-violet-500 focus:ring-0",
-              "placeholder:text-muted-foreground/60",
-              isFocused && "shadow-lg",
-              !canSendMessage && "opacity-50 cursor-not-allowed"
-            )}
-            rows={1}
-          />
+        <div className="group relative">
+          {/* Gradient Border Effect */}
+          <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 opacity-30 blur transition duration-300 group-hover:opacity-50"></div>
+          
+          {/* Input Container */}
+          <div className="relative rounded-2xl border border-slate-600/50 bg-slate-900/80 shadow-xl backdrop-blur-sm">
+            <Textarea
+              ref={textareaRef}
+              placeholder={
+                !user
+                  ? "Please sign in to start chatting..."
+                  : !canSendMessage
+                  ? "Please complete your profile setup..."
+                  : "Type your message here..."
+              }
+              value={inputValue}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              disabled={!canSendMessage}
+              className={cn(
+                "max-h-[200px] min-h-[60px] resize-none rounded-2xl border-0 bg-transparent px-6 py-5 pr-20 text-base leading-relaxed text-white placeholder:text-slate-400 focus:ring-0 sm:px-8 sm:py-6 sm:pr-24 sm:text-lg",
+                "focus-visible:outline-none focus-visible:ring-0",
+                !canSendMessage && "cursor-not-allowed opacity-50"
+              )}
+              rows={1}
+            />
 
-          <div className="absolute bottom-2 right-2 flex items-center gap-2">
-            {isGenerating ? (
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                onClick={handleStopMessage}
-                className="size-8 rounded-lg bg-red-500 p-0 text-white hover:bg-red-600"
-                title="Stop generating"
-              >
-                <Square className="size-4" />
-              </Button>
-            ) : (
-              <Button
-                type="submit"
-                size="sm"
-                disabled={isDisabled}
-                className={cn(
-                  "size-8 rounded-lg p-0 transition-all duration-200",
-                  isDisabled
-                    ? "bg-muted text-muted-foreground cursor-not-allowed"
-                    : "bg-violet-600 text-white hover:bg-violet-700 hover:scale-105"
-                )}
-                title="Send message"
-              >
-                <Send className="size-4" />
-              </Button>
-            )}
+            <div className="absolute bottom-3 right-3 flex items-center gap-2 sm:bottom-4 sm:right-4">
+              {isGenerating ? (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={handleStopMessage}
+                  className="size-12 rounded-xl bg-red-500 p-0 text-white hover:bg-red-600"
+                  title="Stop generating"
+                >
+                  <Square className="size-5" />
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  size="sm"
+                  disabled={isDisabled}
+                  className={cn(
+                    "size-12 rounded-xl p-0 transition-all duration-200",
+                    isDisabled
+                      ? "bg-muted text-muted-foreground cursor-not-allowed"
+                      : "bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 hover:scale-105"
+                  )}
+                  title="Send message"
+                >
+                  <Send className="size-5" />
+                </Button>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Helper text for anonymous users */}
         {user && isAnonymousUser() && (
-          <div className="mt-2 text-xs text-slate-400 text-center">
+          <div className="mt-2 text-center text-xs text-slate-400">
             You&apos;re using Mayura anonymously. Sign up to save your chat history and get more requests!
           </div>
         )}

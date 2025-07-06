@@ -209,7 +209,7 @@ export const Message: FC<MessageProps> = ({
 
             {/* Message Actions */}
             {!isGenerating && (
-              <div className="ml-1 flex items-center gap-1 transition-opacity duration-200 opacity-100 sm:ml-2 sm:gap-2">
+              <div className="ml-1 flex items-center gap-1 opacity-100 transition-opacity duration-200 sm:ml-2 sm:gap-2">
                 <Button
                   variant="ghost"
                   size="sm"

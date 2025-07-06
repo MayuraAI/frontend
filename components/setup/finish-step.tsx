@@ -6,13 +6,15 @@ interface FinishStepProps {
 
 export const FinishStep: FC<FinishStepProps> = ({ displayName }) => {
   return (
-    <div className="space-y-4">
-      <div>
+    <div className="space-y-6 text-center">
+      <div className="text-lg sm:text-xl font-medium">
         Welcome to Mayura
         {displayName.length > 0 ? `, ${displayName.split(" ")[0]}` : null}!
       </div>
 
-      <div>Click next to start chatting.</div>
+      <div className="text-sm sm:text-base text-muted-foreground">
+        Click next to start chatting.
+      </div>
     </div>
   )
 }

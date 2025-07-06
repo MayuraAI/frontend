@@ -51,19 +51,19 @@ export function SignupPromptModal({ isOpen, onClose }: SignupPromptModalProps) {
         <div className="space-y-4">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <CheckCircle className="shrink-0 size-4 text-green-400" />
+              <CheckCircle className="size-4 shrink-0 text-green-400" />
               <span className="text-sm text-slate-200">10 Pro requests daily</span>
             </div>
             <div className="flex items-center gap-3">
-              <Star className="shrink-0 size-4 text-blue-400" />
+              <Star className="size-4 shrink-0 text-blue-400" />
               <span className="text-sm text-slate-200">Unlimited Standard requests</span>
             </div>
             <div className="flex items-center gap-3">
-              <Zap className="shrink-0 size-4 text-purple-400" />
+              <Zap className="size-4 shrink-0 text-purple-400" />
               <span className="text-sm text-slate-200">Access to premium AI models</span>
             </div>
             <div className="flex items-center gap-3">
-              <UserPlus className="shrink-0 size-4 text-violet-400" />
+              <UserPlus className="size-4 shrink-0 text-violet-400" />
               <span className="text-sm text-slate-200">Save your chat history</span>
             </div>
           </div>
@@ -74,12 +74,12 @@ export function SignupPromptModal({ isOpen, onClose }: SignupPromptModalProps) {
               disabled={loading}
               className="flex-1 bg-violet-600 text-white hover:bg-violet-700"
             >
-              <UserPlus className="size-4 mr-2" />
+              <UserPlus className="mr-2 size-4" />
               {loading ? "Loading..." : "Sign Up Now"}
             </Button>
           </div>
 
-          <p className="text-xs text-center text-slate-400">
+          <p className="text-center text-xs text-slate-400">
             Free forever • No credit card required
           </p>
         </div>
