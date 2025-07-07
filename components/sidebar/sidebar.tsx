@@ -10,7 +10,7 @@ import { useAuth } from "@/context/auth-context"
 import { isAnonymousUser } from "@/lib/firebase/auth"
 import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
-import { PlanTag } from "../ui/plan-tag"
+
 
 interface SidebarProps {
   contentType: ContentType
@@ -43,8 +43,6 @@ export const Sidebar: FC<SidebarProps> = ({ contentType, showSidebar }) => {
             <p className="text-sidebar-foreground text-xl font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-2xl md:text-3xl lg:text-4xl">
               Mayura 
             </p>
-            <span className="ml-1 align-top text-xs font-semibold opacity-60 sm:text-sm md:text-base">(beta)</span>
-            <PlanTag compact />
           </div>
         </div>
       </header>
