@@ -141,7 +141,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
           <h1 className="text-sidebar-foreground text-lg font-semibold">MAYURA</h1>
           <div className="flex items-center gap-2">
             <SubscriptionBadge compact />
-            <RateLimitStatus compact className={cn(isAnonymous && "opacity-0")} />
+            <RateLimitStatus compact className={cn(isAnonymous && "opacity-0", "hover:opacity-0 hover:pointer-events-none")} />
           </div>
         </header>
 
@@ -149,7 +149,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         <div className="absolute right-4 top-4 z-50 hidden md:block">
           <div className="flex flex-col gap-2">
             <SubscriptionBadge compact />
-            <RateLimitStatus compact className={cn(isAnonymous && "opacity-0")}/>
+            <RateLimitStatus compact className={cn(isAnonymous && "opacity-0", "hover:opacity-0 hover:pointer-events-none")}/>
           </div>
         </div>
 

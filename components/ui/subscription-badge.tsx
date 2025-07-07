@@ -48,18 +48,6 @@ export const SubscriptionBadge: FC<SubscriptionBadgeProps> = ({ compact = false 
 
   useEffect(() => {
     if (!user || isAnonymousUser()) {
-      setSubscriptionData({
-        user_id: '',
-        tier: "free",
-        status: "active",
-        rate_limit: {
-          free_requests: 5,
-          max_requests: 0,
-          requests_per_day: 5,
-          daily_reset: true,
-          requests_per_minute: 5
-        }
-      })
       setLoading(false)
       return
     }
@@ -245,6 +233,11 @@ export const SubscriptionBadge: FC<SubscriptionBadgeProps> = ({ compact = false 
   const formatUsage = (used: number, limit: number) => {
     if (limit === -1) return "Unlimited"
     return `${used}/${limit}`
+  }
+
+  // Don't show anything for anonymous users
+  if (isAnonymousUser()) {
+    return null
   }
 
   if (loading) {
