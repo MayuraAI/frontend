@@ -175,21 +175,21 @@ export default function RateLimitStatus({
     reset_time_unix
   } = status
 
-  const isPro = current_mode === "pro"
+  const isMax = current_mode === "max"
   const isFree = current_mode === "free"
-  const proExhausted = isFree && requests_used >= daily_limit
-  const progress = isPro ? (requests_used / daily_limit) * 100 : 100
+  const maxExhausted = isFree && requests_used >= daily_limit
+  const progress = isMax ? (requests_used / daily_limit) * 100 : 100
   const timeUntilReset = RateLimitService.getTimeUntilReset(reset_time_unix)
 
   const getTag = () => {
     const isAnonymous = user && isAnonymousUser()
     
-    if (isPro) {
+    if (isMax) {
       return (
         <div className="flex items-center space-x-2">
           <IconCheck size={18} className="text-violet-400" />
           <span className="ml-1">
-            {requests_used} / {daily_limit} {isAnonymous ? 'Free' : 'Pro'}
+            {requests_used} / {daily_limit} {isAnonymous ? 'Free' : 'Max'}
           </span>
         </div>
       )
@@ -228,7 +228,7 @@ export default function RateLimitStatus({
               <IconCheck size={16} className="text-violet-400" />
             )}
             <span className="text-xs font-medium">
-              {isFree ? (user && isAnonymousUser() ? "Free trial" : "Free tier") : "Pro" + " " + requests_remaining + " left"}
+              {isFree ? (user && isAnonymousUser() ? "Free trial" : "Free tier") : "Max" + " " + requests_remaining + " left"}
             </span>
             {isExpanded ? (
               <IconChevronUp size={14} className="ml-1" />
@@ -273,7 +273,7 @@ export default function RateLimitStatus({
 
             <div className="flex items-center justify-between text-xs">
               <span className="text-slate-400">
-                {isPro ? (user && isAnonymousUser() ? "Free Trial" : "Pro Plan") : (user && isAnonymousUser() ? "Free Trial" : "Free Plan")}
+                {isMax ? (user && isAnonymousUser() ? "Free Trial" : "Max Plan") : (user && isAnonymousUser() ? "Free Trial" : "Free Plan")}
               </span>
               <div className="flex items-center space-x-1 text-slate-400">
                 <IconClock size={12} />

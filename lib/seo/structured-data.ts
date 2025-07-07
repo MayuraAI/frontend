@@ -67,7 +67,7 @@ export const softwareApplicationSchema: SoftwareApplication = {
       name: 'Free Plan',
       price: '0',
       priceCurrency: 'USD',
-      description: '10 Pro requests per day, unlimited standard requests'
+      description: '10 Max requests per day, unlimited standard requests'
     }
   ],
   author: {
@@ -121,15 +121,15 @@ export const faqPageSchema: FAQPage = {
       name: 'Is Mayura free to use?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes! Mayura offers a free tier with 10 Pro requests per day and unlimited Standard requests. We also plan to offer a Pro tier with additional features after the beta period.'
+        text: 'Yes! Mayura offers a free tier with 10 Max requests per day and unlimited Standard requests. We also plan to offer a Pro tier with additional features after the beta period.'
       }
     },
     {
       '@type': 'Question',
-      name: 'What\'s the difference between Standard and Pro requests?',
+      name: 'What\'s the difference between Standard and Max requests?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Standard requests use reliable, fast models perfect for everyday tasks. Pro requests access the most advanced models available for complex reasoning, research, and critical work requiring the highest quality output.'
+        text: 'Standard requests use reliable, fast models perfect for everyday tasks. Max requests access the most advanced models available for complex reasoning, research, and critical work requiring the highest quality output.'
       }
     }
   ]

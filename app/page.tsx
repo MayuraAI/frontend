@@ -109,9 +109,9 @@ export default function HomePage() {
         "We implement enterprise-grade security measures including end-to-end encryption, zero-data retention policies, and SOC 2 compliance. Your prompts and data are never stored or used for training."
     },
     {
-      question: "What's the difference between Standard and Pro requests?",
+      question: "What's the difference between Standard and Max requests?",
       answer:
-        "Standard requests use reliable, fast models perfect for everyday tasks like coding, writing, and analysis. Pro requests access the most advanced models available for complex reasoning, research, and critical work requiring the highest quality output."
+        "Standard requests use reliable, fast models perfect for everyday tasks like coding, writing, and analysis. Max requests access the most advanced models available for complex reasoning, research, and critical work requiring the highest quality output."
     },
     {
       question: "Is this a limited beta?",
@@ -571,7 +571,7 @@ export default function HomePage() {
                         <CheckCircle className="size-5 shrink-0 text-violet-400" />
                         <div>
                           <strong className="text-white">
-                            5 Pro Requests / day
+                            5 Max Requests / day
                           </strong>
                           <p className="text-xs text-slate-400">
                             Access premium models like Gemini 2.5 Pro, Gemini
@@ -643,7 +643,7 @@ export default function HomePage() {
                         <CheckCircle className="size-5 shrink-0 text-slate-500" />
                         <div>
                           <strong className="text-slate-300">
-                            100 Pro Requests / day
+                            100 Max Requests / day
                           </strong>
                           <p className="text-xs text-slate-500">
                             Access to premium models

@@ -21,14 +21,14 @@ interface SubscriptionData {
   expires_at?: string
   rate_limit: {
     free_requests: number
-    pro_requests: number
+    max_requests: number
     requests_per_day: number
     daily_reset: boolean
     requests_per_minute: number
   }
   usage?: {
     free_requests_used: number
-    pro_requests_used: number
+    max_requests_used: number
     last_reset: string
   }
 }
@@ -80,7 +80,7 @@ export const SubscriptionManagement: FC<SubscriptionManagementProps> = ({ isAnon
           status: "active",
           rate_limit: {
             free_requests: -1,
-            pro_requests: 0,
+            max_requests: 0,
             requests_per_day: -1,
             daily_reset: true,
             requests_per_minute: 5
@@ -95,7 +95,7 @@ export const SubscriptionManagement: FC<SubscriptionManagementProps> = ({ isAnon
         status: "active",
         rate_limit: {
           free_requests: -1,
-          pro_requests: 0,
+          max_requests: 0,
           requests_per_day: -1,
           daily_reset: true,
           requests_per_minute: 5
@@ -265,9 +265,9 @@ export const SubscriptionManagement: FC<SubscriptionManagementProps> = ({ isAnon
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Pro Requests:</span>
+                <span className="text-slate-400">Max Requests:</span>
                 <span className="text-white">
-                  {formatUsage(subscriptionData?.usage?.pro_requests_used || 0, subscriptionData?.rate_limit?.pro_requests || 0)}
+                  {formatUsage(subscriptionData?.usage?.max_requests_used || 0, subscriptionData?.rate_limit?.max_requests || 0)}
                 </span>
               </div>
             </div>
