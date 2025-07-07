@@ -117,26 +117,51 @@ export const SubscriptionManagement: FC<SubscriptionManagementProps> = ({ isAnon
         return
       }
 
-      const response = await fetch(`${API_BASE_URL}/v1/subscription/checkout`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ tier })
-      })
+      // Check if user has existing subscription and is trying to upgrade
+      const isUpgrade = subscriptionData?.tier === "plus" && tier === "pro"
+      
+      if (isUpgrade) {
+        // For upgrades, redirect to subscription management portal
+        const response = await fetch(`${API_BASE_URL}/v1/subscription/management`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
 
-      if (response.ok) {
-        const data = await response.json()
-        // Redirect to checkout URL
-        window.open(data.checkout_url, '_blank')
+        if (response.ok) {
+          const data = await response.json()
+          window.open(data.management_url, '_blank')
+          toast.success("Redirecting to subscription management portal for upgrade")
+        } else if (response.status === 404) {
+          toast.error("No active subscription found. Please upgrade to a paid plan first.")
+        } else {
+          const errorData = await response.json().catch(() => ({}))
+          toast.error(errorData.error || "Failed to get management URL")
+        }
       } else {
-        const error = await response.json()
-        toast.error(error.error || "Failed to create checkout session")
+        // For new subscriptions, create checkout session
+        const response = await fetch(`${API_BASE_URL}/v1/subscription/checkout`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ tier })
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          // Redirect to checkout URL
+          window.open(data.checkout_url, '_blank')
+        } else {
+          const error = await response.json()
+          toast.error(error.error || "Failed to create checkout session")
+        }
       }
     } catch (error) {
-      console.error("Error creating checkout session:", error)
-      toast.error("Failed to create checkout session")
+      console.error("Error processing upgrade:", error)
+      toast.error("Failed to process upgrade request")
     } finally {
       setCheckoutLoading(false)
     }
