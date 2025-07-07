@@ -148,7 +148,6 @@ export default function HomePage() {
             <p className="text-xl font-semibold leading-none tracking-tight text-white md:text-2xl lg:text-3xl">
               Mayura
             </p>
-            <span className="text-sm font-medium text-white/60">(beta)</span>
           </div>
         </div>
 

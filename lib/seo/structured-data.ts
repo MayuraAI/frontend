@@ -25,7 +25,7 @@ export const organizationSchema: Organization = {
   ],
   sameAs: [
     'https://twitter.com/MayuraAI',
-    'https://github.com/mayura-ai'
+    'https://github.com/mayuraai'
   ],
   contactPoint: {
     '@type': 'ContactPoint',
@@ -114,14 +114,6 @@ export const faqPageSchema: FAQPage = {
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'Mayura supports leading AI models including GPT-4, Claude, Gemini 2.5 Pro, Llama 3.3, DeepSeek R1, and many others, with new models added regularly.'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: 'Is Mayura free to use?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Yes! Mayura offers a free tier with 10 Max requests per day and unlimited Standard requests. We also plan to offer a Pro tier with additional features after the beta period.'
       }
     },
     {
