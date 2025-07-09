@@ -17,7 +17,7 @@ export default function AboutPage() {
                 className="text-sidebar-foreground flex-1 cursor-pointer text-3xl font-extrabold tracking-tight transition-opacity hover:opacity-80 md:text-4xl lg:text-5xl"
                 onClick={() => (window.location.href = "/")}
               >
-                Mayura <span className="ml-1 align-top text-base font-semibold opacity-60">(beta)</span>
+                Mayura
               </h1>
             </div>
           </div>
@@ -36,11 +36,11 @@ export default function AboutPage() {
         <section className="w-full px-6 py-16 md:py-24">
           <div className="container mx-auto">
             <div className="mx-auto max-w-4xl text-center">
-              <h1 className="mb-6 text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
-                Built by Engineers, for Everyone
+              <h1 className="mb-6 text-4xl font-bold text-white sm:text-5xl md:text-6xl">
+                Mayura
               </h1>
-              <p className="mb-8 text-xl text-slate-300">
-                We know your problem bro, we faced it too, that&apos;s why we built Mayura.
+              <p className="mb-8 text-lg text-slate-300">
+                We&apos;re building Mayura to solve the problems we faced when juggling multiple AI platforms. No more switching between tabs, no more choosing the wrong model for the task.
               </p>
               <p className="text-lg text-slate-400">
                 We just want to make your life easier and some money :P
@@ -107,7 +107,7 @@ export default function AboutPage() {
                   </p>
                   <p className="text-slate-400">
                     Built with love, caffeine, and a genuine desire to solve a problem we all face. 
-                    Currently in beta, constantly improving, and yes - we&apos;re trying to make some money while making your life easier.
+                    We&apos;re continually improving and adding new features to make your AI experience seamless and more productive.
                   </p>
                 </div>
               </div>
@@ -123,7 +123,7 @@ export default function AboutPage() {
                 Ready to Try Mayura?
               </h2>
               <p className="mb-8 text-lg text-slate-300">
-                Join our beta and experience intelligent AI routing today.
+                Join thousands of users who have already upgraded their AI experience with Mayura.
               </p>
               <div className="flex flex-col justify-center gap-4 sm:flex-row">
                 <Button size="lg" asChild className="bg-violet-600 text-white hover:bg-violet-700">

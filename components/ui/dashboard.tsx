@@ -11,6 +11,7 @@ import { Button } from "./button"
 import { Sidebar } from "../sidebar/sidebar"
 import useHotkey from "@/lib/hooks/use-hotkey"
 import RateLimitStatus from "./rate-limit-status"
+import { SubscriptionBadge } from "./subscription-badge"
 import { useAuth } from "@/context/auth-context"
 import { isAnonymousUser } from "@/lib/firebase/auth"
 
@@ -138,12 +139,18 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
           {isAnonymous && <div className="size-9" />}
           
           <h1 className="text-sidebar-foreground text-lg font-semibold">MAYURA</h1>
-          <RateLimitStatus compact className={cn("ml-2", isAnonymous && "opacity-0")} />
+          <div className="flex items-center gap-2">
+            <SubscriptionBadge compact />
+            <RateLimitStatus compact className={cn(isAnonymous && "opacity-0", "hover:opacity-0 hover:pointer-events-none")} />
+          </div>
         </header>
 
         {/* Desktop Rate Limit Status - Top Right Corner */}
         <div className="absolute right-4 top-4 z-50 hidden md:block">
-          <RateLimitStatus compact className={cn("ml-2", isAnonymous && "opacity-0")}/>
+          <div className="flex flex-col gap-2">
+            <SubscriptionBadge compact />
+            <RateLimitStatus compact className={cn(isAnonymous && "opacity-0", "hover:opacity-0 hover:pointer-events-none")}/>
+          </div>
         </div>
 
         {/* Chat Content Area */}

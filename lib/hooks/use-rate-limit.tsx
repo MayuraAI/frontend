@@ -18,7 +18,7 @@ export function useRateLimit() {
             daily_limit: headerData.daily_limit,
             requests_used: headerData.requests_used || 0,
             requests_remaining: headerData.requests_remaining || 0,
-            current_mode: headerData.current_mode || "pro",
+            current_mode: headerData.current_mode || "max",
             reset_time: new Date(
               headerData.reset_time_unix! * 1000
             ).toISOString(),
@@ -57,7 +57,7 @@ export function useRateLimit() {
       isInFreeMode: rateLimitStatus.current_mode === "free",
       requestsRemaining: rateLimitStatus.requests_remaining,
       isRunningLow:
-        rateLimitStatus.current_mode === "pro" &&
+        rateLimitStatus.current_mode === "max" &&
         rateLimitStatus.requests_remaining <= 2,
       progressPercentage:
         (rateLimitStatus.requests_used / rateLimitStatus.daily_limit) * 100,

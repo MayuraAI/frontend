@@ -2,7 +2,7 @@ export interface RateLimitStatus {
   daily_limit: number
   requests_used: number
   requests_remaining: number
-  current_mode: "pro" | "free"
+  current_mode: "max" | "free"
   reset_time: string
   reset_time_unix: number
   user_id?: string

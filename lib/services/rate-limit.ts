@@ -44,7 +44,7 @@ export class RateLimitService {
       daily_limit: parseInt(headers.get("X-RateLimit-Limit") || "0"),
       requests_remaining: parseInt(headers.get("X-RateLimit-Remaining") || "0"),
       requests_used: parseInt(headers.get("X-RateLimit-Used") || "0"),
-      current_mode: (headers.get("X-Request-Type") as "pro" | "free") || "pro",
+      current_mode: (headers.get("X-Request-Type") as "max" | "free") || "max",
       reset_time_unix: parseInt(headers.get("X-RateLimit-Reset") || "0"),
       message: headers.get("X-RateLimit-Status") || ""
     }
@@ -70,7 +70,7 @@ export class RateLimitService {
     }
   }
 
-  static getStatusColor(mode: "pro" | "free", remaining: number): string {
+  static getStatusColor(mode: "max" | "free", remaining: number): string {
     if (mode === "free") {
       return "text-orange-600 bg-orange-50 border-orange-200"
     }
@@ -82,7 +82,7 @@ export class RateLimitService {
     return "text-purple-600 bg-purple-50 border-purple-200"
   }
 
-  static getStatusIcon(mode: "pro" | "free", remaining: number): string {
+  static getStatusIcon(mode: "max" | "free", remaining: number): string {
     if (mode === "free") {
       return "⚡"
     }

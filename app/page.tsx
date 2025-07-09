@@ -79,24 +79,19 @@ export default function HomePage() {
 
   const faqs = [
     {
-      question: "How does Mayura work?",
+      question: "What is Mayura?",
       answer:
-        "Mayura uses advanced AI classification to analyze your prompt and automatically route it to the most suitable LLM from our network. This ensures you get the best possible results for each specific task type."
+        "Mayura is an intelligent AI platform that automatically routes your prompts to the best-suited AI model for optimal results. Instead of switching between different AI services, Mayura analyzes your request and chooses the most appropriate model for you."
     },
     {
-      question: "What models are available in the Free tier?",
+      question: "How does automatic routing work?",
       answer:
-        "The Free tier includes access to high-quality models including Llama 3.3 70B, DeepSeek R1, Qwen 3 32B, Gemma 2 9B, and more. You get unlimited access to these standard models plus 5 Pro requests daily for premium models."
+        "Our advanced classification system analyzes your prompt's content, complexity, and requirements to automatically select the most suitable AI model. This ensures you always get the best possible response for your specific task."
     },
     {
-      question: "What premium models are available with Pro requests?",
+      question: "What AI models does Mayura support?",
       answer:
-        "Pro requests give you access to the most powerful models like Gemini 2.5 Pro Preview, Gemini 2.5 Flash Preview, Gemini 2.0 Flash, Gemini 2.0 Flash Lite, and Gemini 1.5 Pro. These are perfect for complex reasoning, advanced coding, and critical tasks."
-    },
-    {
-      question: "Can I choose which model to use?",
-      answer:
-        "In the Free tier, Mayura automatically routes your prompts to the best model. With the Pro plan (coming soon), you'll have the option to manually select specific models while still benefiting from intelligent auto-routing when preferred."
+        "Mayura supports a wide range of AI models including OpenAI GPT models, Google's Gemini, Anthropic's Claude, and many other leading AI services. We continuously add new models as they become available."
     },
     {
       question: "How accurate is the prompt classification?",
@@ -109,14 +104,14 @@ export default function HomePage() {
         "We implement enterprise-grade security measures including end-to-end encryption, zero-data retention policies, and SOC 2 compliance. Your prompts and data are never stored or used for training."
     },
     {
-      question: "What's the difference between Standard and Pro requests?",
+      question: "What's the difference between Standard and Max requests?",
       answer:
-        "Standard requests use reliable, fast models perfect for everyday tasks like coding, writing, and analysis. Pro requests access the most advanced models available for complex reasoning, research, and critical work requiring the highest quality output."
+        "Standard requests use reliable, fast models perfect for everyday tasks like coding, writing, and analysis. Max requests access the most advanced models available for complex reasoning, research, and critical work requiring the highest quality output."
     },
     {
-      question: "Is this a limited beta?",
+      question: "What payment methods do you accept?",
       answer:
-        "Yes, Mayura is currently in public beta. The Free tier is fully available now. The Pro tier with manual model selection and additional features will launch after the beta period."
+        "We accept all major credit cards, PayPal, and other popular payment methods. All payments are processed securely through our trusted payment partners."
     }
   ]
 
@@ -153,7 +148,6 @@ export default function HomePage() {
             <p className="text-xl font-semibold leading-none tracking-tight text-white md:text-2xl lg:text-3xl">
               Mayura
             </p>
-            <span className="text-sm font-medium text-white/60">(beta)</span>
           </div>
         </div>
 
@@ -486,50 +480,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Beta Notice Section */}
-        <section className="py-12">
-          <div className="container mx-auto px-6">
-            <div className="mx-auto max-w-4xl">
-              <div className="rounded-lg border border-amber-600/30 bg-amber-900/10 p-6 backdrop-blur-sm">
-                <div className="flex items-start gap-4">
-                  <div className="shrink-0">
-                    <div className="flex size-8 items-center justify-center rounded-full bg-amber-600/20">
-                      <span className="text-sm font-bold text-amber-400">
-                        β
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="mb-2 text-lg font-semibold text-amber-200">
-                      Beta Version Notice
-                    </h3>
-                    <p className="mb-4 text-slate-300">
-                      Mayura is currently in public beta. While we&apos;ve
-                      worked hard to make it as stable as possible, you might
-                      encounter occasional bugs or unexpected behavior. Your
-                      feedback is invaluable in helping us improve the platform.
-                    </p>
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                      <p className="text-sm text-slate-400">
-                        Found a bug or have suggestions?
-                      </p>
-                      <a
-                        href="https://mail.google.com/mail/?view=cm&fs=1&to=pavanmanishd@gmail.com&su=Mayura%20Beta%20Feedback"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-amber-400 hover:text-amber-300 hover:underline"
-                      >
-                        Report to us
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* --- START: RESTRUCTURED PRICING SECTION --- */}
+        {/* --- START: PRICING SECTION --- */}
         <section id="pricing" className="w-full py-16 md:py-24">
           <div className="container mx-auto px-6">
             <div className="mb-16 text-center">
@@ -537,22 +488,21 @@ export default function HomePage() {
                 Simple, Transparent Pricing
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-slate-300">
-                Get full access during our beta. The Pro plan will be available
-                after this period.
+                Choose the perfect plan for your needs. Start free and upgrade as you grow.
               </p>
             </div>
-            <div className="mx-auto grid max-w-4xl items-start gap-8 md:grid-cols-2">
+            <div className="mx-auto grid max-w-6xl items-start gap-8 md:grid-cols-3">
               {/* Free Plan */}
               <Card className="flex h-full flex-col border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-2xl font-bold text-white">Free</h3>
-                    <div className="w-fit rounded-full border border-violet-600 bg-violet-900/20 px-3 py-1 text-xs font-medium text-violet-300">
-                      Available Now
+                    <div className="w-fit rounded-full border border-green-600 bg-green-900/20 px-3 py-1 text-xs font-medium text-green-300">
+                      Always Free
                     </div>
                   </div>
                   <p className="pt-2 text-sm text-slate-400">
-                    Perfect for students, hobbyists, and light usage.
+                    Perfect for students, hobbyists, and trying out Mayura.
                   </p>
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col justify-between">
@@ -564,129 +514,221 @@ export default function HomePage() {
                       </span>
                     </div>
                     <p className="mb-4 font-semibold text-slate-200">
-                      Core Features:
+                      What&apos;s included:
                     </p>
                     <ul className="space-y-4 text-sm">
-                      <li className="flex items-start gap-3">
-                        <CheckCircle className="size-5 shrink-0 text-violet-400" />
+                      {/* <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-green-400" />
                         <div>
                           <strong className="text-white">
-                            5 Pro Requests / day
+                            5 Max Requests / day
                           </strong>
                           <p className="text-xs text-slate-400">
-                            Access premium models like Gemini 2.5 Pro, Gemini
-                            2.5 Flash Preview
+                            Access to premium models like GPT-4, Claude, Gemini Pro
+                          </p>
+                        </div>
+                      </li> */}
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-green-400" />
+                        <div>
+                          <strong className="text-white">
+                            100 Standard Requests / day
+                          </strong>
+                          <p className="text-xs text-slate-400">
+                            Fast, reliable models for everyday tasks
                           </p>
                         </div>
                       </li>
                       <li className="flex items-start gap-3">
-                        <CheckCircle className="size-5 shrink-0 text-violet-400" />
-                        <div>
-                          <strong className="text-white">
-                            Unlimited Standard Requests
-                          </strong>
-                          <p className="text-xs text-slate-400">
-                            Access to models including Llama 3.3 70B, DeepSeek
-                            R1, Qwen 3 32B, Gemma 2 9B
-                          </p>
-                        </div>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle className="size-5 shrink-0 text-violet-400" />
+                        <CheckCircle className="size-5 shrink-0 text-green-400" />
                         <div className="text-white">
-                          Intelligent Auto-Routing Only
+                          Intelligent Auto-Routing
                         </div>
                       </li>
+                      {/* <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-green-400" />
+                        <div className="text-white">
+                          Chat History & Export
+                        </div>
+                      </li> */}
                     </ul>
                   </div>
                   <Button
-                    className="mt-8 w-full bg-violet-600 text-white hover:bg-violet-700"
+                    className="mt-8 w-full bg-green-600 text-white hover:bg-green-700"
                     asChild
                   >
-                    <Link href="/chat">Try Mayura Now</Link>
+                    <Link href="/chat">Start Free Now</Link>
                   </Button>
                 </CardContent>
               </Card>
 
-              {/* Pro Plan */}
-              <Card className="relative flex h-full flex-col border-2 border-slate-600 bg-black/10 opacity-80 shadow-sm backdrop-blur-sm">
-                <div className="absolute -top-4 left-1/2 w-fit -translate-x-1/2 rounded-full bg-slate-600 px-4 py-1 text-sm font-medium text-slate-300">
-                  Coming Soon
+              {/* Plus Plan */}
+              <Card className="relative flex h-full flex-col border-2 border-yellow-600 bg-black/10 shadow-lg backdrop-blur-sm">
+                <div className="absolute -top-4 left-1/2 w-fit -translate-x-1/2 rounded-full bg-yellow-600 px-4 py-1 text-sm font-medium text-black">
+                  Most Popular
                 </div>
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-2xl font-bold text-slate-300">Pro</h3>
-                    <div className="w-fit rounded-full border border-slate-600 bg-slate-800/20 px-3 py-1 text-xs font-medium text-slate-400">
-                      After Beta
+                    <h3 className="text-2xl font-bold text-white">Plus</h3>
+                    <div className="w-fit rounded-full border border-yellow-600 bg-yellow-900/20 px-3 py-1 text-xs font-medium text-yellow-300">
+                      Best Value
                     </div>
                   </div>
-                  <p className="pt-2 text-sm text-slate-500">
-                    For professionals who need full control and unlimited
-                    access.
+                  <p className="pt-2 text-sm text-slate-400">
+                    For professionals and power users who need more.
                   </p>
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col justify-between">
                   <div>
                     <div className="mb-6">
-                      <span className="text-4xl font-bold text-slate-300">
-                        $xx
-                      </span>
-                      <span className="text-lg font-medium text-slate-500">
+                      <span className="text-4xl font-bold text-white">$10</span>
+                      <span className="text-lg font-medium text-slate-400">
                         /month
                       </span>
                     </div>
-                    <p className="mb-4 font-semibold text-slate-400">
+                    <p className="mb-4 font-semibold text-slate-200">
                       Everything in Free, plus:
                     </p>
                     <ul className="space-y-4 text-sm">
                       <li className="flex items-start gap-3">
-                        <CheckCircle className="size-5 shrink-0 text-slate-500" />
+                        <CheckCircle className="size-5 shrink-0 text-yellow-400" />
                         <div>
-                          <strong className="text-slate-300">
-                            100 Pro Requests / day
+                          <strong className="text-white">
+                            100 Max Requests / day
                           </strong>
-                          <p className="text-xs text-slate-500">
-                            Access to premium models
+                          <p className="text-xs text-slate-400">
+                          Access to premium models like GPT-4, Claude, Gemini Pro
                           </p>
                         </div>
                       </li>
                       <li className="flex items-start gap-3">
-                        <CheckCircle className="size-5 shrink-0 text-slate-500" />
+                        <CheckCircle className="size-5 shrink-0 text-yellow-400" />
                         <div>
-                          <strong className="text-slate-300">
-                            Manual Model Selection
+                          <strong className="text-white">
+                            Unlimited Standard Requests
                           </strong>
-                          <p className="text-xs text-slate-500">
-                            Choose specific models or use auto-routing
+                          <p className="text-xs text-slate-400">
+                            No rate limit on standard requests
                           </p>
                         </div>
                       </li>
                       <li className="flex items-start gap-3">
-                        <CheckCircle className="size-5 shrink-0 text-slate-500" />
-                        <div className="text-slate-300">Priority Support</div>
+                        <CheckCircle className="size-5 shrink-0 text-yellow-400" />
+                        <div>
+                          <strong className="text-white">
+                            Advanced Auto-Routing
+                          </strong>
+                          <p className="text-xs text-slate-400">
+                            Choose the best model for your task
+                          </p>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-yellow-400" />
+                        <div className="text-white">Priority Support</div>
                       </li>
                       {/* <li className="flex items-start gap-3">
-                        <CheckCircle className="size-5 shrink-0 text-slate-500" />
-                        <div className="text-slate-300">API Access</div>
-                      </li> */}
-                      {/* <li className="flex items-start gap-3">
-                        <CheckCircle className="size-5 shrink-0 text-slate-500" />
-                        <div className="text-slate-300">Usage Analytics</div>
+                        <CheckCircle className="size-5 shrink-0 text-yellow-400" />
+                        <div className="text-white">Advanced Analytics</div>
                       </li> */}
                     </ul>
                   </div>
                   <Button
-                    className="mt-8 w-full cursor-not-allowed bg-slate-600 text-slate-300"
-                    disabled
+                    className="mt-8 w-full bg-yellow-600 text-black hover:bg-yellow-700"
+                    asChild
                   >
-                    Coming After Beta
+                    <Link href="/login">Upgrade to Plus</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Pro Plan */}
+              <Card className="flex h-full flex-col border-slate-700 bg-black/10 shadow-sm backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-2xl font-bold text-white">Pro</h3>
+                    <div className="w-fit rounded-full border border-purple-600 bg-purple-900/20 px-3 py-1 text-xs font-medium text-purple-300">
+                      Power User
+                    </div>
+                  </div>
+                  <p className="pt-2 text-sm text-slate-400">
+                    For teams and businesses with high-volume needs.
+                  </p>
+                </CardHeader>
+                <CardContent className="flex flex-1 flex-col justify-between">
+                  <div>
+                    <div className="mb-6">
+                      <span className="text-4xl font-bold text-white">$15</span>
+                      <span className="text-lg font-medium text-slate-400">
+                        /month
+                      </span>
+                    </div>
+                    <p className="mb-4 font-semibold text-slate-200">
+                      Everything in Plus, plus:
+                    </p>
+                    <ul className="space-y-4 text-sm">
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-purple-400" />
+                        <div>
+                          <strong className="text-white">
+                            500 Max Requests / day
+                          </strong>
+                          <p className="text-xs text-slate-400">
+                            High-volume access to premium models
+                          </p>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-purple-400" />
+                        <div>
+                          <strong className="text-white">
+                            Unlimited Standard Requests
+                          </strong>
+                          <p className="text-xs text-slate-400">
+                            No rate limit on standard requests
+                          </p>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-purple-400" />
+                        <div>
+                          <strong className="text-white">
+                            Advanced Auto-Routing
+                          </strong>
+                          <p className="text-xs text-slate-400">
+                            Choose the best model for your task
+                          </p>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-purple-400" />
+                        <div>
+                          <strong className="text-white">
+                            API Beta Access
+                          </strong>
+                          <p className="text-xs text-slate-400">
+                            Integrate Mayura into your applications
+                          </p>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="size-5 shrink-0 text-purple-400" />
+                        <div className="text-white">24/7 Priority Support</div>
+                      </li>
+                    </ul>
+                  </div>
+                  <Button
+                    className="mt-8 w-full bg-purple-600 text-white hover:bg-purple-700"
+                    asChild
+                  >
+                    <Link href="/login">Upgrade to Pro</Link>
                   </Button>
                 </CardContent>
               </Card>
             </div>
           </div>
         </section>
-        {/* --- END: RESTRUCTURED PRICING SECTION --- */}
+        {/* --- END: PRICING SECTION --- */}
 
         {/* About Us Section */}
         <section className="w-full py-16 md:py-24">
@@ -700,9 +742,6 @@ export default function HomePage() {
                 We know your problem, we faced it too, that&apos;s why we built
                 Mayura.
               </p>
-              {/* <p className="text-slate-300">
-                We just want to make your life easier and some money :P.
-              </p> */}
             </div>
           </div>
         </section>
@@ -745,7 +784,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Final CTA Section */}
+        {/* CTA Section */}
         <section className="w-full py-16 md:py-24">
           <div className="container mx-auto px-6">
             <div className="mx-auto max-w-3xl text-center">
@@ -753,8 +792,7 @@ export default function HomePage() {
                 Ready to Transform Your AI Workflow?
               </h2>
               <p className="mb-8 text-lg text-slate-300">
-                Join our beta and start upgrading your AI experience with Mayura
-                today.
+                Join thousands of users who have already upgraded their AI experience with Mayura.
               </p>
               <div className="flex flex-col justify-center gap-4 sm:flex-row">
                 <Button

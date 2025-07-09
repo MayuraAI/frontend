@@ -52,7 +52,7 @@ export function SignupPromptModal({ isOpen, onClose }: SignupPromptModalProps) {
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <CheckCircle className="size-4 shrink-0 text-green-400" />
-              <span className="text-sm text-slate-200">10 Pro requests daily</span>
+              <span className="text-sm text-slate-200">10 Max requests daily</span>
             </div>
             <div className="flex items-center gap-3">
               <Star className="size-4 shrink-0 text-blue-400" />
