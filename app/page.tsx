@@ -17,7 +17,8 @@ import {
   DollarSign as DollarSignIcon,
   MessageSquare,
   Route,
-  Send
+  Send,
+  Github
 } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
@@ -178,7 +179,17 @@ export default function HomePage() {
             FAQ
           </Link>
 
-          <div className="flex items-center">
+          <div className="flex items-center gap-4">
+            <Link
+              href="https://github.com/MayuraAI/Mayura"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2 text-sm font-medium text-slate-300 transition-colors hover:border-violet-400 hover:bg-violet-900/20 hover:text-violet-400"
+            >
+              <Github className="size-4" />
+              GitHub
+            </Link>
+            
             {!loading && user && !isAnonymousUser() ? (
               <Button
                 onClick={() => router.push("/chat")}
